@@ -1,0 +1,26 @@
+server:
+  port: 9544
+  servlet:
+    context-path: /
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://rm-gs5w8aoi23456kf75po.mysql.singapore.rds.aliyuncs.com:3306/gslottery?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true&allowMultiQueries=true
+      username: gs
+      password: iXZREQzhMBUGT2Ls
+  redis:
+    host: r-gs5nsu05rwrseovmrmpd.redis.singapore.rds.aliyuncs.com
+    port: 6379
+    database: 2
+    password: 30Q84d8GE4LBYzbM
+# 不需要登录验证的url
+login:
+  auth:
+    urls:
+      - user/register
+      - user/login
+#token失效时间
+token:
+  expire: 15000
