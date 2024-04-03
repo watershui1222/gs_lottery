@@ -24,4 +24,29 @@
         open_time,close_time,open_result_time,
         create_time,update_time
     </sql>
+    
+   <insert id="insertBatchOrUpdate" parameterType="java.util.List">
+
+   INSERT INTO t_openresult_jsk3(
+      qs,
+      plat_qs,
+      open_result,
+      open_status,
+     curr_count,
+     open_time,
+     close_time,
+     open_result_time,
+     create_time,
+     update_time
+     )
+       values
+       <foreach collection="list" item="i" separator=",">
+           (
+            #{i.qs}, #{i.platQs}, #{i.openResult}, #{i.openStatus}, #{i.currCount},
+           #{i.openTime}, #{i.closeTime}, #{i.openResultTime}, #{i.createTime}, #{i.updateTime}
+           )
+       </foreach>
+       ON DUPLICATE  KEY UPDATE
+       update_time = VALUES(update_time)
+   </insert>
 </mapper>

@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 /**
 * @author 69000
 * @description 针对表【t_lottery】的数据库操作Service
-* @createDate 2024-04-03 17:29:58
+* @createDate 2024-04-03 19:19:50
 */
 public interface LotteryService extends IService<Lottery> {
 
