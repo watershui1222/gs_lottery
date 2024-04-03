@@ -82,6 +82,12 @@ public class LotteryOdds implements Serializable {
     @TableField(value = "pxh")
     private Integer pxh;
 
+    /**
+     * 号码分组
+     */
+    @TableField(value = "group_name")
+    private String groupName;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

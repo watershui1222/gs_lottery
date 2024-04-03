@@ -22,6 +22,8 @@ login:
       - /captcha/getCaptcha
       - /user/register
       - /user/login
+      - /lottery/getAllPlay/*
+      - /lottery/getAllOdds/**
 #token失效时间
 token:
   expire: 15000

@@ -76,6 +76,7 @@ public class UserController {
         userObj.put("balance", userInfo.getBalance());
         userObj.put("nickName", userInfo.getNickName());
         userObj.put("referralCode", userInfo.getReferralCode());
+        userObj.put("setPayPwdStatus", StringUtils.isBlank(userInfo.getPayPwd()));
 
         Map<String, String> paramsMap = sysParamService.getAllParamByMap();
         String resourceDomain = MapUtil.getStr(paramsMap, "resource_domain");
@@ -263,6 +264,15 @@ public class UserController {
         /** 删除密码输入错误次数 **/
         redisTemplate.delete(incKey);
         return R.ok().put("token", token);
+    }
+
+    @ApiOperation(value = "退出登录")
+    @PostMapping("/logout")
+    public R logout(HttpServletRequest httpServletRequest) {
+        String userName = JwtUtils.getUserName(httpServletRequest);
+        redisTemplate.delete(RedisKeyUtil.UserTokenKey(userName));
+        redisTemplate.delete(RedisKeyUtil.UserOnlineKey(userName));
+        return R.ok();
     }
 
 
