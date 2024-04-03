@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gs.commons.mapper.CompanyAccountMapper">
+
+    <resultMap id="BaseResultMap" type="com.gs.commons.entity.CompanyAccount">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="account_name" column="account_name" jdbcType="VARCHAR"/>
+            <result property="payee_name" column="payee_name" jdbcType="VARCHAR"/>
+            <result property="account_no" column="account_no" jdbcType="VARCHAR"/>
+            <result property="address" column="address" jdbcType="VARCHAR"/>
+            <result property="min_amount" column="min_amount" jdbcType="DECIMAL"/>
+            <result property="max_amount" column="max_amount" jdbcType="DECIMAL"/>
+            <result property="type" column="type" jdbcType="INTEGER"/>
+            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="remark" column="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,account_name,payee_name,
+        account_no,address,min_amount,
+        max_amount,type,create_time,
+        remark
+    </sql>
+</mapper>

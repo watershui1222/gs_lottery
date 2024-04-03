@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gs.commons.mapper.LotteryMapper">
+
+    <resultMap id="BaseResultMap" type="com.gs.commons.entity.Lottery">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="lottery_code" column="lottery_code" jdbcType="VARCHAR"/>
+            <result property="lottery_name" column="lottery_name" jdbcType="VARCHAR"/>
+            <result property="day_open" column="day_open" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="INTEGER"/>
+            <result property="img" column="img" jdbcType="VARCHAR"/>
+            <result property="close_time" column="close_time" jdbcType="INTEGER"/>
+            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="update_time" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="remark" column="remark" jdbcType="VARCHAR"/>
+            <result property="pxh" column="pxh" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,lottery_code,lottery_name,
+        day_open,status,img,
+        close_time,create_time,update_time,
+        remark,pxh
+    </sql>
+</mapper>

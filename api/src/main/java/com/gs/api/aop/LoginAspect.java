@@ -51,7 +51,7 @@ public class LoginAspect {
     @Value("${server.servlet.context-path}")
     private String contentPath;
 
-    @Pointcut("execution(public * com.juhai.api.controller.*.*(..))")
+    @Pointcut("execution(public * com.gs.api.controller.*.*(..))")
     public void loginAsp(){}
 
     @Around("loginAsp()")

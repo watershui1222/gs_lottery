@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gs.commons.mapper.EduOrderMapper">
+
+    <resultMap id="BaseResultMap" type="com.gs.commons.entity.EduOrder">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="user_name" column="user_name" jdbcType="VARCHAR"/>
+            <result property="order_no" column="order_no" jdbcType="VARCHAR"/>
+            <result property="plat_order_no" column="plat_order_no" jdbcType="VARCHAR"/>
+            <result property="amount" column="amount" jdbcType="DECIMAL"/>
+            <result property="edu_type" column="edu_type" jdbcType="INTEGER"/>
+            <result property="plat_code" column="plat_code" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="INTEGER"/>
+            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="update_time" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="remark" column="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_name,order_no,
+        plat_order_no,amount,edu_type,
+        plat_code,status,create_time,
+        update_time,remark
+    </sql>
+</mapper>

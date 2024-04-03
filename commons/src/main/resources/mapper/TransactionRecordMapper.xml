@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gs.commons.mapper.TransactionRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.gs.commons.entity.TransactionRecord">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="user_name" column="user_name" jdbcType="VARCHAR"/>
+            <result property="amount" column="amount" jdbcType="DECIMAL"/>
+            <result property="before_amount" column="before_amount" jdbcType="DECIMAL"/>
+            <result property="after_amount" column="after_amount" jdbcType="DECIMAL"/>
+            <result property="pay_type" column="pay_type" jdbcType="INTEGER"/>
+            <result property="business_type" column="business_type" jdbcType="INTEGER"/>
+            <result property="business_order" column="business_order" jdbcType="VARCHAR"/>
+            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="remark" column="remark" jdbcType="VARCHAR"/>
+            <result property="oper_name" column="oper_name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_name,amount,
+        before_amount,after_amount,pay_type,
+        business_type,business_order,create_time,
+        remark,oper_name
+    </sql>
+</mapper>

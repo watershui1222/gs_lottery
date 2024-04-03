@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gs.commons.mapper.LevelMapper">
+
+    <resultMap id="BaseResultMap" type="com.gs.commons.entity.Level">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="level_name" column="level_name" jdbcType="VARCHAR"/>
+            <result property="level_img" column="level_img" jdbcType="VARCHAR"/>
+            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,level_name,level_img,
+        create_time
+    </sql>
+</mapper>

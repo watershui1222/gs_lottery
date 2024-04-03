@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gs.commons.mapper.WithdrawMapper">
+
+    <resultMap id="BaseResultMap" type="com.gs.commons.entity.Withdraw">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="user_name" column="user_name" jdbcType="VARCHAR"/>
+            <result property="order_no" column="order_no" jdbcType="VARCHAR"/>
+            <result property="amount" column="amount" jdbcType="DECIMAL"/>
+            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="check_time" column="check_time" jdbcType="TIMESTAMP"/>
+            <result property="status" column="status" jdbcType="INTEGER"/>
+            <result property="remark" column="remark" jdbcType="VARCHAR"/>
+            <result property="oper_name" column="oper_name" jdbcType="VARCHAR"/>
+            <result property="update_time" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="account_type" column="account_type" jdbcType="INTEGER"/>
+            <result property="channel_name" column="channel_name" jdbcType="VARCHAR"/>
+            <result property="address" column="address" jdbcType="VARCHAR"/>
+            <result property="real_name" column="real_name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_name,order_no,
+        amount,create_time,check_time,
+        status,remark,oper_name,
+        update_time,account_type,channel_name,
+        address,real_name
+    </sql>
+</mapper>

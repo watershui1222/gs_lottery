@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gs.commons.mapper.LotteryPlayMapper">
+
+    <resultMap id="BaseResultMap" type="com.gs.commons.entity.LotteryPlay">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="play_code" column="play_code" jdbcType="VARCHAR"/>
+            <result property="play_name" column="play_name" jdbcType="VARCHAR"/>
+            <result property="lottery_code" column="lottery_code" jdbcType="VARCHAR"/>
+            <result property="handicap_code" column="handicap_code" jdbcType="VARCHAR"/>
+            <result property="wfts" column="wfts" jdbcType="VARCHAR"/>
+            <result property="zjsm" column="zjsm" jdbcType="VARCHAR"/>
+            <result property="fl" column="fl" jdbcType="VARCHAR"/>
+            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="update_time" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="pxh" column="pxh" jdbcType="INTEGER"/>
+            <result property="status" column="status" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,play_code,play_name,
+        lottery_code,handicap_code,wfts,
+        zjsm,fl,create_time,
+        update_time,pxh,status
+    </sql>
+</mapper>

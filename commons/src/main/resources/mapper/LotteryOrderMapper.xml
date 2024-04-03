@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gs.commons.mapper.LotteryOrderMapper">
+
+    <resultMap id="BaseResultMap" type="com.gs.commons.entity.LotteryOrder">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="user_name" column="user_name" jdbcType="VARCHAR"/>
+            <result property="order_no" column="order_no" jdbcType="VARCHAR"/>
+            <result property="lottery_code" column="lottery_code" jdbcType="VARCHAR"/>
+            <result property="lottery_name" column="lottery_name" jdbcType="VARCHAR"/>
+            <result property="handicap_code" column="handicap_code" jdbcType="VARCHAR"/>
+            <result property="play_code" column="play_code" jdbcType="VARCHAR"/>
+            <result property="play_name" column="play_name" jdbcType="VARCHAR"/>
+            <result property="bet_content" column="bet_content" jdbcType="VARCHAR"/>
+            <result property="odds" column="odds" jdbcType="DECIMAL"/>
+            <result property="qs" column="qs" jdbcType="VARCHAR"/>
+            <result property="bet_amount" column="bet_amount" jdbcType="DECIMAL"/>
+            <result property="bonus_amount" column="bonus_amount" jdbcType="DECIMAL"/>
+            <result property="profit_amount" column="profit_amount" jdbcType="DECIMAL"/>
+            <result property="bet_time" column="bet_time" jdbcType="TIMESTAMP"/>
+            <result property="settle_time" column="settle_time" jdbcType="TIMESTAMP"/>
+            <result property="settle_status" column="settle_status" jdbcType="INTEGER"/>
+            <result property="order_status" column="order_status" jdbcType="INTEGER"/>
+            <result property="open_result" column="open_result" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_name,order_no,
+        lottery_code,lottery_name,handicap_code,
+        play_code,play_name,bet_content,
+        odds,qs,bet_amount,
+        bonus_amount,profit_amount,bet_time,
+        settle_time,settle_status,order_status,
+        open_result
+    </sql>
+</mapper>
