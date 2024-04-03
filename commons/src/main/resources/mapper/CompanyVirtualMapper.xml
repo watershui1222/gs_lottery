@@ -6,13 +6,13 @@
 
     <resultMap id="BaseResultMap" type="com.gs.commons.entity.CompanyVirtual">
             <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="channel_name" column="channel_name" jdbcType="VARCHAR"/>
-            <result property="channel_type" column="channel_type" jdbcType="INTEGER"/>
-            <result property="account_no" column="account_no" jdbcType="VARCHAR"/>
-            <result property="exchange_rate" column="exchange_rate" jdbcType="DECIMAL"/>
-            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="update_time" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="oper_name" column="oper_name" jdbcType="VARCHAR"/>
+            <result property="channelName" column="channel_name" jdbcType="VARCHAR"/>
+            <result property="channelType" column="channel_type" jdbcType="INTEGER"/>
+            <result property="accountNo" column="account_no" jdbcType="VARCHAR"/>
+            <result property="exchangeRate" column="exchange_rate" jdbcType="DECIMAL"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="operName" column="oper_name" jdbcType="VARCHAR"/>
             <result property="pxh" column="pxh" jdbcType="INTEGER"/>
     </resultMap>
 

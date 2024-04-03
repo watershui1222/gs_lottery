@@ -25,13 +25,13 @@ public class Group implements Serializable {
      * 分组名称
      */
     @TableField(value = "group_name")
-    private String group_name;
+    private String groupName;
 
     /**
      * 创建时间
      */
     @TableField(value = "create_time")
-    private Date create_time;
+    private Date createTime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

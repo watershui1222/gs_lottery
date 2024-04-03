@@ -6,15 +6,15 @@
 
     <resultMap id="BaseResultMap" type="com.gs.commons.entity.LotteryOdds">
             <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="hm_code" column="hm_code" jdbcType="VARCHAR"/>
-            <result property="hm_name" column="hm_name" jdbcType="VARCHAR"/>
+            <result property="hmCode" column="hm_code" jdbcType="VARCHAR"/>
+            <result property="hmName" column="hm_name" jdbcType="VARCHAR"/>
             <result property="odds" column="odds" jdbcType="DECIMAL"/>
             <result property="status" column="status" jdbcType="INTEGER"/>
-            <result property="lottery_code" column="lottery_code" jdbcType="VARCHAR"/>
-            <result property="handicap_code" column="handicap_code" jdbcType="VARCHAR"/>
-            <result property="play_code" column="play_code" jdbcType="VARCHAR"/>
-            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="update_time" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="lotteryCode" column="lottery_code" jdbcType="VARCHAR"/>
+            <result property="handicapCode" column="handicap_code" jdbcType="VARCHAR"/>
+            <result property="playCode" column="play_code" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="pxh" column="pxh" jdbcType="INTEGER"/>
     </resultMap>
 

@@ -6,8 +6,8 @@
 
     <resultMap id="BaseResultMap" type="com.gs.commons.entity.Avatar">
             <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="avatar_img" column="avatar_img" jdbcType="VARCHAR"/>
-            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="avatarImg" column="avatar_img" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="status" column="status" jdbcType="INTEGER"/>
             <result property="pxh" column="pxh" jdbcType="INTEGER"/>
     </resultMap>

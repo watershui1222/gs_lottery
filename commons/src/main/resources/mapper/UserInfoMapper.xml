@@ -6,26 +6,26 @@
 
     <resultMap id="BaseResultMap" type="com.gs.commons.entity.UserInfo">
             <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="user_name" column="user_name" jdbcType="VARCHAR"/>
-            <result property="nick_name" column="nick_name" jdbcType="VARCHAR"/>
-            <result property="real_name" column="real_name" jdbcType="VARCHAR"/>
+            <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+            <result property="nickName" column="nick_name" jdbcType="VARCHAR"/>
+            <result property="realName" column="real_name" jdbcType="VARCHAR"/>
             <result property="balance" column="balance" jdbcType="DECIMAL"/>
-            <result property="yeb_balance" column="yeb_balance" jdbcType="DECIMAL"/>
-            <result property="yeb_interest" column="yeb_interest" jdbcType="DECIMAL"/>
-            <result property="login_pwd" column="login_pwd" jdbcType="VARCHAR"/>
-            <result property="pay_pwd" column="pay_pwd" jdbcType="VARCHAR"/>
-            <result property="login_status" column="login_status" jdbcType="INTEGER"/>
-            <result property="pay_status" column="pay_status" jdbcType="INTEGER"/>
-            <result property="user_phone" column="user_phone" jdbcType="VARCHAR"/>
-            <result property="user_agent" column="user_agent" jdbcType="VARCHAR"/>
-            <result property="referral_code" column="referral_code" jdbcType="VARCHAR"/>
-            <result property="avatar_id" column="avatar_id" jdbcType="INTEGER"/>
-            <result property="level_id" column="level_id" jdbcType="INTEGER"/>
-            <result property="group_id" column="group_id" jdbcType="INTEGER"/>
-            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="update_time" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="last_time" column="last_time" jdbcType="TIMESTAMP"/>
-            <result property="last_ip" column="last_ip" jdbcType="VARCHAR"/>
+            <result property="yebBalance" column="yeb_balance" jdbcType="DECIMAL"/>
+            <result property="yebInterest" column="yeb_interest" jdbcType="DECIMAL"/>
+            <result property="loginPwd" column="login_pwd" jdbcType="VARCHAR"/>
+            <result property="payPwd" column="pay_pwd" jdbcType="VARCHAR"/>
+            <result property="loginStatus" column="login_status" jdbcType="INTEGER"/>
+            <result property="payStatus" column="pay_status" jdbcType="INTEGER"/>
+            <result property="userPhone" column="user_phone" jdbcType="VARCHAR"/>
+            <result property="userAgent" column="user_agent" jdbcType="VARCHAR"/>
+            <result property="referralCode" column="referral_code" jdbcType="VARCHAR"/>
+            <result property="avatarId" column="avatar_id" jdbcType="INTEGER"/>
+            <result property="levelId" column="level_id" jdbcType="INTEGER"/>
+            <result property="groupId" column="group_id" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="lastTime" column="last_time" jdbcType="TIMESTAMP"/>
+            <result property="lastIp" column="last_ip" jdbcType="VARCHAR"/>
             <result property="remark" column="remark" jdbcType="VARCHAR"/>
     </resultMap>
 

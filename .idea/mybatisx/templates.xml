@@ -68,14 +68,13 @@
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="UserLoginLog" />
-                  <option name="tableName" value="t_user_login_log" />
+                  <option name="className" value="Withdraw" />
+                  <option name="tableName" value="t_withdraw" />
                 </TableUIInfo>
               </list>
             </option>
             <option name="templatesName" value="mybatis-plus3" />
             <option name="useActualColumnAnnotationInject" value="true" />
-            <option name="useActualColumns" value="true" />
             <option name="useLombokPlugin" value="true" />
           </GenerateConfig>
         </option>

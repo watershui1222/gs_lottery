@@ -26,19 +26,19 @@ public class UserInfo implements Serializable {
      * 用户名
      */
     @TableField(value = "user_name")
-    private String user_name;
+    private String userName;
 
     /**
      * 昵称
      */
     @TableField(value = "nick_name")
-    private String nick_name;
+    private String nickName;
 
     /**
      * 真实姓名
      */
     @TableField(value = "real_name")
-    private String real_name;
+    private String realName;
 
     /**
      * 余额
@@ -50,97 +50,97 @@ public class UserInfo implements Serializable {
      * 余额宝余额
      */
     @TableField(value = "yeb_balance")
-    private BigDecimal yeb_balance;
+    private BigDecimal yebBalance;
 
     /**
      * 余额宝利息
      */
     @TableField(value = "yeb_interest")
-    private BigDecimal yeb_interest;
+    private BigDecimal yebInterest;
 
     /**
      * 登录密码
      */
     @TableField(value = "login_pwd")
-    private String login_pwd;
+    private String loginPwd;
 
     /**
      * 支付密码
      */
     @TableField(value = "pay_pwd")
-    private String pay_pwd;
+    private String payPwd;
 
     /**
      * 状态(0:正常 1:停用 2:密码输入错误上限锁定)
      */
     @TableField(value = "login_status")
-    private Integer login_status;
+    private Integer loginStatus;
 
     /**
      * 支付状态(0:正常 1:停用)
      */
     @TableField(value = "pay_status")
-    private Integer pay_status;
+    private Integer payStatus;
 
     /**
      * 手机号
      */
     @TableField(value = "user_phone")
-    private String user_phone;
+    private String userPhone;
 
     /**
      * 上级代理
      */
     @TableField(value = "user_agent")
-    private String user_agent;
+    private String userAgent;
 
     /**
      * 邀请码
      */
     @TableField(value = "referral_code")
-    private String referral_code;
+    private String referralCode;
 
     /**
      * 用户头像ID
      */
     @TableField(value = "avatar_id")
-    private Integer avatar_id;
+    private Integer avatarId;
 
     /**
      * 等级ID
      */
     @TableField(value = "level_id")
-    private Integer level_id;
+    private Integer levelId;
 
     /**
      * 分组ID
      */
     @TableField(value = "group_id")
-    private Integer group_id;
+    private Integer groupId;
 
     /**
      * 注册时间
      */
     @TableField(value = "create_time")
-    private Date create_time;
+    private Date createTime;
 
     /**
      * 最后修改时间
      */
     @TableField(value = "update_time")
-    private Date update_time;
+    private Date updateTime;
 
     /**
      * 最后登录时间
      */
     @TableField(value = "last_time")
-    private Date last_time;
+    private Date lastTime;
 
     /**
      * 最后登录IP
      */
     @TableField(value = "last_ip")
-    private String last_ip;
+    private String lastIp;
 
     /**
      * 备注

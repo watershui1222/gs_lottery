@@ -25,31 +25,31 @@ public class UserLoginLog implements Serializable {
      * 用户名
      */
     @TableField(value = "user_name")
-    private String user_name;
+    private String userName;
 
     /**
      * 登录IP
      */
     @TableField(value = "login_ip")
-    private String login_ip;
+    private String loginIp;
 
     /**
      * 地址详情
      */
     @TableField(value = "addr_detail")
-    private String addr_detail;
+    private String addrDetail;
 
     /**
      * 登录域名
      */
     @TableField(value = "login_domain")
-    private String login_domain;
+    private String loginDomain;
 
     /**
      * 登录时间
      */
     @TableField(value = "create_time")
-    private Date create_time;
+    private Date createTime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

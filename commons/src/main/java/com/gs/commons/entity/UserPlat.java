@@ -25,19 +25,19 @@ public class UserPlat implements Serializable {
      * 用户名
      */
     @TableField(value = "user_name")
-    private String user_name;
+    private String userName;
 
     /**
      * 平台代码
      */
     @TableField(value = "plat_code")
-    private String plat_code;
+    private String platCode;
 
     /**
      * 平台游戏账号
      */
     @TableField(value = "plat_user_name")
-    private String plat_user_name;
+    private String platUserName;
 
     /**
      * 0:正常 1:停用
@@ -49,7 +49,7 @@ public class UserPlat implements Serializable {
      * 创建时间
      */
     @TableField(value = "create_time")
-    private Date create_time;
+    private Date createTime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

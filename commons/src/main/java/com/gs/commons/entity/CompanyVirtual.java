@@ -26,43 +26,43 @@ public class CompanyVirtual implements Serializable {
      * 通道名称
      */
     @TableField(value = "channel_name")
-    private String channel_name;
+    private String channelName;
 
     /**
      * 1:trc20 2:erc20
      */
     @TableField(value = "channel_type")
-    private Integer channel_type;
+    private Integer channelType;
 
     /**
      * 收款账户
      */
     @TableField(value = "account_no")
-    private String account_no;
+    private String accountNo;
 
     /**
      * 汇率
      */
     @TableField(value = "exchange_rate")
-    private BigDecimal exchange_rate;
+    private BigDecimal exchangeRate;
 
     /**
      * 创建时间
      */
     @TableField(value = "create_time")
-    private Date create_time;
+    private Date createTime;
 
     /**
      * 修改时间
      */
     @TableField(value = "update_time")
-    private Date update_time;
+    private Date updateTime;
 
     /**
      * 操作人
      */
     @TableField(value = "oper_name")
-    private String oper_name;
+    private String operName;
 
     /**
      * 排序号(值越大越靠前)

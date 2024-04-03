@@ -6,11 +6,11 @@
 
     <resultMap id="BaseResultMap" type="com.gs.commons.entity.LotteryHandicap">
             <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="handicap_code" column="handicap_code" jdbcType="VARCHAR"/>
-            <result property="handicap_name" column="handicap_name" jdbcType="VARCHAR"/>
-            <result property="lottery_code" column="lottery_code" jdbcType="VARCHAR"/>
-            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="update_time" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="handicapCode" column="handicap_code" jdbcType="VARCHAR"/>
+            <result property="handicapName" column="handicap_name" jdbcType="VARCHAR"/>
+            <result property="lotteryCode" column="lottery_code" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="remark" column="remark" jdbcType="VARCHAR"/>
             <result property="pxh" column="pxh" jdbcType="INTEGER"/>
             <result property="status" column="status" jdbcType="INTEGER"/>

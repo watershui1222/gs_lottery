@@ -6,16 +6,16 @@
 
     <resultMap id="BaseResultMap" type="com.gs.commons.entity.Deposit">
             <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="user_name" column="user_name" jdbcType="VARCHAR"/>
-            <result property="order_no" column="order_no" jdbcType="VARCHAR"/>
+            <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+            <result property="orderNo" column="order_no" jdbcType="VARCHAR"/>
             <result property="amount" column="amount" jdbcType="DECIMAL"/>
-            <result property="deposit_type" column="deposit_type" jdbcType="INTEGER"/>
-            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="check_time" column="check_time" jdbcType="TIMESTAMP"/>
-            <result property="update_time" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="oper_name" column="oper_name" jdbcType="VARCHAR"/>
+            <result property="depositType" column="deposit_type" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="checkTime" column="check_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="operName" column="oper_name" jdbcType="VARCHAR"/>
             <result property="remark" column="remark" jdbcType="VARCHAR"/>
-            <result property="account_detail" column="account_detail" jdbcType="VARCHAR"/>
+            <result property="accountDetail" column="account_detail" jdbcType="VARCHAR"/>
             <result property="status" column="status" jdbcType="INTEGER"/>
     </resultMap>
 

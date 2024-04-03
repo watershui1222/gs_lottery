@@ -25,31 +25,31 @@ public class LotteryHandicap implements Serializable {
      * 盘口代码
      */
     @TableField(value = "handicap_code")
-    private String handicap_code;
+    private String handicapCode;
 
     /**
      * 盘口名称
      */
     @TableField(value = "handicap_name")
-    private String handicap_name;
+    private String handicapName;
 
     /**
      * 彩种代码
      */
     @TableField(value = "lottery_code")
-    private String lottery_code;
+    private String lotteryCode;
 
     /**
      * 创建时间
      */
     @TableField(value = "create_time")
-    private Date create_time;
+    private Date createTime;
 
     /**
      * 修改时间
      */
     @TableField(value = "update_time")
-    private Date update_time;
+    private Date updateTime;
 
     /**
      * 备注

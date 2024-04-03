@@ -26,13 +26,13 @@ public class Withdraw implements Serializable {
      * 用户名
      */
     @TableField(value = "user_name")
-    private String user_name;
+    private String userName;
 
     /**
      * 订单号
      */
     @TableField(value = "order_no")
-    private String order_no;
+    private String orderNo;
 
     /**
      * 金额
@@ -44,13 +44,13 @@ public class Withdraw implements Serializable {
      * 申请时间
      */
     @TableField(value = "create_time")
-    private Date create_time;
+    private Date createTime;
 
     /**
      * 审核时间
      */
     @TableField(value = "check_time")
-    private Date check_time;
+    private Date checkTime;
 
     /**
      * 0:待审核 1:审核通过 2:拒绝提现
@@ -68,25 +68,25 @@ public class Withdraw implements Serializable {
      * 操作人
      */
     @TableField(value = "oper_name")
-    private String oper_name;
+    private String operName;
 
     /**
      * 修改时间
      */
     @TableField(value = "update_time")
-    private Date update_time;
+    private Date updateTime;
 
     /**
      * 1:银行卡 2:微信 3:支付宝 4:虚拟货币
      */
     @TableField(value = "account_type")
-    private Integer account_type;
+    private Integer accountType;
 
     /**
      * 通道名称
      */
     @TableField(value = "channel_name")
-    private String channel_name;
+    private String channelName;
 
     /**
      * 开户网点
@@ -98,7 +98,7 @@ public class Withdraw implements Serializable {
      * 持卡人姓名
      */
     @TableField(value = "real_name")
-    private String real_name;
+    private String realName;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

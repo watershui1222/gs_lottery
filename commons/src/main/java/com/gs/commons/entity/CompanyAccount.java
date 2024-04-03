@@ -26,19 +26,19 @@ public class CompanyAccount implements Serializable {
      * 账户名称
      */
     @TableField(value = "account_name")
-    private String account_name;
+    private String accountName;
 
     /**
      * 收款人
      */
     @TableField(value = "payee_name")
-    private String payee_name;
+    private String payeeName;
 
     /**
      * 收款账号
      */
     @TableField(value = "account_no")
-    private String account_no;
+    private String accountNo;
 
     /**
      * 开户网点
@@ -50,13 +50,13 @@ public class CompanyAccount implements Serializable {
      * 最小金额
      */
     @TableField(value = "min_amount")
-    private BigDecimal min_amount;
+    private BigDecimal minAmount;
 
     /**
      * 最大金额
      */
     @TableField(value = "max_amount")
-    private BigDecimal max_amount;
+    private BigDecimal maxAmount;
 
     /**
      * 1:银行卡 2:微信 3:支付宝
@@ -68,7 +68,7 @@ public class CompanyAccount implements Serializable {
      * 创建时间
      */
     @TableField(value = "create_time")
-    private Date create_time;
+    private Date createTime;
 
     /**
      * 备注

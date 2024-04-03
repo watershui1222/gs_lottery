@@ -6,8 +6,8 @@
 
     <resultMap id="BaseResultMap" type="com.gs.commons.entity.Group">
             <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="group_name" column="group_name" jdbcType="VARCHAR"/>
-            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="groupName" column="group_name" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">

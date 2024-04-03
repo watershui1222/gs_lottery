@@ -6,14 +6,14 @@
 
     <resultMap id="BaseResultMap" type="com.gs.commons.entity.Lottery">
             <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="lottery_code" column="lottery_code" jdbcType="VARCHAR"/>
-            <result property="lottery_name" column="lottery_name" jdbcType="VARCHAR"/>
-            <result property="day_open" column="day_open" jdbcType="VARCHAR"/>
+            <result property="lotteryCode" column="lottery_code" jdbcType="VARCHAR"/>
+            <result property="lotteryName" column="lottery_name" jdbcType="VARCHAR"/>
+            <result property="dayOpen" column="day_open" jdbcType="VARCHAR"/>
             <result property="status" column="status" jdbcType="INTEGER"/>
             <result property="img" column="img" jdbcType="VARCHAR"/>
-            <result property="close_time" column="close_time" jdbcType="INTEGER"/>
-            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="update_time" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="closeTime" column="close_time" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="remark" column="remark" jdbcType="VARCHAR"/>
             <result property="pxh" column="pxh" jdbcType="INTEGER"/>
     </resultMap>

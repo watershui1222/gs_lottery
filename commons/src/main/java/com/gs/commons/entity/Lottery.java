@@ -25,19 +25,19 @@ public class Lottery implements Serializable {
      * 彩种代码
      */
     @TableField(value = "lottery_code")
-    private String lottery_code;
+    private String lotteryCode;
 
     /**
      * 彩种名称
      */
     @TableField(value = "lottery_name")
-    private String lottery_name;
+    private String lotteryName;
 
     /**
      * 9:00-23:50(全天开奖不用填)
      */
     @TableField(value = "day_open")
-    private String day_open;
+    private String dayOpen;
 
     /**
      * 0:启用 1:停用
@@ -55,19 +55,19 @@ public class Lottery implements Serializable {
      * 提前封盘时间
      */
     @TableField(value = "close_time")
-    private Integer close_time;
+    private Integer closeTime;
 
     /**
      * 创建时间
      */
     @TableField(value = "create_time")
-    private Date create_time;
+    private Date createTime;
 
     /**
      * 修改时间
      */
     @TableField(value = "update_time")
-    private Date update_time;
+    private Date updateTime;
 
     /**
      * 备注

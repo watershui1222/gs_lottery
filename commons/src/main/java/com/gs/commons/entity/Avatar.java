@@ -25,13 +25,13 @@ public class Avatar implements Serializable {
      * 头像地址
      */
     @TableField(value = "avatar_img")
-    private String avatar_img;
+    private String avatarImg;
 
     /**
      * 创建时间
      */
     @TableField(value = "create_time")
-    private Date create_time;
+    private Date createTime;
 
     /**
      * 0:启用 1:停用

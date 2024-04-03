@@ -6,24 +6,24 @@
 
     <resultMap id="BaseResultMap" type="com.gs.commons.entity.LotteryOrder">
             <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="user_name" column="user_name" jdbcType="VARCHAR"/>
-            <result property="order_no" column="order_no" jdbcType="VARCHAR"/>
-            <result property="lottery_code" column="lottery_code" jdbcType="VARCHAR"/>
-            <result property="lottery_name" column="lottery_name" jdbcType="VARCHAR"/>
-            <result property="handicap_code" column="handicap_code" jdbcType="VARCHAR"/>
-            <result property="play_code" column="play_code" jdbcType="VARCHAR"/>
-            <result property="play_name" column="play_name" jdbcType="VARCHAR"/>
-            <result property="bet_content" column="bet_content" jdbcType="VARCHAR"/>
+            <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+            <result property="orderNo" column="order_no" jdbcType="VARCHAR"/>
+            <result property="lotteryCode" column="lottery_code" jdbcType="VARCHAR"/>
+            <result property="lotteryName" column="lottery_name" jdbcType="VARCHAR"/>
+            <result property="handicapCode" column="handicap_code" jdbcType="VARCHAR"/>
+            <result property="playCode" column="play_code" jdbcType="VARCHAR"/>
+            <result property="playName" column="play_name" jdbcType="VARCHAR"/>
+            <result property="betContent" column="bet_content" jdbcType="VARCHAR"/>
             <result property="odds" column="odds" jdbcType="DECIMAL"/>
             <result property="qs" column="qs" jdbcType="VARCHAR"/>
-            <result property="bet_amount" column="bet_amount" jdbcType="DECIMAL"/>
-            <result property="bonus_amount" column="bonus_amount" jdbcType="DECIMAL"/>
-            <result property="profit_amount" column="profit_amount" jdbcType="DECIMAL"/>
-            <result property="bet_time" column="bet_time" jdbcType="TIMESTAMP"/>
-            <result property="settle_time" column="settle_time" jdbcType="TIMESTAMP"/>
-            <result property="settle_status" column="settle_status" jdbcType="INTEGER"/>
-            <result property="order_status" column="order_status" jdbcType="INTEGER"/>
-            <result property="open_result" column="open_result" jdbcType="VARCHAR"/>
+            <result property="betAmount" column="bet_amount" jdbcType="DECIMAL"/>
+            <result property="bonusAmount" column="bonus_amount" jdbcType="DECIMAL"/>
+            <result property="profitAmount" column="profit_amount" jdbcType="DECIMAL"/>
+            <result property="betTime" column="bet_time" jdbcType="TIMESTAMP"/>
+            <result property="settleTime" column="settle_time" jdbcType="TIMESTAMP"/>
+            <result property="settleStatus" column="settle_status" jdbcType="INTEGER"/>
+            <result property="orderStatus" column="order_status" jdbcType="INTEGER"/>
+            <result property="openResult" column="open_result" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">

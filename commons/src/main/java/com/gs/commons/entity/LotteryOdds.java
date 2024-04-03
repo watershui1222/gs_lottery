@@ -26,13 +26,13 @@ public class LotteryOdds implements Serializable {
      * 号码代码
      */
     @TableField(value = "hm_code")
-    private String hm_code;
+    private String hmCode;
 
     /**
      * 号码名称
      */
     @TableField(value = "hm_name")
-    private String hm_name;
+    private String hmName;
 
     /**
      * 赔率
@@ -50,31 +50,31 @@ public class LotteryOdds implements Serializable {
      * 彩种代码
      */
     @TableField(value = "lottery_code")
-    private String lottery_code;
+    private String lotteryCode;
 
     /**
      * 盘口代码
      */
     @TableField(value = "handicap_code")
-    private String handicap_code;
+    private String handicapCode;
 
     /**
      * 玩法代码
      */
     @TableField(value = "play_code")
-    private String play_code;
+    private String playCode;
 
     /**
      * 创建时间
      */
     @TableField(value = "create_time")
-    private Date create_time;
+    private Date createTime;
 
     /**
      * 修改时间
      */
     @TableField(value = "update_time")
-    private Date update_time;
+    private Date updateTime;
 
     /**
      * 排序号

@@ -6,11 +6,11 @@
 
     <resultMap id="BaseResultMap" type="com.gs.commons.entity.UserPlat">
             <result property="id" column="id" jdbcType="INTEGER"/>
-            <result property="user_name" column="user_name" jdbcType="VARCHAR"/>
-            <result property="plat_code" column="plat_code" jdbcType="VARCHAR"/>
-            <result property="plat_user_name" column="plat_user_name" jdbcType="VARCHAR"/>
+            <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+            <result property="platCode" column="plat_code" jdbcType="VARCHAR"/>
+            <result property="platUserName" column="plat_user_name" jdbcType="VARCHAR"/>
             <result property="status" column="status" jdbcType="INTEGER"/>
-            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">

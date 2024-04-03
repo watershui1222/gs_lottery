@@ -25,13 +25,13 @@ public class SysParam implements Serializable {
      * 参数KEY
      */
     @TableField(value = "param_key")
-    private String param_key;
+    private String paramKey;
 
     /**
      * 参数值
      */
     @TableField(value = "param_value")
-    private String param_value;
+    private String paramValue;
 
     /**
      * 备注
@@ -43,19 +43,19 @@ public class SysParam implements Serializable {
      * 创建时间
      */
     @TableField(value = "create_time")
-    private Date create_time;
+    private Date createTime;
 
     /**
      * 修改时间
      */
     @TableField(value = "update_time")
-    private Date update_time;
+    private Date updateTime;
 
     /**
      * 操作人
      */
     @TableField(value = "oper_name")
-    private String oper_name;
+    private String operName;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

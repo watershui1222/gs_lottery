@@ -6,12 +6,12 @@
 
     <resultMap id="BaseResultMap" type="com.gs.commons.entity.SysParam">
             <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="param_key" column="param_key" jdbcType="VARCHAR"/>
-            <result property="param_value" column="param_value" jdbcType="VARCHAR"/>
+            <result property="paramKey" column="param_key" jdbcType="VARCHAR"/>
+            <result property="paramValue" column="param_value" jdbcType="VARCHAR"/>
             <result property="remark" column="remark" jdbcType="VARCHAR"/>
-            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="update_time" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="oper_name" column="oper_name" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="operName" column="oper_name" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">

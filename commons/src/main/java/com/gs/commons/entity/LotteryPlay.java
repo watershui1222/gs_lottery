@@ -25,25 +25,25 @@ public class LotteryPlay implements Serializable {
      * 玩法代码
      */
     @TableField(value = "play_code")
-    private String play_code;
+    private String playCode;
 
     /**
      * 玩法名称
      */
     @TableField(value = "play_name")
-    private String play_name;
+    private String playName;
 
     /**
      * 彩票代码
      */
     @TableField(value = "lottery_code")
-    private String lottery_code;
+    private String lotteryCode;
 
     /**
      * 盘口代码
      */
     @TableField(value = "handicap_code")
-    private String handicap_code;
+    private String handicapCode;
 
     /**
      * 玩法提示
@@ -67,13 +67,13 @@ public class LotteryPlay implements Serializable {
      * 创建时间
      */
     @TableField(value = "create_time")
-    private Date create_time;
+    private Date createTime;
 
     /**
      * 修改时间
      */
     @TableField(value = "update_time")
-    private Date update_time;
+    private Date updateTime;
 
     /**
      * 排序号

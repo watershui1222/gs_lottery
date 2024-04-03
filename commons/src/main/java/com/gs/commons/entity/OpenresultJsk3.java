@@ -31,55 +31,55 @@ public class OpenresultJsk3 implements Serializable {
      * 三方期号
      */
     @TableField(value = "plat_qs")
-    private String plat_qs;
+    private String platQs;
 
     /**
      * 开奖号码
      */
     @TableField(value = "open_result")
-    private String open_result;
+    private String openResult;
 
     /**
      * 0:已开奖 1:未开奖
      */
     @TableField(value = "open_status")
-    private Integer open_status;
+    private Integer openStatus;
 
     /**
      * 当前第N期
      */
     @TableField(value = "curr_count")
-    private Integer curr_count;
+    private Integer currCount;
 
     /**
      * 开盘时间
      */
     @TableField(value = "open_time")
-    private Date open_time;
+    private Date openTime;
 
     /**
      * 封盘时间
      */
     @TableField(value = "close_time")
-    private Date close_time;
+    private Date closeTime;
 
     /**
      * 开奖时间
      */
     @TableField(value = "open_result_time")
-    private Date open_result_time;
+    private Date openResultTime;
 
     /**
      * 创建时间
      */
     @TableField(value = "create_time")
-    private Date create_time;
+    private Date createTime;
 
     /**
      * 修改时间
      */
     @TableField(value = "update_time")
-    private Date update_time;
+    private Date updateTime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

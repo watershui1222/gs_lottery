@@ -25,19 +25,19 @@ public class Level implements Serializable {
      * 等级名称
      */
     @TableField(value = "level_name")
-    private String level_name;
+    private String levelName;
 
     /**
      * 等级图标
      */
     @TableField(value = "level_img")
-    private String level_img;
+    private String levelImg;
 
     /**
      * 创建时间
      */
     @TableField(value = "create_time")
-    private Date create_time;
+    private Date createTime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

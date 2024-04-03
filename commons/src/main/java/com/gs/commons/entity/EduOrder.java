@@ -26,19 +26,19 @@ public class EduOrder implements Serializable {
      * 用户名
      */
     @TableField(value = "user_name")
-    private String user_name;
+    private String userName;
 
     /**
      * 订单号(自己平台)
      */
     @TableField(value = "order_no")
-    private String order_no;
+    private String orderNo;
 
     /**
      * 三方订单号
      */
     @TableField(value = "plat_order_no")
-    private String plat_order_no;
+    private String platOrderNo;
 
     /**
      * 转换金额
@@ -50,13 +50,13 @@ public class EduOrder implements Serializable {
      * 0:转入 1:转出
      */
     @TableField(value = "edu_type")
-    private Integer edu_type;
+    private Integer eduType;
 
     /**
      * 平台代码
      */
     @TableField(value = "plat_code")
-    private String plat_code;
+    private String platCode;
 
     /**
      * -1:异常 0:成功 1:失败
@@ -68,13 +68,13 @@ public class EduOrder implements Serializable {
      * 创建时间
      */
     @TableField(value = "create_time")
-    private Date create_time;
+    private Date createTime;
 
     /**
      * 修改时间
      */
     @TableField(value = "update_time")
-    private Date update_time;
+    private Date updateTime;
 
     /**
      * 备注

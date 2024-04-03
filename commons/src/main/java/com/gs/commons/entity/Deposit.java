@@ -26,13 +26,13 @@ public class Deposit implements Serializable {
      * 用户名
      */
     @TableField(value = "user_name")
-    private String user_name;
+    private String userName;
 
     /**
      * 订单号
      */
     @TableField(value = "order_no")
-    private String order_no;
+    private String orderNo;
 
     /**
      * 充值金额
@@ -44,31 +44,31 @@ public class Deposit implements Serializable {
      * 1:银行卡 2:支付宝 3:微信 4:虚拟货币 5:在线支付
      */
     @TableField(value = "deposit_type")
-    private Integer deposit_type;
+    private Integer depositType;
 
     /**
      * 发起时间
      */
     @TableField(value = "create_time")
-    private Date create_time;
+    private Date createTime;
 
     /**
      * 审核时间
      */
     @TableField(value = "check_time")
-    private Date check_time;
+    private Date checkTime;
 
     /**
      * 修改时间
      */
     @TableField(value = "update_time")
-    private Date update_time;
+    private Date updateTime;
 
     /**
      * 操作人
      */
     @TableField(value = "oper_name")
-    private String oper_name;
+    private String operName;
 
     /**
      * 备注
@@ -80,7 +80,7 @@ public class Deposit implements Serializable {
      * 充值账户详情
      */
     @TableField(value = "account_detail")
-    private String account_detail;
+    private String accountDetail;
 
     /**
      * 0:待审核 1:审核成功 2:审核失败

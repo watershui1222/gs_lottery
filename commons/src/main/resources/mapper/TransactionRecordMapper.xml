@@ -6,16 +6,16 @@
 
     <resultMap id="BaseResultMap" type="com.gs.commons.entity.TransactionRecord">
             <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="user_name" column="user_name" jdbcType="VARCHAR"/>
+            <result property="userName" column="user_name" jdbcType="VARCHAR"/>
             <result property="amount" column="amount" jdbcType="DECIMAL"/>
-            <result property="before_amount" column="before_amount" jdbcType="DECIMAL"/>
-            <result property="after_amount" column="after_amount" jdbcType="DECIMAL"/>
-            <result property="pay_type" column="pay_type" jdbcType="INTEGER"/>
-            <result property="business_type" column="business_type" jdbcType="INTEGER"/>
-            <result property="business_order" column="business_order" jdbcType="VARCHAR"/>
-            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="beforeAmount" column="before_amount" jdbcType="DECIMAL"/>
+            <result property="afterAmount" column="after_amount" jdbcType="DECIMAL"/>
+            <result property="payType" column="pay_type" jdbcType="INTEGER"/>
+            <result property="businessType" column="business_type" jdbcType="INTEGER"/>
+            <result property="businessOrder" column="business_order" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="remark" column="remark" jdbcType="VARCHAR"/>
-            <result property="oper_name" column="oper_name" jdbcType="VARCHAR"/>
+            <result property="operName" column="oper_name" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">

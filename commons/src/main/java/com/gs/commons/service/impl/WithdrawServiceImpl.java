@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 /**
 * @author 69000
 * @description 针对表【t_withdraw】的数据库操作Service实现
-* @createDate 2024-04-03 16:56:49
+* @createDate 2024-04-03 17:30:39
 */
 @Service
 public class WithdrawServiceImpl extends ServiceImpl<WithdrawMapper, Withdraw>

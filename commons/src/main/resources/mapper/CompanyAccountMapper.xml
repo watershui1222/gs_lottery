@@ -6,14 +6,14 @@
 
     <resultMap id="BaseResultMap" type="com.gs.commons.entity.CompanyAccount">
             <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="account_name" column="account_name" jdbcType="VARCHAR"/>
-            <result property="payee_name" column="payee_name" jdbcType="VARCHAR"/>
-            <result property="account_no" column="account_no" jdbcType="VARCHAR"/>
+            <result property="accountName" column="account_name" jdbcType="VARCHAR"/>
+            <result property="payeeName" column="payee_name" jdbcType="VARCHAR"/>
+            <result property="accountNo" column="account_no" jdbcType="VARCHAR"/>
             <result property="address" column="address" jdbcType="VARCHAR"/>
-            <result property="min_amount" column="min_amount" jdbcType="DECIMAL"/>
-            <result property="max_amount" column="max_amount" jdbcType="DECIMAL"/>
+            <result property="minAmount" column="min_amount" jdbcType="DECIMAL"/>
+            <result property="maxAmount" column="max_amount" jdbcType="DECIMAL"/>
             <result property="type" column="type" jdbcType="INTEGER"/>
-            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="remark" column="remark" jdbcType="VARCHAR"/>
     </resultMap>
 

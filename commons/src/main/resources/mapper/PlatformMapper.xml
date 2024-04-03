@@ -6,16 +6,16 @@
 
     <resultMap id="BaseResultMap" type="com.gs.commons.entity.Platform">
             <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="plat_code" column="plat_code" jdbcType="VARCHAR"/>
-            <result property="sub_plat_code" column="sub_plat_code" jdbcType="VARCHAR"/>
-            <result property="plat_name" column="plat_name" jdbcType="VARCHAR"/>
+            <result property="platCode" column="plat_code" jdbcType="VARCHAR"/>
+            <result property="subPlatCode" column="sub_plat_code" jdbcType="VARCHAR"/>
+            <result property="platName" column="plat_name" jdbcType="VARCHAR"/>
             <result property="ratio" column="ratio" jdbcType="DECIMAL"/>
             <result property="status" column="status" jdbcType="INTEGER"/>
-            <result property="maintenance_status" column="maintenance_status" jdbcType="INTEGER"/>
-            <result property="maintenance_msg" column="maintenance_msg" jdbcType="VARCHAR"/>
+            <result property="maintenanceStatus" column="maintenance_status" jdbcType="INTEGER"/>
+            <result property="maintenanceMsg" column="maintenance_msg" jdbcType="VARCHAR"/>
             <result property="img1" column="img1" jdbcType="VARCHAR"/>
-            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="update_time" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="remark" column="remark" jdbcType="VARCHAR"/>
             <result property="pxh" column="pxh" jdbcType="INTEGER"/>
     </resultMap>

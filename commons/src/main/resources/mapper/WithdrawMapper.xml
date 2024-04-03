@@ -6,19 +6,19 @@
 
     <resultMap id="BaseResultMap" type="com.gs.commons.entity.Withdraw">
             <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="user_name" column="user_name" jdbcType="VARCHAR"/>
-            <result property="order_no" column="order_no" jdbcType="VARCHAR"/>
+            <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+            <result property="orderNo" column="order_no" jdbcType="VARCHAR"/>
             <result property="amount" column="amount" jdbcType="DECIMAL"/>
-            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="check_time" column="check_time" jdbcType="TIMESTAMP"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="checkTime" column="check_time" jdbcType="TIMESTAMP"/>
             <result property="status" column="status" jdbcType="INTEGER"/>
             <result property="remark" column="remark" jdbcType="VARCHAR"/>
-            <result property="oper_name" column="oper_name" jdbcType="VARCHAR"/>
-            <result property="update_time" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="account_type" column="account_type" jdbcType="INTEGER"/>
-            <result property="channel_name" column="channel_name" jdbcType="VARCHAR"/>
+            <result property="operName" column="oper_name" jdbcType="VARCHAR"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="accountType" column="account_type" jdbcType="INTEGER"/>
+            <result property="channelName" column="channel_name" jdbcType="VARCHAR"/>
             <result property="address" column="address" jdbcType="VARCHAR"/>
-            <result property="real_name" column="real_name" jdbcType="VARCHAR"/>
+            <result property="realName" column="real_name" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">

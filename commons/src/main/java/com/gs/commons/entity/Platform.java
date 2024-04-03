@@ -26,19 +26,19 @@ public class Platform implements Serializable {
      * 平台大类
      */
     @TableField(value = "plat_code")
-    private String plat_code;
+    private String platCode;
 
     /**
      * 平台子类
      */
     @TableField(value = "sub_plat_code")
-    private String sub_plat_code;
+    private String subPlatCode;
 
     /**
      * 平台名称
      */
     @TableField(value = "plat_name")
-    private String plat_name;
+    private String platName;
 
     /**
      * 返水比例
@@ -56,13 +56,13 @@ public class Platform implements Serializable {
      * 0:正常 1:维护
      */
     @TableField(value = "maintenance_status")
-    private Integer maintenance_status;
+    private Integer maintenanceStatus;
 
     /**
      * 维护信息
      */
     @TableField(value = "maintenance_msg")
-    private String maintenance_msg;
+    private String maintenanceMsg;
 
     /**
      * 图标
@@ -74,13 +74,13 @@ public class Platform implements Serializable {
      * 创建时间
      */
     @TableField(value = "create_time")
-    private Date create_time;
+    private Date createTime;
 
     /**
      * 修改时间
      */
     @TableField(value = "update_time")
-    private Date update_time;
+    private Date updateTime;
 
     /**
      * 备注

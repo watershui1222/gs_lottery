@@ -6,11 +6,11 @@
 
     <resultMap id="BaseResultMap" type="com.gs.commons.entity.UserLoginLog">
             <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="user_name" column="user_name" jdbcType="VARCHAR"/>
-            <result property="login_ip" column="login_ip" jdbcType="VARCHAR"/>
-            <result property="addr_detail" column="addr_detail" jdbcType="VARCHAR"/>
-            <result property="login_domain" column="login_domain" jdbcType="VARCHAR"/>
-            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+            <result property="loginIp" column="login_ip" jdbcType="VARCHAR"/>
+            <result property="addrDetail" column="addr_detail" jdbcType="VARCHAR"/>
+            <result property="loginDomain" column="login_domain" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">

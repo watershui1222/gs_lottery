@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 /**
 * @author 69000
 * @description 针对表【t_lottery_handicap】的数据库操作Service实现
-* @createDate 2024-04-03 16:56:05
+* @createDate 2024-04-03 17:30:01
 */
 @Service
 public class LotteryHandicapServiceImpl extends ServiceImpl<LotteryHandicapMapper, LotteryHandicap>

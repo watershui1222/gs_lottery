@@ -6,9 +6,9 @@
 
     <resultMap id="BaseResultMap" type="com.gs.commons.entity.Level">
             <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="level_name" column="level_name" jdbcType="VARCHAR"/>
-            <result property="level_img" column="level_img" jdbcType="VARCHAR"/>
-            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="levelName" column="level_name" jdbcType="VARCHAR"/>
+            <result property="levelImg" column="level_img" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
