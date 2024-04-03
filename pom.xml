@@ -18,6 +18,7 @@
     <modules>
         <module>commons</module>
         <module>api</module>
+        <module>task</module>
     </modules>
 
     <properties>
