@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gs.commons.mapper.UserInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.gs.commons.entity.UserInfo">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="user_name" column="user_name" jdbcType="VARCHAR"/>
+            <result property="nick_name" column="nick_name" jdbcType="VARCHAR"/>
+            <result property="real_name" column="real_name" jdbcType="VARCHAR"/>
+            <result property="balance" column="balance" jdbcType="DECIMAL"/>
+            <result property="yeb_balance" column="yeb_balance" jdbcType="DECIMAL"/>
+            <result property="yeb_interest" column="yeb_interest" jdbcType="DECIMAL"/>
+            <result property="login_pwd" column="login_pwd" jdbcType="VARCHAR"/>
+            <result property="pay_pwd" column="pay_pwd" jdbcType="VARCHAR"/>
+            <result property="login_status" column="login_status" jdbcType="INTEGER"/>
+            <result property="pay_status" column="pay_status" jdbcType="INTEGER"/>
+            <result property="user_phone" column="user_phone" jdbcType="VARCHAR"/>
+            <result property="user_agent" column="user_agent" jdbcType="VARCHAR"/>
+            <result property="referral_code" column="referral_code" jdbcType="VARCHAR"/>
+            <result property="avatar_id" column="avatar_id" jdbcType="INTEGER"/>
+            <result property="level_id" column="level_id" jdbcType="INTEGER"/>
+            <result property="group_id" column="group_id" jdbcType="INTEGER"/>
+            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="update_time" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="last_time" column="last_time" jdbcType="TIMESTAMP"/>
+            <result property="last_ip" column="last_ip" jdbcType="VARCHAR"/>
+            <result property="remark" column="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_name,nick_name,
+        real_name,balance,yeb_balance,
+        yeb_interest,login_pwd,pay_pwd,
+        login_status,pay_status,user_phone,
+        user_agent,referral_code,avatar_id,
+        level_id,group_id,create_time,
+        update_time,last_time,last_ip,
+        remark
+    </sql>
+</mapper>

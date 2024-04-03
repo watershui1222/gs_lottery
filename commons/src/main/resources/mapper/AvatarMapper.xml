@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gs.commons.mapper.AvatarMapper">
+
+    <resultMap id="BaseResultMap" type="com.gs.commons.entity.Avatar">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="avatar_img" column="avatar_img" jdbcType="VARCHAR"/>
+            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="status" column="status" jdbcType="INTEGER"/>
+            <result property="pxh" column="pxh" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,avatar_img,create_time,
+        status,pxh
+    </sql>
+</mapper>

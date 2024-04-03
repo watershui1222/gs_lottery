@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gs.commons.mapper.UserAccountMapper">
+
+    <resultMap id="BaseResultMap" type="com.gs.commons.entity.UserAccount">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="user_name" column="user_name" jdbcType="VARCHAR"/>
+            <result property="account_type" column="account_type" jdbcType="INTEGER"/>
+            <result property="channel_name" column="channel_name" jdbcType="VARCHAR"/>
+            <result property="account_no" column="account_no" jdbcType="VARCHAR"/>
+            <result property="address" column="address" jdbcType="VARCHAR"/>
+            <result property="real_name" column="real_name" jdbcType="VARCHAR"/>
+            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_name,account_type,
+        channel_name,account_no,address,
+        real_name,create_time
+    </sql>
+</mapper>

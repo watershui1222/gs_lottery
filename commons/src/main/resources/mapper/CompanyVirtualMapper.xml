@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gs.commons.mapper.CompanyVirtualMapper">
+
+    <resultMap id="BaseResultMap" type="com.gs.commons.entity.CompanyVirtual">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="channel_name" column="channel_name" jdbcType="VARCHAR"/>
+            <result property="channel_type" column="channel_type" jdbcType="INTEGER"/>
+            <result property="account_no" column="account_no" jdbcType="VARCHAR"/>
+            <result property="exchange_rate" column="exchange_rate" jdbcType="DECIMAL"/>
+            <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="update_time" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="oper_name" column="oper_name" jdbcType="VARCHAR"/>
+            <result property="pxh" column="pxh" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,channel_name,channel_type,
+        account_no,exchange_rate,create_time,
+        update_time,oper_name,pxh
+    </sql>
+</mapper>
