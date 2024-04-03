@@ -1,7 +1,9 @@
 package com.gs.commons.service;
 
-import com.gs.commons.entity.OpenresultJsk3;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.gs.commons.entity.OpenresultJsk3;
+
+import java.util.List;
 
 /**
 * @author 69000
@@ -9,5 +11,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 * @createDate 2024-04-03 17:30:12
 */
 public interface OpenresultJsk3Service extends IService<OpenresultJsk3> {
+
+    int insertBatchOrUpdate(List<OpenresultJsk3> list);
 
 }

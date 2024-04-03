@@ -4,7 +4,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gs.commons.entity.OpenresultJsk3;
 import com.gs.commons.service.OpenresultJsk3Service;
 import com.gs.commons.mapper.OpenresultJsk3Mapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
 * @author 69000
@@ -15,6 +18,12 @@ import org.springframework.stereotype.Service;
 public class OpenresultJsk3ServiceImpl extends ServiceImpl<OpenresultJsk3Mapper, OpenresultJsk3>
     implements OpenresultJsk3Service{
 
+    @Autowired
+    private OpenresultJsk3Mapper openresultJsk3Mapper;
+    @Override
+    public int insertBatchOrUpdate(List<OpenresultJsk3> list) {
+        return openresultJsk3Mapper.insertBatchOrUpdate(list);
+    }
 }
 
 

@@ -20,7 +20,7 @@ public class PqSchedule {
 
     @Autowired
     private PaiqiClient paiqiClient;
-    @Scheduled(cron = "0/50 * * * * ?")
+    @Scheduled(cron = "0/30 * * * * ?")
     public void jsk3Paiqi() {
         PqService pqService = paiqiClient.getSourceService(LotteryKindEnum.JSK3.getLotteryCode());
         pqService.saveData();

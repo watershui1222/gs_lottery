@@ -50,6 +50,6 @@ public class Jsk3PqServiceImpl extends PqService<OpenresultJsk3> {
 
     @Override
     public void saveData() {
-        openresultJsk3Service.saveBatch(getData());
+        openresultJsk3Service.insertBatchOrUpdate(getData());
     }
 }
