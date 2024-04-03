@@ -148,6 +148,12 @@ public class UserInfo implements Serializable {
     @TableField(value = "remark")
     private String remark;
 
+    /**
+     * 注册IP
+     */
+    @TableField(value = "register_ip")
+    private String registerIp;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

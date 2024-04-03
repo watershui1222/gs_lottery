@@ -27,6 +27,7 @@
             <result property="lastTime" column="last_time" jdbcType="TIMESTAMP"/>
             <result property="lastIp" column="last_ip" jdbcType="VARCHAR"/>
             <result property="remark" column="remark" jdbcType="VARCHAR"/>
+            <result property="registerIp" column="register_ip" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -37,6 +38,6 @@
         user_agent,referral_code,avatar_id,
         level_id,group_id,create_time,
         update_time,last_time,last_ip,
-        remark
+        remark,register_ip
     </sql>
 </mapper>
