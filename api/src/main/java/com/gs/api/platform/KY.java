@@ -219,6 +219,6 @@ public class KY {
 
     public static void main(String[] args) throws Exception {
         KY k = new KY();
-        System.out.println(k.getRecord());
+        System.out.println(k.login());
     }
 }

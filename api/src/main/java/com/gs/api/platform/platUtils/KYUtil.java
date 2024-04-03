@@ -1,7 +1,6 @@
 package com.gs.api.platform.platUtils;
 
 import cn.hutool.core.codec.Base64;
-
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;

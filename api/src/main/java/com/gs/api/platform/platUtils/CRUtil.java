@@ -1,7 +1,6 @@
 package com.gs.api.platform.platUtils;
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
+import cn.hutool.core.codec.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -19,7 +18,7 @@ public class CRUtil {
         SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
         cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
         byte[] encrypted = cipher.doFinal(value.getBytes("UTF-8"));
-        String base64 = new BASE64Encoder().encode(encrypted);// 此处使用BASE64做转码
+        String base64 = Base64.encode(encrypted);
         String result = base64.replace("\r\n", "");//去掉
         return result;
     }
@@ -36,7 +35,7 @@ public class CRUtil {
             SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
             Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
             cipher.init(Cipher.DECRYPT_MODE, skeySpec);
-            byte[] encrypted1 = new BASE64Decoder().decodeBuffer(value);// 先用base64解密
+            byte[] encrypted1 = Base64.decode(value);// 先用base64解密
             byte[] original = cipher.doFinal(encrypted1);
             String originalString = new String(original, "UTF-8");
             return originalString;
