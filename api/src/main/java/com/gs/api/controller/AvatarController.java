@@ -8,30 +8,29 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.gs.api.utils.JwtUtils;
 import com.gs.commons.entity.Avatar;
 import com.gs.commons.entity.UserInfo;
-import com.gs.commons.service.*;
+import com.gs.commons.service.AvatarService;
+import com.gs.commons.service.SysParamService;
+import com.gs.commons.service.UserInfoService;
 import com.gs.commons.utils.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Api(value = "头像相关", tags = "头像相关")
 @RequestMapping("/avatar")
 @RestController
 public class AvatarController {
-    @Value("${token.expire}")
-    private int expire;
-
-    @Autowired
-    private StringRedisTemplate redisTemplate;
-
     @Autowired
     private UserInfoService userInfoService;
 
@@ -40,12 +39,6 @@ public class AvatarController {
 
     @Autowired
     private AvatarService avatarService;
-
-    @Autowired
-    private UserLoginLogService userLoginLogService;
-
-    @Autowired
-    private LevelService levelService;
 
     @ApiOperation(value = "获取所有用户头像")
     @GetMapping("/list")

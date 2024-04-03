@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 /**
 * @author 69000
 * @description 针对表【t_lottery_odds】的数据库操作Service实现
-* @createDate 2024-04-03 17:30:04
+* @createDate 2024-04-03 20:37:09
 */
 @Service
 public class LotteryOddsServiceImpl extends ServiceImpl<LotteryOddsMapper, LotteryOdds>

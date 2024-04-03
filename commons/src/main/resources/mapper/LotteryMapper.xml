@@ -16,12 +16,13 @@
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="remark" column="remark" jdbcType="VARCHAR"/>
             <result property="pxh" column="pxh" jdbcType="INTEGER"/>
+            <result property="lotteryType" column="lottery_type" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,lottery_code,lottery_name,
         day_open,status,img,
         close_time,create_time,update_time,
-        remark,pxh
+        remark,pxh,lottery_type
     </sql>
 </mapper>

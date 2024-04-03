@@ -81,6 +81,12 @@ public class Lottery implements Serializable {
     @TableField(value = "pxh")
     private Integer pxh;
 
+    /**
+     * 1:快3 2:时时彩 3:PK10 4:六合彩 5:PC蛋蛋 6:11选5 7:福彩3D 8:快乐8
+     */
+    @TableField(value = "lottery_type")
+    private Integer lotteryType;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }
