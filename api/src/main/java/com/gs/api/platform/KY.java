@@ -4,10 +4,9 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.gs.api.platform.platUtils.KYEncrypt;
+import com.gs.api.platform.platUtils.KYUtil;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.stream.IntStream;
 
 /**
  * 开源棋牌
@@ -25,7 +24,7 @@ public class KY {
      * @return
      * @throws Exception
      */
-    private String login() throws Exception {
+    public String login() throws Exception {
         String agent = this.agent;
         String timestamp = String.valueOf(DateUtil.current());
         String account = "GSTestAccount";
@@ -41,8 +40,8 @@ public class KY {
                 .append("&ip=127.0.0.1")
                 .append("&lineCode=").append(lineCode)
                 .append("&KindID=").append(kindId);
-        String param = KYEncrypt.AESEncrypt(paramSb.toString(), aesKey);
-        String key = KYEncrypt.MD5(agent+timestamp+this.Md5Key);
+        String param = KYUtil.AESEncrypt(paramSb.toString(), aesKey);
+        String key = KYUtil.MD5(agent+timestamp+this.Md5Key);
         StringBuilder urlSB = new StringBuilder();
         urlSB.append(this.prefixURL).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
         String result = HttpUtil.get(urlSB.toString());
@@ -61,8 +60,8 @@ public class KY {
         String aesKey = this.aesKey;
         StringBuilder paramSb = new StringBuilder();
         paramSb.append("s=1&").append("account=").append(account);
-        String param = KYEncrypt.AESEncrypt(paramSb.toString(), aesKey);
-        String key = KYEncrypt.MD5(agent+timestamp+this.Md5Key);
+        String param = KYUtil.AESEncrypt(paramSb.toString(), aesKey);
+        String key = KYUtil.MD5(agent+timestamp+this.Md5Key);
         StringBuilder urlSB = new StringBuilder();
         urlSB.append(this.prefixURL).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
         String result = HttpUtil.get(urlSB.toString());
@@ -92,8 +91,8 @@ public class KY {
                 .append("account=").append(account)
                 .append("&money=").append(money)
                 .append("&orderid=").append(orderid);
-        String param = KYEncrypt.AESEncrypt(paramSb.toString(), aesKey);
-        String key = KYEncrypt.MD5(agent+timestamp+this.Md5Key);
+        String param = KYUtil.AESEncrypt(paramSb.toString(), aesKey);
+        String key = KYUtil.MD5(agent+timestamp+this.Md5Key);
         StringBuilder urlSB = new StringBuilder();
         urlSB.append(this.prefixURL).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
         String result = HttpUtil.get(urlSB.toString());
@@ -115,8 +114,8 @@ public class KY {
                 .append("account=").append(account)
                 .append("&money=").append(money)
                 .append("&orderid=").append(orderid);
-        String param = KYEncrypt.AESEncrypt(paramSb.toString(), aesKey);
-        String key = KYEncrypt.MD5(agent+timestamp+this.Md5Key);
+        String param = KYUtil.AESEncrypt(paramSb.toString(), aesKey);
+        String key = KYUtil.MD5(agent+timestamp+this.Md5Key);
         StringBuilder urlSB = new StringBuilder();
         urlSB.append(this.prefixURL).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
         String result = HttpUtil.get(urlSB.toString());
@@ -137,8 +136,8 @@ public class KY {
         String aesKey = this.aesKey;
         StringBuilder paramSb = new StringBuilder();
         paramSb.append("s=4&").append("&orderid=").append(orderid);
-        String param = KYEncrypt.AESEncrypt(paramSb.toString(), aesKey);
-        String key = KYEncrypt.MD5(agent + timestamp + this.Md5Key);
+        String param = KYUtil.AESEncrypt(paramSb.toString(), aesKey);
+        String key = KYUtil.MD5(agent + timestamp + this.Md5Key);
         StringBuilder urlSB = new StringBuilder();
         urlSB.append(this.prefixURL).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
         String result = HttpUtil.get(urlSB.toString());
@@ -165,8 +164,8 @@ public class KY {
         String aesKey = this.aesKey;
         StringBuilder paramSb = new StringBuilder();
         paramSb.append("s=8&").append("account=").append(account);
-        String param = KYEncrypt.AESEncrypt(paramSb.toString(), aesKey);
-        String key = KYEncrypt.MD5(agent+timestamp+this.Md5Key);
+        String param = KYUtil.AESEncrypt(paramSb.toString(), aesKey);
+        String key = KYUtil.MD5(agent+timestamp+this.Md5Key);
         StringBuilder urlSB = new StringBuilder();
         urlSB.append(this.prefixURL).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
         String result = HttpUtil.get(urlSB.toString());
@@ -185,8 +184,8 @@ public class KY {
         paramSb.append("s=6&")
                 .append("startTime=").append(startTime)
                 .append("&endTime=").append(endTime);
-        String param = KYEncrypt.AESEncrypt(paramSb.toString(), aesKey);
-        String key = KYEncrypt.MD5(agent+timestamp+this.Md5Key);
+        String param = KYUtil.AESEncrypt(paramSb.toString(), aesKey);
+        String key = KYUtil.MD5(agent+timestamp+this.Md5Key);
         StringBuilder urlSB = new StringBuilder();
         urlSB.append(this.recordURL).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
         String result = HttpUtil.get(urlSB.toString());

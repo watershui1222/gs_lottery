@@ -17,7 +17,7 @@ import sun.misc.BASE64Encoder;
  * @author temdy
  *
  */
-public class KYEncrypt {
+public class KYUtil {
 	
 	/**
 	 * MD5 32位加密
