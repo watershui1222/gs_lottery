@@ -25,7 +25,6 @@ import java.util.List;
  * @author Mark sunlightcs@gmail.com
  */
 @Configuration
-@MapperScan({"com.juhai.commons.mapper"})
 public class MybatisPlusConfig extends JoinDefaultSqlInjector {
 
     /**
