@@ -8,7 +8,7 @@ import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 public class CaptchaController {
 
     @Autowired
-    RedisTemplate redisTemplate;
+    private StringRedisTemplate redisTemplate;
 
     @GetMapping("/getCaptcha")
     public R captcha(@Validated CaptchaRequest request) {
