@@ -4,13 +4,17 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.extra.servlet.ServletUtil;
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.gs.api.controller.request.CheckExistRequest;
 import com.gs.api.controller.request.LoginRequest;
+import com.gs.api.controller.request.UpdateNickNameRequest;
 import com.gs.api.controller.request.UserRegisterRequest;
 import com.gs.api.utils.JwtUtils;
 import com.gs.commons.entity.Avatar;
+import com.gs.commons.entity.Level;
 import com.gs.commons.entity.UserInfo;
 import com.gs.commons.entity.UserLoginLog;
 import com.gs.commons.service.*;
@@ -65,18 +69,32 @@ public class UserController {
     @ApiOperation(value = "用户信息")
     @GetMapping("/info")
     public R info(HttpServletRequest httpServletRequest) {
-        return R.ok().put("list", userInfoService.getById(1));
+        String userName = JwtUtils.getUserName(httpServletRequest);
+        UserInfo userInfo = userInfoService.getUserByName(userName);
+        JSONObject userObj = new JSONObject();
+        userObj.put("userName", userInfo.getUserName());
+        userObj.put("balance", userInfo.getBalance());
+        userObj.put("nickName", userInfo.getNickName());
+        userObj.put("referralCode", userInfo.getReferralCode());
+
+        Map<String, String> paramsMap = sysParamService.getAllParamByMap();
+        String resourceDomain = MapUtil.getStr(paramsMap, "resource_domain");
+
+        Avatar avatar = avatarService.getOne(new LambdaQueryWrapper<Avatar>().eq(Avatar::getId, userInfo.getAvatarId()));
+        Level level = levelService.getOne(new LambdaQueryWrapper<Level>().eq(Level::getId, userInfo.getLevelId()));
+        userObj.put("avatarUrl", avatar == null ? "" : resourceDomain + avatar.getAvatarImg());
+        userObj.put("levelUrl", level == null ? "" : resourceDomain + level.getLevelImg());
+        userObj.put("levelName", level == null ? "" : level.getLevelName());
+
+        return R.ok().put("user", userObj);
     }
 
-    @ApiOperation(value = "检测当前用户名是否存在")
-    @PostMapping("/checkExist")
-    public R checkExist(@Validated CheckExistRequest request) {
-        // 查询用户名是否存在
-        long exist = userInfoService.count(
-                new LambdaQueryWrapper<UserInfo>()
-                        .eq(UserInfo::getUserName, request.getUserName())
-        );
-        return R.ok().put("exist", exist > 0);
+    @ApiOperation(value = "用户余额")
+    @GetMapping("/getUserBalance")
+    public R getUserBalance(HttpServletRequest httpServletRequest) {
+        String userName = JwtUtils.getUserName(httpServletRequest);
+        UserInfo user = userInfoService.getUserByName(userName);
+        return R.ok().put("balance", user.getBalance());
     }
 
     @ApiOperation(value = "注册")
@@ -245,5 +263,24 @@ public class UserController {
         /** 删除密码输入错误次数 **/
         redisTemplate.delete(incKey);
         return R.ok().put("token", token);
+    }
+
+
+    @ApiOperation(value = "修改用户昵称")
+    @PostMapping("/updateNickName")
+    public R register(@Validated UpdateNickNameRequest request, HttpServletRequest httpServletRequest) {
+        if (request.getNickName().length() > 6) {
+            return R.error();
+        }
+
+        String userName = JwtUtils.getUserName(httpServletRequest);
+
+        userInfoService.update(
+                new LambdaUpdateWrapper<UserInfo>()
+                        .eq(UserInfo::getUserName, userName)
+                        .set(UserInfo::getNickName, request.getNickName())
+                        .set(UserInfo::getUpdateTime, new Date())
+        );
+        return R.ok();
     }
 }
