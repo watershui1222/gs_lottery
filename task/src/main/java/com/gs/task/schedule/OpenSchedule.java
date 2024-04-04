@@ -53,6 +53,24 @@ public class OpenSchedule {
 
 
 
+    @Scheduled(cron = "0/12 * * * * ?")
+    public void kl8Open() {
+
+        // 多彩数据原
+        LotterySourceProperties.SourceMerchants merChant = lotterySourceProperties.getMerChant(LotterySourceEnum.DUOCAI);
+        HttpRequest httpRequest = HttpRequest.get(merChant.getUrl());
+        HttpResponse httpResponse = httpRequest.execute();
+        String body = httpResponse.body();
+        JSONObject jsonObject = JSONObject.parseObject(body);
+
+        LotteryDataService k3LotteryDataService = lotteryDataClient.getSourceService(LotteryCodeEnum.GD11X5.getLotteryCode());
+        k3LotteryDataService.openResult(merChant, jsonObject);
+
+
+    }
+
+
+
 
 
 }

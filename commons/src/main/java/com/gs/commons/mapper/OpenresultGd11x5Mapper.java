@@ -1,7 +1,10 @@
 package com.gs.commons.mapper;
 
+import com.gs.commons.entity.OpenresultFt;
 import com.gs.commons.entity.OpenresultGd11x5;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+
+import java.util.List;
 
 /**
 * @author tommm
@@ -10,7 +13,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @Entity com.gs.commons.entity.OpenresultGd11x5
 */
 public interface OpenresultGd11x5Mapper extends BaseMapper<OpenresultGd11x5> {
-
+    int batchOpenResult(List<OpenresultGd11x5> list);
 }
 
 

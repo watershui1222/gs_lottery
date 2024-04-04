@@ -24,4 +24,15 @@
         open_time,close_time,open_result_time,
         create_time,update_time
     </sql>
+
+    <update id="batchOpenResult" parameterType="java.util.List">
+        <foreach collection="list" item="item" separator=";">
+            update t_openresult_gd11x5
+            set open_status = #{item.openStatus},
+            open_result = #{item.openResult},
+            open_result_time = #{item.openResultTime},
+            update_time = #{item.updateTime}
+            where plat_qs = #{item.platQs} and open_status = 1
+        </foreach>
+    </update>
 </mapper>
