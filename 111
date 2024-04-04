@@ -1,0 +1,32 @@
+pipeline {
+    agent any
+
+    parameters {
+        // 字符串
+        string(defaultValue: "1.0.0",description: 'version', name: 'tagVersion')
+    }
+
+    stages {
+        stage('code') {
+            steps {
+                git credentialsId: 'git', url: 'https://github.com/watershui1222/gs_lottery.git'
+            }
+        }
+        stage('package') {
+            steps {
+                sh "/usr/local/maven/bin/mvn clean package -DskipTests=true"
+            }
+        }
+        stage('images') {
+            steps {
+                sh "docker build -f ./api/Dockerfile -t registry-intl-vpc.ap-southeast-1.aliyuncs.com/juhai/caipiao-api:$params.tagVersion ."
+            }
+        }
+        stage('push') {
+            steps {
+                sh "docker login --username=zhaot0392@gmail.com --password=OZi1vWXjkrF259NU registry-intl-vpc.ap-southeast-1.aliyuncs.com"
+                sh "docker push registry-intl-vpc.ap-southeast-1.aliyuncs.com/juhai/caipiao-api:$params.tagVersion"
+            }
+        }
+    }
+}

@@ -87,6 +87,24 @@ public class Lottery implements Serializable {
     @TableField(value = "lottery_type")
     private Integer lotteryType;
 
+    /**
+     * 一天多少期
+     */
+    @TableField(value = "day_count")
+    private Integer dayCount;
+
+    /**
+     * 第一期开奖时间
+     */
+    @TableField(value = "first_qs_time")
+    private String firstQsTime;
+
+    /**
+     * 多少分钟一期
+     */
+    @TableField(value = "qs_time")
+    private Integer qsTime;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

@@ -199,4 +199,15 @@ public class RedisKeyUtil {
         String template = "user:sign:{}:{}";
         return StrUtil.format(template, DateUtil.today(), userName);
     }
+
+    /**
+     * 彩种排期
+     * @param lotteryCode
+     * @param date
+     * @return
+     */
+    public static String PaiqiGenerateKey(String lotteryCode, Date date) {
+        String template = "paiqi:generate:{}:{}";
+        return StrUtil.format(template, lotteryCode, DateUtil.format(date, "yyyyMMdd"));
+    }
 }

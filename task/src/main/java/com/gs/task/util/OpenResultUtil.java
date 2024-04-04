@@ -6,8 +6,5 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 public class OpenResultUtil {
-    @Autowired
-    private RestTemplate restTemplate;
-
 
 }
