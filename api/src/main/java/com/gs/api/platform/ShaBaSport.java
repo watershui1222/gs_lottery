@@ -7,14 +7,12 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 
 import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
  * 沙巴体育
  */
-public class SABA {
+public class ShaBaSport {
 
     public String operatorID = "ZhiFeng946";
     public String apiUrl = "http://c0m1tsa.bw6688.com/api";

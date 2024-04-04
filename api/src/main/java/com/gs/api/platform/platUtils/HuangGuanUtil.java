@@ -1,12 +1,11 @@
 package com.gs.api.platform.platUtils;
 
 import cn.hutool.core.codec.Base64;
-import cn.hutool.core.util.CharsetUtil;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
-public class CRUtil {
+public class HuangGuanUtil {
 
     /**
      * AES加密

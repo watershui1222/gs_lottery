@@ -1,6 +1,7 @@
 package com.gs.api.platform.platUtils;
 
 import cn.hutool.core.codec.Base64;
+
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
@@ -11,14 +12,12 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * 加解密工具
- * @author temdy
  *
  */
-public class KYUtil {
+public class LeYouUtil {
 	
 	/**
 	 * MD5 32位加密
-	 * @param sourceStr
 	 * @return
 	 */
 	public static String MD5(String sourceStr) {
@@ -50,7 +49,6 @@ public class KYUtil {
 	
 	/**
 	 * AES加密
-	 * @param sSrc
 	 * @return
 	 * @throws Exception
 	 */
@@ -66,7 +64,6 @@ public class KYUtil {
 	
 	/**
 	 * AES加密 不进行URLEncoder
-	 * @param sSrc
 	 * @return
 	 * @throws Exception
 	 */
@@ -81,7 +78,6 @@ public class KYUtil {
 
 	/**
 	 * AES 解密
-	 * @param sSrc
 	 * @return
 	 * @throws Exception
 	 */
