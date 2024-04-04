@@ -39,19 +39,13 @@ public class OpenSchedule {
         String body = httpResponse.body();
         JSONObject jsonObject = JSONObject.parseObject(body);
 
-        LotteryDataService lotteryDataService = lotteryDataClient.getSourceService(LotteryCodeEnum.JSK3.getLotteryCode());
-        lotteryDataService.openResult(merChant, jsonObject);
+        LotteryDataService k3LotteryDataService = lotteryDataClient.getSourceService(LotteryCodeEnum.JSK3.getLotteryCode());
+        k3LotteryDataService.openResult(merChant, jsonObject);
+
+
+        LotteryDataService cqsscLotteryDataService = lotteryDataClient.getSourceService(LotteryCodeEnum.CQSSC.getLotteryCode());
+        cqsscLotteryDataService.openResult(merChant, jsonObject);
     }
 
 
-    @Scheduled(cron = "0/11 * * * * ?")
-    public void cqsscOpen() {
-        LotteryDataService lotteryDataService = lotteryDataClient.getSourceService(LotteryCodeEnum.CQSSC.getLotteryCode());
-        LotterySourceProperties.SourceMerchants merChant = lotterySourceProperties.getMerChant(LotterySourceEnum.DUOCAI);
-        HttpRequest httpRequest = HttpRequest.get(merChant.getUrl());
-        HttpResponse httpResponse = httpRequest.execute();
-        String body = httpResponse.body();
-        JSONObject jsonObject = JSONObject.parseObject(body);
-        lotteryDataService.openResult(merChant, jsonObject);
-    }
 }
