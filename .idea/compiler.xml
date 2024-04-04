@@ -7,9 +7,10 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="commons" />
         <module name="api" />
         <module name="task" />
+        <module name="game-record" />
+        <module name="commons" />
       </profile>
     </annotationProcessing>
   </component>
@@ -17,6 +18,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="api" options="-parameters" />
       <module name="commons" options="-parameters" />
+      <module name="game-record" options="-parameters" />
       <module name="task" options="-parameters" />
     </option>
   </component>

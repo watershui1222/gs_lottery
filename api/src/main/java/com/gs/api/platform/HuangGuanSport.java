@@ -1,15 +1,13 @@
 package com.gs.api.platform;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson2.JSONObject;
-import com.gs.api.platform.platUtils.CRUtil;
-import com.gs.api.platform.platUtils.KYUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.gs.commons.utils.AesUtils;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -19,31 +17,36 @@ import java.util.List;
 /**
  * CR皇冠体育
  */
-public class CR {
+public class HuangGuanSport {
+    @Value("${platform.ShaBa.agId}")
     public String agId = "2829";
+    @Value("${platform.ShaBa.agPassword}")
     public String agPassword = "aaa123";
+    @Value("${platform.ShaBa.agName}")
     public String agName = "ZF946test";
+    @Value("${platform.ShaBa.secretKey}")
     public String secretKey = "9Sceij7Eka7331lR";
+    @Value("${platform.ShaBa.apiUrl}")
     public String apiUrl = "https://api.orb-6789.com/app/control_API/agents/api_doaction.php";
 
     /**
      * 其他接口的token从此接口获取 有效期36H
      * @return
      */
-    public String agLogin() throws Exception {
+    public String agLogin() {
         String token = "";
         JSONObject param = new JSONObject();
         JSONObject request = new JSONObject();
         request.put("username", agName);
         request.put("password", agPassword);
         request.put("timestamp", DateUtil.current());
-        String requestStr = CRUtil.AESEncrypt(request.toJSONString(), this.secretKey);
+        String requestStr = AesUtils.AESEncrypt(request.toJSONString(), this.secretKey);
         param.put("Request", requestStr);
         param.put("Method", "AGLogin");
         param.put("AGID", agId);
         HttpResponse res = HttpUtil.createPost(this.apiUrl).contentType("application/json").charset("utf-8").body(param.toJSONString()).execute();
         String encryptRes = res.body();
-        String result = CRUtil.AESDecrypt(encryptRes, this.secretKey);
+        String result = AesUtils.AESDecrypt(encryptRes, this.secretKey);
         JSONObject resultJS = JSONObject.parseObject(result);
         if(StrUtil.equals(resultJS.getString("respcode"), "0000")){
             token = resultJS.getString("token");
@@ -55,7 +58,7 @@ public class CR {
      * 创建会员
      * @return
      */
-    public String createMember() throws Exception {
+    public String createMember(){
         String token = agLogin();
         if(StrUtil.isNotBlank(token)){
             //代理登录成功
@@ -69,14 +72,14 @@ public class CR {
             request.put("method", "CreateMember");
             request.put("token", token);
             request.put("timestamp", DateUtil.current());
-            String requestStr = CRUtil.AESEncrypt(request.toJSONString(), this.secretKey);
+            String requestStr = AesUtils.AESEncrypt(request.toJSONString(), this.secretKey);
             param.put("Request", requestStr);
             param.put("Method", "CreateMember");
             param.put("AGID", agId);
             HttpResponse res = HttpUtil.createPost(this.apiUrl).contentType("application/json").charset("utf-8").body(param.toJSONString()).execute();
             String resStr = res.body();
             if(!JSONUtil.isTypeJSON(resStr)){
-                String result = CRUtil.AESDecrypt(resStr, this.secretKey);
+                String result = AesUtils.AESDecrypt(resStr, this.secretKey);
                 System.out.println(result);
                 String respcode = JSONObject.parseObject(result).getString("respcode");
                 if(StrUtil.equals(respcode, "0000")){
@@ -132,7 +135,7 @@ public class CR {
      * @return
      * @throws Exception
      */
-    public String launchGame() throws Exception {
+    public String launchGame(){
         String token = agLogin();
         if(StrUtil.isNotBlank(token)){
             //代理登录成功
@@ -149,14 +152,14 @@ public class CR {
             request.put("langx", "zh-cn");
             request.put("remoteip", "127.0.0.1");
             request.put("timestamp", DateUtil.current());
-            String requestStr = CRUtil.AESEncrypt(request.toJSONString(), this.secretKey);
+            String requestStr = AesUtils.AESEncrypt(request.toJSONString(), this.secretKey);
             param.put("Request", requestStr);
             param.put("Method", "LaunchGame");
             param.put("AGID", agId);
             HttpResponse res = HttpUtil.createPost(this.apiUrl).contentType("application/json").charset("utf-8").body(param.toJSONString()).execute();
             String resStr = res.body();
             if(!JSONUtil.isTypeJSON(resStr)){
-                String result = CRUtil.AESDecrypt(resStr, this.secretKey);
+                String result = AesUtils.AESDecrypt(resStr, this.secretKey);
                 JSONObject resultJson = JSONObject.parseObject(result);
                 String respcode = resultJson.getString("respcode");
                 if(StrUtil.equals(respcode, "0000")){
@@ -172,7 +175,7 @@ public class CR {
      * @return
      * @throws Exception
      */
-    public String deposit() throws Exception {
+    public String deposit(){
         String token = agLogin();
         if(StrUtil.isNotBlank(token)){
             //代理登录成功
@@ -187,14 +190,14 @@ public class CR {
             request.put("method", "Deposit");
             request.put("token", token);
             request.put("timestamp", DateUtil.current());
-            String requestStr = CRUtil.AESEncrypt(request.toJSONString(), this.secretKey);
+            String requestStr = AesUtils.AESEncrypt(request.toJSONString(), this.secretKey);
             param.put("Request", requestStr);
             param.put("Method", "Deposit");
             param.put("AGID", agId);
             HttpResponse res = HttpUtil.createPost(this.apiUrl).contentType("application/json").charset("utf-8").body(param.toJSONString()).execute();
             String resStr = res.body();
             if(!JSONUtil.isTypeJSON(resStr)){
-                String result = CRUtil.AESDecrypt(resStr, this.secretKey);
+                String result = AesUtils.AESDecrypt(resStr, this.secretKey);
                 System.out.println(result);
                 JSONObject resultJson = JSONObject.parseObject(result);
                 String respcode = resultJson.getString("respcode");
@@ -211,7 +214,7 @@ public class CR {
      * @return
      * @throws Exception
      */
-    public String withdraw() throws Exception {
+    public String withdraw(){
         String token = agLogin();
         if(StrUtil.isNotBlank(token)){
             //代理登录成功
@@ -226,14 +229,14 @@ public class CR {
             request.put("method", "Withdraw");
             request.put("token", token);
             request.put("timestamp", DateUtil.current());
-            String requestStr = CRUtil.AESEncrypt(request.toJSONString(), this.secretKey);
+            String requestStr = AesUtils.AESEncrypt(request.toJSONString(), this.secretKey);
             param.put("Request", requestStr);
             param.put("Method", "Withdraw");
             param.put("AGID", agId);
             HttpResponse res = HttpUtil.createPost(this.apiUrl).contentType("application/json").charset("utf-8").body(param.toJSONString()).execute();
             String resStr = res.body();
             if(!JSONUtil.isTypeJSON(resStr)){
-                String result = CRUtil.AESDecrypt(resStr, this.secretKey);
+                String result = AesUtils.AESDecrypt(resStr, this.secretKey);
                 System.out.println(result);
                 JSONObject resultJson = JSONObject.parseObject(result);
                 String respcode = resultJson.getString("respcode");
@@ -250,7 +253,7 @@ public class CR {
      * @return
      * @throws Exception
      */
-    public BigDecimal chkMemberBalance() throws Exception {
+    public BigDecimal chkMemberBalance(){
         String token = agLogin();
         if(StrUtil.isNotBlank(token)){
             //代理登录成功
@@ -261,14 +264,14 @@ public class CR {
             request.put("method", "chkMemberBalance");
             request.put("token", token);
             request.put("timestamp", DateUtil.current());
-            String requestStr = CRUtil.AESEncrypt(request.toJSONString(), this.secretKey);
+            String requestStr = AesUtils.AESEncrypt(request.toJSONString(), this.secretKey);
             param.put("Request", requestStr);
             param.put("Method", "chkMemberBalance");
             param.put("AGID", agId);
             HttpResponse res = HttpUtil.createPost(this.apiUrl).contentType("application/json").charset("utf-8").body(param.toJSONString()).execute();
             String resStr = res.body();
             if(!JSONUtil.isTypeJSON(resStr)){
-                String result = CRUtil.AESDecrypt(resStr, this.secretKey);
+                String result = AesUtils.AESDecrypt(resStr, this.secretKey);
                 System.out.println(result);
                 JSONObject resultJson = JSONObject.parseObject(result);
                 String respcode = resultJson.getString("respcode");
@@ -285,7 +288,7 @@ public class CR {
      * @return
      * @throws Exception
      */
-    public String kickOutMem() throws Exception {
+    public String kickOutMem(){
         String token = agLogin();
         if(StrUtil.isNotBlank(token)){
             //代理登录成功
@@ -296,14 +299,14 @@ public class CR {
             request.put("method", "KickOutMem");
             request.put("token", token);
             request.put("timestamp", DateUtil.current());
-            String requestStr = CRUtil.AESEncrypt(request.toJSONString(), this.secretKey);
+            String requestStr = AesUtils.AESEncrypt(request.toJSONString(), this.secretKey);
             param.put("Request", requestStr);
             param.put("Method", "KickOutMem");
             param.put("AGID", agId);
             HttpResponse res = HttpUtil.createPost(this.apiUrl).contentType("application/json").charset("utf-8").body(param.toJSONString()).execute();
             String resStr = res.body();
             if(!JSONUtil.isTypeJSON(resStr)){
-                String result = CRUtil.AESDecrypt(resStr, this.secretKey);
+                String result = AesUtils.AESDecrypt(resStr, this.secretKey);
                 System.out.println(result);
                 JSONObject resultJson = JSONObject.parseObject(result);
                 String respcode = resultJson.getString("respcode");
@@ -320,7 +323,7 @@ public class CR {
      * @return
      * @throws Exception
      */
-    public List<String> aLLWager() throws Exception {
+    public List<String> aLLWager(){
         String token = agLogin();
         List<String> recordList = new ArrayList<>();
         if(StrUtil.isNotBlank(token)){
@@ -343,14 +346,14 @@ public class CR {
                 request.put("token", token);
                 request.put("timestamp", DateUtil.current());
                 request.put("langx", "zh-cn");
-                String requestStr = CRUtil.AESEncrypt(request.toJSONString(), this.secretKey);
+                String requestStr = AesUtils.AESEncrypt(request.toJSONString(), this.secretKey);
                 param.put("Request", requestStr);
                 param.put("Method", "ALLWager");
                 param.put("AGID", agId);
                 HttpResponse res = HttpUtil.createPost(this.apiUrl).contentType("application/json").charset("utf-8").body(param.toJSONString()).execute();
                 String resStr = res.body();
                 if(!JSONUtil.isTypeJSON(resStr)){
-                    String result = CRUtil.AESDecrypt(resStr, this.secretKey);
+                    String result = AesUtils.AESDecrypt(resStr, this.secretKey);
                     System.out.println(result);
                     JSONObject resultJson = JSONObject.parseObject(result);
                     String respcode = resultJson.getString("respcode");
@@ -368,9 +371,9 @@ public class CR {
     }
 
 
-    public static void main(String[] args) throws Exception {
-        CR cr = new CR();
-        System.out.println(cr.aLLWager().size());
+    public static void main(String[] args){
+        HuangGuanSport cr = new HuangGuanSport();
+        System.out.println(cr.deposit());
 //        JSONObject request = new JSONObject();
 //        request.put("password", "cit001123");
 //        request.put("remoteip", "192.168.1.1");
