@@ -89,11 +89,7 @@ public class Jsk3LotteryDataServiceImpl extends LotteryDataService<OpenresultJsk
     }
 
     @Override
-    public void openResult(LotterySourceProperties.SourceMerchants merchants) {
-        HttpRequest httpRequest = HttpRequest.get(merchants.getUrl());
-        HttpResponse httpResponse = httpRequest.execute();
-        String body = httpResponse.body();
-        JSONObject jsonObject = JSONObject.parseObject(body);
+    public void openResult(LotterySourceProperties.SourceMerchants merchants, JSONObject jsonObject) {
 
         List<OpenresultJsk3> list = new ArrayList<>();
 

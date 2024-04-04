@@ -1,6 +1,7 @@
 package com.gs.task.service;
 
 
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.gs.commons.entity.Lottery;
 import com.gs.commons.enums.LotteryCodeEnum;
@@ -24,7 +25,7 @@ public abstract class LotteryDataService<T> {
     public abstract void generatePaiqi(Date today);
 
     // 生成开奖结果
-    public abstract void openResult(LotterySourceProperties.SourceMerchants merchants);
+    public abstract void openResult(LotterySourceProperties.SourceMerchants merchants, JSONObject jsonObject);
 
 
     public Lottery getLottery() {

@@ -2,6 +2,10 @@ package com.gs.task.service.impl;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import com.gs.commons.entity.Lottery;
 import com.gs.commons.entity.OpenresultCqssc;
 import com.gs.commons.entity.OpenresultJsk3;
@@ -10,6 +14,7 @@ import com.gs.commons.service.OpenresultCqsscService;
 import com.gs.commons.service.OpenresultJsk3Service;
 import com.gs.commons.utils.RedisKeyUtil;
 import com.gs.task.config.LotterySourceProperties;
+import com.gs.task.enums.LotterySourceCodeEnum;
 import com.gs.task.service.LotteryDataService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,8 +134,32 @@ public class CqsscLotteryDataServiceImpl extends LotteryDataService<OpenresultJs
     }
 
     @Override
-    public void openResult(LotterySourceProperties.SourceMerchants merchants) {
+    public void openResult(LotterySourceProperties.SourceMerchants merchants, JSONObject jsonObject) {
 
+        List<OpenresultCqssc> list = new ArrayList<>();
+
+        // 获取对应上游彩种代码
+        LotterySourceCodeEnum sourceCodeEnum = LotterySourceCodeEnum.getLotterySourceCode(merchants.getCode(), lotteryKindCode().getLotteryCode());
+        if (null == sourceCodeEnum) {
+            log.info("彩种[{}]未配置上游代码LotterySourceCodeEnum", lotteryKindCode().getLotteryCode());
+            return;
+        }
+
+        String lotterySourceLotteryCode = sourceCodeEnum.getLotterySourceLotteryCode();
+
+
+        JSONArray jsks = jsonObject.getJSONArray(lotterySourceLotteryCode);
+        for (int i = 0; i < jsks.size(); i++) {
+            JSONObject openObj = jsks.getJSONObject(i);
+            OpenresultCqssc openresultJsk3 = new OpenresultCqssc();
+            openresultJsk3.setPlatQs(openObj.getString("issue"));
+            openresultJsk3.setOpenResult(openObj.getString("code"));
+            openresultJsk3.setOpenStatus(0);
+            openresultJsk3.setOpenResultTime(new Date());
+            openresultJsk3.setUpdateTime(new Date());
+            list.add(openresultJsk3);
+        }
+        openresultCqsscService.batchOpenResult(list);
     }
 
 
