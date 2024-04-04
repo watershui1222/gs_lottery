@@ -13,3 +13,12 @@ spring:
     port: 6379
     database: 2
     password: 30Q84d8GE4LBYzbM
+
+lottery:
+  source:
+    merchants:
+      duocai:
+        key: K2653601ec5af9f
+        name: 多彩网
+
+

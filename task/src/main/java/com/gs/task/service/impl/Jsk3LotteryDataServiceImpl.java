@@ -4,8 +4,8 @@ import com.google.common.collect.Lists;
 import com.gs.commons.entity.Lottery;
 import com.gs.commons.entity.OpenresultJsk3;
 import com.gs.commons.service.OpenresultJsk3Service;
-import com.gs.task.enums.LotteryKindEnum;
-import com.gs.task.service.PqService;
+import com.gs.task.enums.LotteryEnum;
+import com.gs.task.service.LotteryDataService;
 import com.gs.task.util.OpenresultPaiQiData;
 import com.gs.task.util.PaiqiUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,18 +15,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class Jsk3PqServiceImpl extends PqService<OpenresultJsk3> {
+public class Jsk3LotteryDataServiceImpl extends LotteryDataService<OpenresultJsk3> {
 
     @Autowired
     private OpenresultJsk3Service openresultJsk3Service;
 
     @Override
-    public LotteryKindEnum lotteryKindCode() {
-        return LotteryKindEnum.JSK3;
+    public LotteryEnum lotteryKindCode() {
+        return LotteryEnum.JSK3;
     }
 
     @Override
-    public List<OpenresultJsk3> getData() {
+    public List<OpenresultJsk3> getPaiqiData() {
         Lottery lottery = this.getLottery();
         List<OpenresultPaiQiData> paiQiData = PaiqiUtil.getPaiQiData(lotteryKindCode(), lottery);
         ArrayList<OpenresultJsk3> resultList = Lists.newArrayList();
@@ -48,8 +48,20 @@ public class Jsk3PqServiceImpl extends PqService<OpenresultJsk3> {
         return resultList;
     }
 
+
+
     @Override
-    public void saveData() {
-        openresultJsk3Service.insertBatchOrUpdate(getData());
+    public void savePaiqiData() {
+        openresultJsk3Service.insertBatchOrUpdate(getPaiqiData());
+    }
+
+    @Override
+    public void saveOpenData() {
+
+    }
+
+    @Override
+    public List<OpenresultJsk3> getResultData() {
+        return null;
     }
 }

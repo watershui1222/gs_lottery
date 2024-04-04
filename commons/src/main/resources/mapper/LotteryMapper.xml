@@ -17,12 +17,16 @@
             <result property="remark" column="remark" jdbcType="VARCHAR"/>
             <result property="pxh" column="pxh" jdbcType="INTEGER"/>
             <result property="lotteryType" column="lottery_type" jdbcType="INTEGER"/>
+            <result property="dayCount" column="day_count" jdbcType="INTEGER"/>
+            <result property="firstQsTime" column="first_qs_time" jdbcType="VARCHAR"/>
+            <result property="qsTime" column="qs_time" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,lottery_code,lottery_name,
         day_open,status,img,
         close_time,create_time,update_time,
-        remark,pxh,lottery_type
+        remark,pxh,lottery_type,
+        day_count,first_qs_time,qs_time
     </sql>
 </mapper>

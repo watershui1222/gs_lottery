@@ -1,14 +1,13 @@
 package com.gs.task.enums;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public enum LotteryKindEnum {
+public enum LotteryEnum {
 
 
     JSK3("JSK3", "江苏快三", "08:29:50", 41, 1200),
