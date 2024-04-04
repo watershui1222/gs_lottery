@@ -9,6 +9,7 @@ import com.gs.commons.enums.LotteryCodeEnum;
 import com.gs.commons.service.OpenresultCqsscService;
 import com.gs.commons.service.OpenresultJsk3Service;
 import com.gs.commons.utils.RedisKeyUtil;
+import com.gs.task.config.LotterySourceProperties;
 import com.gs.task.service.LotteryDataService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,4 +127,11 @@ public class CqsscLotteryDataServiceImpl extends LotteryDataService<OpenresultJs
         openresultCqsscService.saveBatch(paiqiList);
         redisTemplate.opsForValue().set(paiqiKey, "true", 2, TimeUnit.DAYS);
     }
+
+    @Override
+    public void openResult(LotterySourceProperties.SourceMerchants merchants) {
+
+    }
+
+
 }

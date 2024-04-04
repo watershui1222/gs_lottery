@@ -1,5 +1,6 @@
 package com.gs.task.config;
 
+import com.gs.task.enums.LotterySourceEnum;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -12,6 +13,10 @@ import java.util.Map;
 )
 public class LotterySourceProperties {
     private Map<String, LotterySourceProperties.SourceMerchants> merchants;
+
+    public LotterySourceProperties.SourceMerchants getMerChant(LotterySourceEnum lotterySourceEnum) {
+        return merchants.get(lotterySourceEnum.getCode());
+    }
     @Data
     public static class SourceMerchants {
 
@@ -20,6 +25,7 @@ public class LotterySourceProperties {
         private String name;
         private Integer fetchCount;
         private String url;
+        private String code;
     }
 
     public void setMerchants(Map<String, SourceMerchants> merchants) {

@@ -14,25 +14,29 @@ import java.util.Map;
 @AllArgsConstructor
 public enum LotterySourceCodeEnum {
 
-    DUOCAI_JSK3(LotterySourceEnum.DUOCAI, LotteryCodeEnum.JSK3.getLotteryCode(), "JSKS"),
+    DUOCAI_JSK3(LotterySourceEnum.DUOCAI.getCode(), LotteryCodeEnum.JSK3.getLotteryCode(), "JSKS"),
     ;
 
-//    private static Map<String, LotteryEnum> lotteryCodeMap;
-//
-//    static {
-//        init();
-//    }
-//
-//    private static void init() {
-//
-//        lotteryCodeMap = Maps.newHashMap();
-//        for (LotteryEnum lotteryEnum : values()) {
-//            lotteryCodeMap.put(lotteryEnum.getLotteryCode(), lotteryEnum);
-//        }
-//    }
+    private static Map<String, LotterySourceCodeEnum> lotterySourceCodeEnumMap;
+
+    static {
+        init();
+    }
+
+    private static void init() {
+
+        lotterySourceCodeEnumMap = Maps.newHashMap();
+        for (LotterySourceCodeEnum lotterySourceCodeEnum : values()) {
+            lotterySourceCodeEnumMap.put(lotterySourceCodeEnum.getLotterySourceCode() + "_" + lotterySourceCodeEnum.getLotteryCode(), lotterySourceCodeEnum);
+        }
+    }
+
+    public static LotterySourceCodeEnum getLotterySourceCode(String merchantCode, String lotterycode) {
+        return lotterySourceCodeEnumMap.get(merchantCode + "_" + lotterycode);
+    }
 
 
-    private LotterySourceEnum lotterySourceEnum;
+    private String lotterySourceCode;
     private String lotteryCode;
     private String lotterySourceLotteryCode;
 }
