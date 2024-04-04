@@ -372,20 +372,21 @@ public class UserController {
         params.put("userName", userName);
         params.put("type", request.getType());
         //1:今天 2:昨天 3:一周内 4:一月内
-        Date date = new Date();
-        if (StringUtils.equals(request.getDateStr(), "2")) {
-            date = DateUtil.offsetDay(date, -1);
-        } else if (StringUtils.equals(request.getDateStr(), "3")) {
-            date = DateUtil.offsetWeek(date, 1);
-        } else if (StringUtils.equals(request.getDateStr(), "4")) {
-            date = DateUtil.offsetMonth(date, 1);
+        if (StringUtils.isNotBlank(request.getDateStr())) {
+            Date date = new Date();
+            if (StringUtils.equals(request.getDateStr(), "2")) {
+                date = DateUtil.offsetDay(date, -1);
+            } else if (StringUtils.equals(request.getDateStr(), "3")) {
+                date = DateUtil.offsetWeek(date, 1);
+            } else if (StringUtils.equals(request.getDateStr(), "4")) {
+                date = DateUtil.offsetMonth(date, 1);
+            }
+            Date startTime = DateUtil.beginOfDay(date);
+            Date endTime = DateUtil.endOfDay(date);
+
+            params.put("startTime", startTime);
+            params.put("endTime", endTime);
         }
-        Date startTime = DateUtil.beginOfDay(date);
-        Date endTime = DateUtil.endOfDay(date);
-
-        params.put("startTime", startTime);
-        params.put("endTime", endTime);
-
         PageUtils page = transactionRecordService.queryPage(params);
         List<TransactionRecord> list = (List<TransactionRecord>) page.getList();
 
