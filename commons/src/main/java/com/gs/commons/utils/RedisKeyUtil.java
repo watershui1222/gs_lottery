@@ -210,4 +210,10 @@ public class RedisKeyUtil {
         String template = "paiqi:generate:{}:{}";
         return StrUtil.format(template, lotteryCode, DateUtil.format(date, "yyyyMMdd"));
     }
+
+
+    public static String bjkl8YesterdayQs(String lotteryCode, Date date) {
+        String template = "{}:yesterday:{}";
+        return StrUtil.format(template, lotteryCode, DateUtil.format(date, "yyyyMMdd"));
+    }
 }
