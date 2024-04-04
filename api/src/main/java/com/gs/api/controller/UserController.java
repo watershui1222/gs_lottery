@@ -8,10 +8,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.gs.api.controller.request.CheckExistRequest;
-import com.gs.api.controller.request.LoginRequest;
-import com.gs.api.controller.request.UpdateNickNameRequest;
-import com.gs.api.controller.request.UserRegisterRequest;
+import com.gs.api.controller.request.*;
 import com.gs.api.utils.JwtUtils;
 import com.gs.commons.entity.Avatar;
 import com.gs.commons.entity.Level;
@@ -290,6 +287,70 @@ public class UserController {
                         .eq(UserInfo::getUserName, userName)
                         .set(UserInfo::getNickName, request.getNickName())
                         .set(UserInfo::getUpdateTime, new Date())
+        );
+        return R.ok();
+    }
+
+
+    @ApiOperation(value = "设置资金密码")
+    @PostMapping("/setPayPwd")
+    public R setPayPwd(@Validated SetPayPwdRequest request, HttpServletRequest httpServletRequest) {
+
+        String userName = JwtUtils.getUserName(httpServletRequest);
+        UserInfo userInf = userInfoService.getUserByName(userName);
+        if (StringUtils.isNotBlank(userInf.getPayPwd())) {
+            return R.error();
+        }
+        userInfoService.update(
+                new LambdaUpdateWrapper<UserInfo>()
+                        .eq(UserInfo::getUserName, userName)
+                        .set(UserInfo::getPayPwd, SecureUtil.md5(request.getPayPwd()))
+                        .set(UserInfo::getUpdateTime, new Date())
+        );
+        return R.ok();
+    }
+
+
+    @ApiOperation(value = "修改用户密码")
+    @PostMapping("/updatePwd")
+    public R updatePwd(@Validated UpdatePwdRequest request, HttpServletRequest httpServletRequest) {
+        String userName = JwtUtils.getUserName(httpServletRequest);
+
+        UserInfo user = userInfoService.getUserByName(userName);
+
+        String oldPwd = SecureUtil.md5(request.getOldPwd());
+        if (!StringUtils.equals(oldPwd, user.getLoginPwd())) {
+            return R.error(MsgUtil.get("system.user.oldpwderror"));
+        }
+
+        userInfoService.update(
+                new UpdateWrapper<UserInfo>().lambda()
+                        .set(UserInfo::getLoginPwd, SecureUtil.md5(request.getNewPwd()))
+                        .set(UserInfo::getUpdateTime, new Date())
+                        .eq(UserInfo::getUserName, userName)
+        );
+
+        return R.ok();
+    }
+
+
+    @ApiOperation(value = "修改用户支付密码")
+    @PostMapping("/updatePayPwd")
+    public R updatePayPwd(@Validated UpdatePayPwdRequest request, HttpServletRequest httpServletRequest) {
+        String userName = JwtUtils.getUserName(httpServletRequest);
+
+        UserInfo user = userInfoService.getUserByName(userName);
+
+        String oldPwd = SecureUtil.md5(request.getOldPwd());
+        if (!StringUtils.equals(oldPwd, user.getPayPwd())) {
+            return R.error(MsgUtil.get("system.user.oldpwderror"));
+        }
+
+        userInfoService.update(
+                new UpdateWrapper<UserInfo>().lambda()
+                        .set(UserInfo::getPayPwd, SecureUtil.md5(request.getNewPwd()))
+                        .set(UserInfo::getUpdateTime, new Date())
+                        .eq(UserInfo::getUserName, userName)
         );
         return R.ok();
     }
