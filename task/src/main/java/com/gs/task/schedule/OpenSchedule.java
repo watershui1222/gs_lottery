@@ -53,7 +53,7 @@ public class OpenSchedule {
 
 
 
-    @Scheduled(cron = "0/12 * * * * ?")
+    @Scheduled(cron = "0/10 * * * * ?")
     public void ssxwOpen() {
 
         // 多彩数据原
@@ -77,7 +77,7 @@ public class OpenSchedule {
     }
 
 
-    @Scheduled(cron = "0/14 * * * * ?")
+    @Scheduled(cron = "0/10 * * * * ?")
     public void bjpk10Open() {
 
         // 多彩数据原
