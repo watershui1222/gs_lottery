@@ -2,26 +2,23 @@ package com.gs.task.util;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Lists;
 import com.gs.commons.entity.Lottery;
-import com.gs.task.enums.LotteryKindEnum;
+import com.gs.task.enums.LotteryEnum;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 public class PaiqiUtil {
 
 
-    public static List<OpenresultPaiQiData> getPaiQiData(LotteryKindEnum lotteryKindEnum, Lottery lottery) {
+    public static List<OpenresultPaiQiData> getPaiQiData(LotteryEnum lotteryEnum, Lottery lottery) {
 
-        Date startDate = DateUtil.parse(StringUtils.join(DateUtil.formatDate(DateUtil.date()), " ", lotteryKindEnum.getStartTime()));
+        Date startDate = DateUtil.parse(StringUtils.join(DateUtil.formatDate(DateUtil.date()), " ", lotteryEnum.getStartTime()));
 
         List<OpenresultPaiQiData> openresultPaiQiDataList = Lists.newArrayList();
-        for (int i = 1; i <= lotteryKindEnum.getCount(); i++) {
+        for (int i = 1; i <= lotteryEnum.getCount(); i++) {
             OpenresultPaiQiData openresultPaiQiData = new OpenresultPaiQiData();
 
             String qs = String.valueOf(i);
@@ -33,7 +30,7 @@ public class PaiqiUtil {
 
             qs = StringUtils.join(DateUtil.format(startDate, "yyMMdd"), qs);
 
-            DateTime endTime = DateUtil.offsetSecond(startDate, lotteryKindEnum.getRate());
+            DateTime endTime = DateUtil.offsetSecond(startDate, lotteryEnum.getRate());
             DateTime closeTime = DateUtil.offsetSecond(endTime, -lottery.getCloseTime());
 
             openresultPaiQiData.setQs(qs);
