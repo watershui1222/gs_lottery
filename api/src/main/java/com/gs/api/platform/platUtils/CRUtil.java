@@ -1,6 +1,8 @@
 package com.gs.api.platform.platUtils;
 
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.util.CharsetUtil;
+
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -8,7 +10,7 @@ public class CRUtil {
 
     /**
      * AES加密
-     * @param sSrc
+     * @param
      * @return
      * @throws Exception
      */
@@ -25,7 +27,7 @@ public class CRUtil {
 
     /**
      * AES 解密
-     * @param sSrc
+     * @param
      * @return
      * @throws Exception
      */

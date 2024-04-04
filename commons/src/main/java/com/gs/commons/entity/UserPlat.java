@@ -40,6 +40,13 @@ public class UserPlat implements Serializable {
     private String platUserName;
 
     /**
+     * 平台游戏密码
+     */
+    @TableField(value = "plat_user_password")
+    private String platUserPassword;
+
+
+    /**
      * 0:正常 1:停用
      */
     @TableField(value = "status")
