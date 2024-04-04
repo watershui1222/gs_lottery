@@ -14,4 +14,5 @@ public interface OpenresultJsk3Service extends IService<OpenresultJsk3> {
 
     int insertBatchOrUpdate(List<OpenresultJsk3> list);
 
+    int batchOpenResult(List<OpenresultJsk3> list);
 }

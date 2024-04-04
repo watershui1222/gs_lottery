@@ -48,7 +48,7 @@ public class PqSchedule {
 //        System.out.println("123");
     }
 
-    @Scheduled(cron = "0/10 * * * * ?")
+//    @Scheduled(cron = "0/10 * * * * ?")
     public void jsk3Paiqi1() {
         // 获取彩种信息
         Lottery lottery = lotteryService.getOne(
