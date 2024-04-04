@@ -68,8 +68,8 @@
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="OpenresultMo6hc" />
-                  <option name="tableName" value="t_openresult_mo6hc" />
+                  <option name="className" value="OpenresultFc3d" />
+                  <option name="tableName" value="t_openresult_fc3d" />
                 </TableUIInfo>
               </list>
             </option>

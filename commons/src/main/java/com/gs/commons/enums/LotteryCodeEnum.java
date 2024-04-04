@@ -19,6 +19,7 @@ public enum LotteryCodeEnum {
     PCDD("PCDD", "PC蛋蛋"),
     BJPK10("BJPK10", "北京PK10"),
     MO6HC("MOLHC", "澳门六合彩"),
+    FC3D("FC3D", "福彩3D"),
     ;
     private String lotteryCode;
     private String name;

@@ -96,6 +96,9 @@ public class OpenSchedule {
         molhcLotteryDataService.openResult(merChant, jsonObject);
 
 
+//        LotteryDataService fc3dLotteryDataService = lotteryDataClient.getSourceService(LotteryCodeEnum.FC3D.getLotteryCode());
+//        fc3dLotteryDataService.openResult(merChant, jsonObject);
+
     }
 
 

@@ -116,4 +116,16 @@ public class PqSchedule {
     }
 
 
+//    @Scheduled(cron = "0/10 * * * * ?")
+//    public void fc3dPaiqi1() {
+//
+//        LotteryDataService pqService = lotteryDataClient.getSourceService(LotteryCodeEnum.FC3D.getLotteryCode());
+//
+//        pqService.generatePaiqi(new Date());
+//        pqService.generatePaiqi(DateUtil.tomorrow());
+//
+//
+//    }
+
+
 }
