@@ -40,5 +40,28 @@ public class KyConstants {
         GAME_NAME.put("1370", "港式梭哈");
         GAME_NAME.put("1690", "⾎战骰宝");
         GAME_NAME.put("1890", "⽔果机");
+        GAME_NAME.put("1610", "幸运夺宝");
+        GAME_NAME.put("1930", "鱼虾蟹");
+        GAME_NAME.put("8130", "跑得快");
+        GAME_NAME.put("950", "红黑大战");
+        GAME_NAME.put("840", "疯狂抢庄牛牛");
+        GAME_NAME.put("520", "李逵捕鱼");
+        GAME_NAME.put("530", "金元捕鱼");
+        GAME_NAME.put("540", "捕鱼传说");
+        GAME_NAME.put("3001", "极速百家乐");
+        GAME_NAME.put("2890", "看牌抢庄三公");
+        GAME_NAME.put("2002", "梭哈德州扑克");
+        GAME_NAME.put("3002", "金球银球");
+        GAME_NAME.put("3003", "十倍牛牛");
+        GAME_NAME.put("550", "富贵金龙");
+        GAME_NAME.put("3005", "欧式轮盘");
+        GAME_NAME.put("2005", "富贵三张");
+        GAME_NAME.put("3006", "官人坏坏百J乐");
+        GAME_NAME.put("2007", "闪电 21 点");
+        GAME_NAME.put("2008", "终极德州扑克");
+        GAME_NAME.put("7479", "炸财神");
+        GAME_NAME.put("7484", "幸运熊猫");
+        GAME_NAME.put("7485", "财神发发发");
+
     }
 }
