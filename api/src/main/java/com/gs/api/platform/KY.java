@@ -96,7 +96,15 @@ public class KY {
         StringBuilder urlSB = new StringBuilder();
         urlSB.append(this.prefixURL).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
         String result = HttpUtil.get(urlSB.toString());
-        return "OK";
+        System.out.println(result);
+        JSONObject res = JSONObject.parseObject(result);
+        JSONObject d = res.getJSONObject("d");
+        if(d.getIntValue("code") == 0){
+            return "OK";//转账成功
+        }else{
+            //需要调用订单确认接口
+            return "needcheck";
+        }
     }
 
     /**
@@ -120,7 +128,14 @@ public class KY {
         urlSB.append(this.prefixURL).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
         String result = HttpUtil.get(urlSB.toString());
         System.out.println(result);
-        return "OK";
+        JSONObject res = JSONObject.parseObject(result);
+        JSONObject d = res.getJSONObject("d");
+        if(d.getIntValue("code") == 0){
+            return "OK";//转账成功
+        }else{
+            //需要调用订单确认接口
+            return "needcheck";
+        }
     }
 
     /**
@@ -219,6 +234,6 @@ public class KY {
 
     public static void main(String[] args) throws Exception {
         KY k = new KY();
-        System.out.println(k.login());
+        System.out.println(k.refund());
     }
 }
