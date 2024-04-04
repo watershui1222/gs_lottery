@@ -76,7 +76,7 @@ public class UserController {
         userObj.put("balance", userInfo.getBalance());
         userObj.put("nickName", userInfo.getNickName());
         userObj.put("referralCode", userInfo.getReferralCode());
-        userObj.put("setPayPwdStatus", StringUtils.isBlank(userInfo.getPayPwd()));
+        userObj.put("setPayPwdStatus", StringUtils.isNotBlank(userInfo.getPayPwd()));
 
         Map<String, String> paramsMap = sysParamService.getAllParamByMap();
         String resourceDomain = MapUtil.getStr(paramsMap, "resource_domain");
