@@ -80,4 +80,27 @@ public class PqSchedule {
 
 
     }
+
+    @Scheduled(cron = "0/10 * * * * ?")
+    public void bjkl8Paiqi1() {
+
+        LotteryDataService pqService = lotteryDataClient.getSourceService(LotteryCodeEnum.BJKL8.getLotteryCode());
+
+        pqService.generatePaiqi(new Date());
+        pqService.generatePaiqi(DateUtil.tomorrow());
+
+
+    }
+
+
+    @Scheduled(cron = "0/10 * * * * ?")
+    public void pcddPaiqi1() {
+
+        LotteryDataService pqService = lotteryDataClient.getSourceService(LotteryCodeEnum.PCDD.getLotteryCode());
+
+        pqService.generatePaiqi(new Date());
+        pqService.generatePaiqi(DateUtil.tomorrow());
+
+
+    }
 }

@@ -54,7 +54,7 @@ public class OpenSchedule {
 
 
     @Scheduled(cron = "0/12 * * * * ?")
-    public void kl8Open() {
+    public void ssxwOpen() {
 
         // 多彩数据原
         LotterySourceProperties.SourceMerchants merChant = lotterySourceProperties.getMerChant(LotterySourceEnum.DUOCAI);
@@ -63,11 +63,19 @@ public class OpenSchedule {
         String body = httpResponse.body();
         JSONObject jsonObject = JSONObject.parseObject(body);
 
-        LotteryDataService k3LotteryDataService = lotteryDataClient.getSourceService(LotteryCodeEnum.GD11X5.getLotteryCode());
-        k3LotteryDataService.openResult(merChant, jsonObject);
+        LotteryDataService gd11x5LotteryDataService = lotteryDataClient.getSourceService(LotteryCodeEnum.GD11X5.getLotteryCode());
+        gd11x5LotteryDataService.openResult(merChant, jsonObject);
+
+
+        LotteryDataService bjkl8LotteryDataService = lotteryDataClient.getSourceService(LotteryCodeEnum.BJKL8.getLotteryCode());
+        bjkl8LotteryDataService.openResult(merChant, jsonObject);
+
+        LotteryDataService pcddLotteryDataService = lotteryDataClient.getSourceService(LotteryCodeEnum.PCDD.getLotteryCode());
+        pcddLotteryDataService.openResult(merChant, jsonObject);
 
 
     }
+
 
 
 

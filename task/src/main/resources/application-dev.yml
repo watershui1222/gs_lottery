@@ -23,3 +23,14 @@ lottery:
         fetch-count: 5
         url: https://vip.manycai.com/K2653601ec5af9f/p/5.json
         code: duocai
+
+# 昨日的最后一起期号
+bjkl8:
+  yesterday-qs: 1249149
+pcdd:
+  yesterday-qs: 1249149
+
+
+
+
+
