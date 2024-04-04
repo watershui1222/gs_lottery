@@ -63,9 +63,7 @@ public class LoginAspect {
         log.info("请求参数:" + JSONUtil.toJsonStr(request.getParameterMap()));
         for (String pattern : urls) {
             pattern = contentPath + pattern;
-            System.out.println(pattern);
             boolean match = matcher.match(pattern, request.getRequestURI());
-            System.out.println(match);
             if (match) {
                 return joinPoint.proceed();
             }

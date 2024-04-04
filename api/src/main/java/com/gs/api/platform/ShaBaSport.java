@@ -274,8 +274,8 @@ public class ShaBaSport {
         return "FAIL";
     }
 
-    public static void main(String[] args) {
+//    public static void main(String[] args) {
 //        SABA sb = new SABA();
 //        System.out.println(sb.getSabaUrl());
-    }
+//    }
 }

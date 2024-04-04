@@ -40,7 +40,7 @@ public class HuangGuanSport {
         request.put("username", agName);
         request.put("password", agPassword);
         request.put("timestamp", DateUtil.current());
-        String requestStr = AesUtils.AESEncrypt(request.toJSONString(), this.secretKey);
+        String requestStr = AesUtils.AESEncrypt(request.toJSONString(), this.secretKey, false);
         param.put("Request", requestStr);
         param.put("Method", "AGLogin");
         param.put("AGID", agId);
@@ -72,7 +72,7 @@ public class HuangGuanSport {
             request.put("method", "CreateMember");
             request.put("token", token);
             request.put("timestamp", DateUtil.current());
-            String requestStr = AesUtils.AESEncrypt(request.toJSONString(), this.secretKey);
+            String requestStr = AesUtils.AESEncrypt(request.toJSONString(), this.secretKey, false);
             param.put("Request", requestStr);
             param.put("Method", "CreateMember");
             param.put("AGID", agId);
@@ -152,7 +152,7 @@ public class HuangGuanSport {
             request.put("langx", "zh-cn");
             request.put("remoteip", "127.0.0.1");
             request.put("timestamp", DateUtil.current());
-            String requestStr = AesUtils.AESEncrypt(request.toJSONString(), this.secretKey);
+            String requestStr = AesUtils.AESEncrypt(request.toJSONString(), this.secretKey, false);
             param.put("Request", requestStr);
             param.put("Method", "LaunchGame");
             param.put("AGID", agId);
@@ -190,11 +190,17 @@ public class HuangGuanSport {
             request.put("method", "Deposit");
             request.put("token", token);
             request.put("timestamp", DateUtil.current());
-            String requestStr = AesUtils.AESEncrypt(request.toJSONString(), this.secretKey);
+            String requestStr = AesUtils.AESEncrypt(request.toJSONString(), this.secretKey,false);
             param.put("Request", requestStr);
             param.put("Method", "Deposit");
             param.put("AGID", agId);
-            HttpResponse res = HttpUtil.createPost(this.apiUrl).contentType("application/json").charset("utf-8").body(param.toJSONString()).execute();
+            HttpResponse res = null;
+            try {
+                res = HttpUtil.createPost(this.apiUrl).contentType("application/json").charset("utf-8").body(param.toJSONString()).execute();
+            } catch (Exception e) {
+                //结果不确定
+                return "needcheck";
+            }
             String resStr = res.body();
             if(!JSONUtil.isTypeJSON(resStr)){
                 String result = AesUtils.AESDecrypt(resStr, this.secretKey);
@@ -229,7 +235,7 @@ public class HuangGuanSport {
             request.put("method", "Withdraw");
             request.put("token", token);
             request.put("timestamp", DateUtil.current());
-            String requestStr = AesUtils.AESEncrypt(request.toJSONString(), this.secretKey);
+            String requestStr = AesUtils.AESEncrypt(request.toJSONString(), this.secretKey,false);
             param.put("Request", requestStr);
             param.put("Method", "Withdraw");
             param.put("AGID", agId);
@@ -264,7 +270,7 @@ public class HuangGuanSport {
             request.put("method", "chkMemberBalance");
             request.put("token", token);
             request.put("timestamp", DateUtil.current());
-            String requestStr = AesUtils.AESEncrypt(request.toJSONString(), this.secretKey);
+            String requestStr = AesUtils.AESEncrypt(request.toJSONString(), this.secretKey,false);
             param.put("Request", requestStr);
             param.put("Method", "chkMemberBalance");
             param.put("AGID", agId);
@@ -299,7 +305,7 @@ public class HuangGuanSport {
             request.put("method", "KickOutMem");
             request.put("token", token);
             request.put("timestamp", DateUtil.current());
-            String requestStr = AesUtils.AESEncrypt(request.toJSONString(), this.secretKey);
+            String requestStr = AesUtils.AESEncrypt(request.toJSONString(), this.secretKey,false);
             param.put("Request", requestStr);
             param.put("Method", "KickOutMem");
             param.put("AGID", agId);
@@ -346,7 +352,7 @@ public class HuangGuanSport {
                 request.put("token", token);
                 request.put("timestamp", DateUtil.current());
                 request.put("langx", "zh-cn");
-                String requestStr = AesUtils.AESEncrypt(request.toJSONString(), this.secretKey);
+                String requestStr = AesUtils.AESEncrypt(request.toJSONString(), this.secretKey,false);
                 param.put("Request", requestStr);
                 param.put("Method", "ALLWager");
                 param.put("AGID", agId);
@@ -371,22 +377,9 @@ public class HuangGuanSport {
     }
 
 
-    public static void main(String[] args){
-        HuangGuanSport cr = new HuangGuanSport();
-        System.out.println(cr.deposit());
-//        JSONObject request = new JSONObject();
-//        request.put("password", "cit001123");
-//        request.put("remoteip", "192.168.1.1");
-//        request.put("method", "AGLogin");
-//        request.put("username", "cit001");
-//        request.put("timestamp", "1497866722526");
-//        System.out.println(CRUtil.AESEncrypt(request.toJSONString(), "5rx9ibpyqdn6xmt3"));
-//        String ggg = "Uz3vy0fL9i1CWYlSOZ+PpF4W0QntdjHsC4sYaASlQeCbkI4qvudhaRs6nTHQyu+6hjj9hg1hN6Ep" +
-//                "CvL66FnQI2Twsq8dGl5mbRbP6UevQvQ=";
-//        System.out.println(CRUtil.AESDecrypt(ggg, "9Sceij7Eka7331lR"));
-//        String hhh = "Uz3vy0fL9i1CWYlSOZ+PpF4W0QntdjHsC4sYaASlQeCbkI4qvudhaRs6nTHQyu+6iwFTjFZTWZjr" +
-//                "iWXZ/5lzizbUenDOOfFf3CPzlV0rqN8=";
-//        System.out.println(hhh.replace("\n", ""));
-    }
+//    public static void main(String[] args){
+//        HuangGuanSport cr = new HuangGuanSport();
+//        System.out.println(cr.agLogin());
+//    }
 
 }
