@@ -18,6 +18,8 @@ public class LotterySourceProperties {
 
         private String key;
         private String name;
+        private Integer fetchCount;
+        private String url;
     }
 
     public void setMerchants(Map<String, SourceMerchants> merchants) {

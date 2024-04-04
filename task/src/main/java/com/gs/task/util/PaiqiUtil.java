@@ -4,13 +4,22 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import com.google.common.collect.Lists;
 import com.gs.commons.entity.Lottery;
+import com.gs.commons.entity.OpenresultJsk3;
+import com.gs.commons.utils.RedisKeyUtil;
+import com.gs.commons.utils.SpringContextHolderUtil;
 import com.gs.task.enums.LotteryEnum;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class PaiqiUtil {
+
+
+
 
 
     public static List<OpenresultPaiQiData> getPaiQiData(LotteryEnum lotteryEnum, Lottery lottery) {

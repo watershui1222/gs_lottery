@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 public enum LotteryTypeEnum {
 
 
-    JSK3(1, "江苏快三"),
+    K3(1, "快三"),
+    SSC(2, "时时彩"),
     ;
     private Integer lotteryType;
     private String name;
