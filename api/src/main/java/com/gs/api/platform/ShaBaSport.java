@@ -5,6 +5,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -14,10 +15,14 @@ import java.util.Date;
  */
 public class ShaBaSport {
 
+    @Value("${platform.ShaBa.operatorID}")
     public String operatorID = "ZhiFeng946";
+    @Value("${platform.ShaBa.apiUrl}")
     public String apiUrl = "http://c0m1tsa.bw6688.com/api";
+    @Value("${platform.ShaBa.vendorID}")
     public String vendorID = "i96zwegizd";
-    public int currencyID = 20;//20=测试货币 13=CNY
+    @Value("${platform.ShaBa.currencyID}")
+    public String currencyID = "20";//20=测试货币 13=CNY
 
     /**
      * 创建账号
@@ -30,7 +35,7 @@ public class ShaBaSport {
         String operatorId = this.operatorID;
         String username = vendor_member_id;
         int oddstype = 2;
-        int currency = this.currencyID;
+        int currency = Integer.valueOf(this.currencyID);
         BigDecimal mintransfer = BigDecimal.ZERO;
         BigDecimal maxtransfer = new BigDecimal("10000000");
         JSONObject param = new JSONObject();
@@ -112,7 +117,7 @@ public class ShaBaSport {
         String vendor_member_id = "GSSBTESTACOUNT1";
         String vendor_trans_id = "GSSBTESTORDERNO1";//我方单号
         BigDecimal amount = new BigDecimal("100");
-        int currency = this.currencyID;
+        int currency = Integer.valueOf(this.currencyID);
         int direction = 1;
         int wallet_id = 1;
         JSONObject param = new JSONObject();
@@ -153,7 +158,7 @@ public class ShaBaSport {
         String vendor_member_id = "GSSBTESTACOUNT1";
         String vendor_trans_id = "GSSBTESTORDERNO1";//我方单号
         BigDecimal amount = new BigDecimal("100");
-        int currency = this.currencyID;
+        int currency = Integer.valueOf(this.currencyID);
         int direction = 0;
         int wallet_id = 1;
         JSONObject param = new JSONObject();

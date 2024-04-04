@@ -7,6 +7,7 @@ import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.gs.api.platform.platUtils.HuangGuanUtil;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -17,10 +18,15 @@ import java.util.List;
  * CR皇冠体育
  */
 public class HuangGuanSport {
+    @Value("${platform.ShaBa.agId}")
     public String agId = "2829";
+    @Value("${platform.ShaBa.agPassword}")
     public String agPassword = "aaa123";
+    @Value("${platform.ShaBa.agName}")
     public String agName = "ZF946test";
+    @Value("${platform.ShaBa.secretKey}")
     public String secretKey = "9Sceij7Eka7331lR";
+    @Value("${platform.ShaBa.apiUrl}")
     public String apiUrl = "https://api.orb-6789.com/app/control_API/agents/api_doaction.php";
 
     /**

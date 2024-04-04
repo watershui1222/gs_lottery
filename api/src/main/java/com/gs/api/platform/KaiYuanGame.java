@@ -16,15 +16,15 @@ import java.util.Date;
 public class KaiYuanGame {
 
     @Value("${platform.KaiYuan.prefixURL}")
-    public String prefixURL;//接口地址
+    public String prefixURL = "https://wc1-api.uaphl791.com/channelHandle";//接口地址
     @Value("${platform.KaiYuan.recordURL}")
-    public String recordURL;//拉单接口
+    public String recordURL = "https://wc1-record.uaphl791.com/getRecordHandle";//拉单接口
     @Value("${platform.KaiYuan.agent}")
-    public String agent;
+    public String agent = "73419";
     @Value("${platform.KaiYuan.aesKey}")
-    public String aesKey;
+    public String aesKey = "77C3273B538BB6F9";
     @Value("${platform.KaiYuan.md5Key}")
-    public String md5Key;
+    public String md5Key = "08A455C3E66DDF22";
 
     /**
      * 登录
@@ -241,6 +241,6 @@ public class KaiYuanGame {
 
     public static void main(String[] args) throws Exception {
         KaiYuanGame k = new KaiYuanGame();
-        System.out.println(k.refund());
+        System.out.println(k.login());
     }
 }
