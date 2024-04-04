@@ -7,6 +7,8 @@ import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import cn.hutool.crypto.symmetric.AES;
 
+import java.net.URLEncoder;
+
 public class AesUtils {
 
     public static String MD5(String sourceStr) {
@@ -18,12 +20,15 @@ public class AesUtils {
      * @param key 偏移量
      * @return
      */
-    public static String AESEncrypt(String content, String key){
+    public static  String AESEncrypt(String content, String key, boolean URLEncode){
         try {
             byte[] raw = key.getBytes("UTF-8");
             AES aes = SecureUtil.aes(raw);
             byte[] encrypt = aes.encrypt(content);
             String encryptStr = Base64.encode(encrypt);
+            if(URLEncode){
+                return URLEncoder.encode(encryptStr, "UTF-8");
+            }
             return encryptStr;
         } catch (Exception e) {
             throw new RuntimeException(e);
