@@ -68,8 +68,8 @@
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="LotteryOdds" />
-                  <option name="tableName" value="t_lottery_odds" />
+                  <option name="className" value="OpenresultCqssc" />
+                  <option name="tableName" value="t_openresult_cqssc" />
                 </TableUIInfo>
               </list>
             </option>

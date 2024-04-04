@@ -15,6 +15,7 @@ public interface OpenresultJsk3Mapper extends BaseMapper<OpenresultJsk3> {
 
     int insertBatchOrUpdate(List<OpenresultJsk3> list);
 
+    int batchOpenResult(List<OpenresultJsk3> list);
 }
 
 

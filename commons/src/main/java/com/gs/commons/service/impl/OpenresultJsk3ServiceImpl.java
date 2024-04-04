@@ -24,6 +24,11 @@ public class OpenresultJsk3ServiceImpl extends ServiceImpl<OpenresultJsk3Mapper,
     public int insertBatchOrUpdate(List<OpenresultJsk3> list) {
         return openresultJsk3Mapper.insertBatchOrUpdate(list);
     }
+
+    @Override
+    public int batchOpenResult(List<OpenresultJsk3> list) {
+        return openresultJsk3Mapper.batchOpenResult(list);
+    }
 }
 
 

@@ -7,8 +7,10 @@ import cn.hutool.http.HttpResponse;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.gs.commons.entity.Lottery;
+import com.gs.commons.entity.OpenresultCqssc;
 import com.gs.commons.entity.OpenresultJsk3;
 import com.gs.commons.enums.LotteryCodeEnum;
+import com.gs.commons.service.OpenresultCqsscService;
 import com.gs.commons.service.OpenresultJsk3Service;
 import com.gs.commons.utils.RedisKeyUtil;
 import com.gs.task.config.LotterySourceProperties;
@@ -26,23 +28,23 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
-public class Jsk3LotteryDataServiceImpl extends LotteryDataService<OpenresultJsk3> {
+public class CqsscLotteryDataServiceImpl extends LotteryDataService<OpenresultJsk3> {
 
     @Autowired
-    private OpenresultJsk3Service openresultJsk3Service;
+    private OpenresultCqsscService openresultCqsscService;
 
     @Autowired
     private StringRedisTemplate redisTemplate;
 
     @Override
     public LotteryCodeEnum lotteryKindCode() {
-        return LotteryCodeEnum.JSK3;
+        return LotteryCodeEnum.CQSSC;
     }
 
     @Override
     public String getPaiqiQs(Date todayDate, Integer currCount) {
-        String todayDateStr = DateUtil.format(todayDate, "YYMMdd");
-        String qs = todayDateStr + String.format("%03d", currCount);
+        String todayDateStr = DateUtil.format(todayDate, "yyyyMMdd");
+        String qs = todayDateStr + "-" + String.format("%03d", currCount);
         return qs;
     }
 
@@ -66,9 +68,12 @@ public class Jsk3LotteryDataServiceImpl extends LotteryDataService<OpenresultJsk
         String todayDateStr = DateUtil.format(today, "YYMMdd");
 
         DateTime firstOpenResult = DateUtil.parseDateTime(DateUtil.formatDate(today) + " " + lottery.getFirstQsTime());
-        List<OpenresultJsk3> paiqiList = new ArrayList<>();
-        for (Integer i = 1; i <= lottery.getDayCount(); i++) {
-            OpenresultJsk3 open = new OpenresultJsk3();
+        List<OpenresultCqssc> paiqiList = new ArrayList<>();
+
+
+
+        for (int i = 1; i <= 23; i++) {
+            OpenresultCqssc open = new OpenresultCqssc();
             String qs = getPaiqiQs(today, i);
             open.setQs(qs);
             open.setPlatQs(qs);
@@ -76,22 +81,62 @@ public class Jsk3LotteryDataServiceImpl extends LotteryDataService<OpenresultJsk
             open.setOpenStatus(1);
             open.setCurrCount(i);
             open.setCloseTime(DateUtil.offsetSecond(firstOpenResult, -lottery.getCloseTime()));
-            open.setOpenTime(DateUtil.offsetMinute(firstOpenResult, -lottery.getQsTime()));
+            open.setOpenTime(DateUtil.offsetMinute(firstOpenResult, -5));
             open.setOpenResultTime(firstOpenResult);
             open.setCreateTime(now);
             open.setUpdateTime(now);
             paiqiList.add(open);
             // 下一期开奖时间
-            firstOpenResult = DateUtil.offsetMinute(open.getOpenResultTime(), lottery.getQsTime());
+            firstOpenResult = DateUtil.offsetMinute(open.getOpenResultTime(), 5);
         }
-        openresultJsk3Service.saveBatch(paiqiList);
+
+        firstOpenResult = DateUtil.parseDateTime(DateUtil.formatDate(today) + " 10:00:00");
+
+        for (int i = 24; i <= 96; i++) {
+            OpenresultCqssc open = new OpenresultCqssc();
+            String qs = getPaiqiQs(today, i);
+            open.setQs(qs);
+            open.setPlatQs(qs);
+            open.setOpenResult(null);
+            open.setOpenStatus(1);
+            open.setCurrCount(i);
+            open.setCloseTime(DateUtil.offsetSecond(firstOpenResult, -lottery.getCloseTime()));
+            open.setOpenTime(DateUtil.offsetMinute(firstOpenResult, -10));
+            open.setOpenResultTime(firstOpenResult);
+            open.setCreateTime(now);
+            open.setUpdateTime(now);
+            paiqiList.add(open);
+            // 下一期开奖时间
+            firstOpenResult = DateUtil.offsetMinute(open.getOpenResultTime(), 10);
+        }
+
+        firstOpenResult = DateUtil.parseDateTime(DateUtil.formatDate(today) + " 22:05:00");
+        for (int i = 97; i <= 120; i++) {
+            OpenresultCqssc open = new OpenresultCqssc();
+            String qs = getPaiqiQs(today, i);
+            open.setQs(qs);
+            open.setPlatQs(qs);
+            open.setOpenResult(null);
+            open.setOpenStatus(1);
+            open.setCurrCount(i);
+            open.setCloseTime(DateUtil.offsetSecond(firstOpenResult, -lottery.getCloseTime()));
+            open.setOpenTime(DateUtil.offsetMinute(firstOpenResult, -5));
+            open.setOpenResultTime(firstOpenResult);
+            open.setCreateTime(now);
+            open.setUpdateTime(now);
+            paiqiList.add(open);
+            // 下一期开奖时间
+            firstOpenResult = DateUtil.offsetMinute(open.getOpenResultTime(), 5);
+        }
+        
+        openresultCqsscService.saveBatch(paiqiList);
         redisTemplate.opsForValue().set(paiqiKey, "true", 2, TimeUnit.DAYS);
     }
 
     @Override
     public void openResult(LotterySourceProperties.SourceMerchants merchants, JSONObject jsonObject) {
 
-        List<OpenresultJsk3> list = new ArrayList<>();
+        List<OpenresultCqssc> list = new ArrayList<>();
 
         // 获取对应上游彩种代码
         LotterySourceCodeEnum sourceCodeEnum = LotterySourceCodeEnum.getLotterySourceCode(merchants.getCode(), lotteryKindCode().getLotteryCode());
@@ -106,7 +151,7 @@ public class Jsk3LotteryDataServiceImpl extends LotteryDataService<OpenresultJsk
         JSONArray jsks = jsonObject.getJSONArray(lotterySourceLotteryCode);
         for (int i = 0; i < jsks.size(); i++) {
             JSONObject openObj = jsks.getJSONObject(i);
-            OpenresultJsk3 openresultJsk3 = new OpenresultJsk3();
+            OpenresultCqssc openresultJsk3 = new OpenresultCqssc();
             openresultJsk3.setPlatQs(openObj.getString("issue"));
             openresultJsk3.setOpenResult(openObj.getString("code"));
             openresultJsk3.setOpenStatus(0);
@@ -114,6 +159,8 @@ public class Jsk3LotteryDataServiceImpl extends LotteryDataService<OpenresultJsk
             openresultJsk3.setUpdateTime(new Date());
             list.add(openresultJsk3);
         }
-        openresultJsk3Service.batchOpenResult(list);
+        openresultCqsscService.batchOpenResult(list);
     }
+
+
 }

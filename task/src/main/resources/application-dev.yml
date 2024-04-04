@@ -20,5 +20,6 @@ lottery:
       duocai:
         key: K2653601ec5af9f
         name: 多彩网
-
-
+        fetch-count: 5
+        url: https://vip.manycai.com/K2653601ec5af9f/p/5.json
+        code: duocai
