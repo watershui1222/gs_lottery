@@ -1,21 +1,23 @@
 package com.gs.api.controller;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.extra.servlet.ServletUtil;
+import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.gs.api.controller.request.*;
 import com.gs.api.utils.JwtUtils;
-import com.gs.commons.entity.Avatar;
-import com.gs.commons.entity.Level;
-import com.gs.commons.entity.UserInfo;
-import com.gs.commons.entity.UserLoginLog;
+import com.gs.commons.constants.Constant;
+import com.gs.commons.entity.*;
 import com.gs.commons.service.*;
 import com.gs.commons.utils.MsgUtil;
+import com.gs.commons.utils.PageUtils;
 import com.gs.commons.utils.R;
 import com.gs.commons.utils.RedisKeyUtil;
 import io.swagger.annotations.Api;
@@ -62,6 +64,9 @@ public class UserController {
 
     @Autowired
     private LevelService levelService;
+
+    @Autowired
+    private TransactionRecordService transactionRecordService;
 
     @ApiOperation(value = "用户信息")
     @GetMapping("/info")
@@ -193,11 +198,11 @@ public class UserController {
     @PostMapping("/login")
     public R login(@Validated LoginRequest request, HttpServletRequest httpServletRequest) {
         // 获取验证码
-        String captchaCode = redisTemplate.opsForValue().get("login:" + request.getCaptchaKey());
-        redisTemplate.delete(request.getCaptchaKey());
-        if (StringUtils.isBlank(captchaCode) || !captchaCode.equals(request.getCaptcha().trim().toLowerCase())) {
-            return R.error(MsgUtil.get("validation.user.register.yzmerr"));
-        }
+//        String captchaCode = redisTemplate.opsForValue().get("login:" + request.getCaptchaKey());
+//        redisTemplate.delete(request.getCaptchaKey());
+//        if (StringUtils.isBlank(captchaCode) || !captchaCode.equals(request.getCaptcha().trim().toLowerCase())) {
+//            return R.error(MsgUtil.get("validation.user.register.yzmerr"));
+//        }
 
         String clientIP = ServletUtil.getClientIPByHeader(httpServletRequest, "x-original-forwarded-for");
 
@@ -353,5 +358,62 @@ public class UserController {
                         .eq(UserInfo::getUserName, userName)
         );
         return R.ok();
+    }
+
+
+    @ApiOperation(value = "用户流水记录")
+    @GetMapping("/transactionRecord/list")
+    public R orderList(TransactionRecordRequest request, HttpServletRequest httpServletRequest) {
+        String userName = JwtUtils.getUserName(httpServletRequest);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put(Constant.PAGE, request.getPage());
+        params.put(Constant.LIMIT, request.getLimit());
+        params.put("userName", userName);
+        params.put("type", request.getType());
+        //1:今天 2:昨天 3:一周内 4:一月内
+        Date date = new Date();
+        if (StringUtils.equals(request.getDateStr(), "2")) {
+            date = DateUtil.offsetDay(date, -1);
+        } else if (StringUtils.equals(request.getDateStr(), "3")) {
+            date = DateUtil.offsetWeek(date, 1);
+        } else if (StringUtils.equals(request.getDateStr(), "4")) {
+            date = DateUtil.offsetMonth(date, 1);
+        }
+        Date startTime = DateUtil.beginOfDay(date);
+        Date endTime = DateUtil.endOfDay(date);
+
+        params.put("startTime", startTime);
+        params.put("endTime", endTime);
+
+        PageUtils page = transactionRecordService.queryPage(params);
+        List<TransactionRecord> list = (List<TransactionRecord>) page.getList();
+
+        if (CollUtil.isNotEmpty(list)) {
+            Map<Integer, String> businessTypeMap = new HashMap<>();
+            businessTypeMap.put(0, "充值");
+            businessTypeMap.put(1, "提现");
+            businessTypeMap.put(2, "彩票奖金");
+            businessTypeMap.put(3, "彩票撤单");
+            businessTypeMap.put(4, "额度转入");
+            businessTypeMap.put(5, "额度转出");
+            businessTypeMap.put(6, "返水");
+            businessTypeMap.put(7, "优惠活动");
+            businessTypeMap.put(8, "后台入款");
+            businessTypeMap.put(9, "后台扣款");
+            JSONArray arr = new JSONArray();
+            for (TransactionRecord temp : list) {
+                JSONObject obj = new JSONObject();
+                obj.put("remark", temp.getRemark());
+                obj.put("time", temp.getCreateTime());
+                obj.put("amount", temp.getAmount());
+                obj.put("afterAmount", temp.getAfterAmount());
+                obj.put("typeStr", businessTypeMap.getOrDefault(temp.getBusinessType(), "未知"));
+                arr.add(obj);
+            }
+            page.setList(arr);
+        }
+
+        return R.ok().put("page", page);
     }
 }

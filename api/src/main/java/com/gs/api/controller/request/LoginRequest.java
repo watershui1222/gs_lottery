@@ -22,11 +22,11 @@ public class LoginRequest {
     @ApiModelProperty(value = "登录密码", example = "123qwe", required = true)
     private String loginPwd;
 
-    @NotNull(message = "system.param.err")
-    @ApiModelProperty(value = "验证码Key")
-    protected String captchaKey;
-
-    @NotNull(message = "system.param.err")
-    @ApiModelProperty(value = "验证码")
-    protected String captcha;
+//    @NotNull(message = "system.param.err")
+//    @ApiModelProperty(value = "验证码Key")
+//    protected String captchaKey;
+//
+//    @NotNull(message = "system.param.err")
+//    @ApiModelProperty(value = "验证码")
+//    protected String captcha;
 }
