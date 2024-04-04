@@ -57,4 +57,15 @@ public class PqSchedule {
 
 
     }
+
+    @Scheduled(cron = "0/10 * * * * ?")
+    public void ftPaiqi1() {
+
+        LotteryDataService pqService = lotteryDataClient.getSourceService(LotteryCodeEnum.FT.getLotteryCode());
+
+        pqService.generatePaiqi(new Date());
+        pqService.generatePaiqi(DateUtil.tomorrow());
+
+
+    }
 }

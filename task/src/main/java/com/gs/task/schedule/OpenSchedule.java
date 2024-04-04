@@ -45,7 +45,14 @@ public class OpenSchedule {
 
         LotteryDataService cqsscLotteryDataService = lotteryDataClient.getSourceService(LotteryCodeEnum.CQSSC.getLotteryCode());
         cqsscLotteryDataService.openResult(merChant, jsonObject);
+
+        LotteryDataService ftLotteryDataService = lotteryDataClient.getSourceService(LotteryCodeEnum.FT.getLotteryCode());
+        ftLotteryDataService.openResult(merChant, jsonObject);
+
     }
+
+
+
 
 
 }

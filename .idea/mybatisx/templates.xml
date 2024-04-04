@@ -68,8 +68,8 @@
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="OpenresultCqssc" />
-                  <option name="tableName" value="t_openresult_cqssc" />
+                  <option name="className" value="OpenresultGd11x5" />
+                  <option name="tableName" value="t_openresult_gd11x5" />
                 </TableUIInfo>
               </list>
             </option>
