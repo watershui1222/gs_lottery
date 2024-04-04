@@ -2,7 +2,7 @@ package com.gs.api.platform;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.http.HttpUtil;
-import com.gs.api.platform.platUtils.KaiYuanUtil;
+import com.gs.commons.utils.AesUtils;
 import org.springframework.beans.factory.annotation.Value;
 import java.util.Date;
 
@@ -27,7 +27,7 @@ public class LeYouGame {
      * @return
      * @throws Exception
      */
-    public String login() throws Exception {
+    public String login(){
         String agent = this.agent;
         String timestamp = String.valueOf(DateUtil.current());
         String account = "GSTestAccount1";
@@ -43,8 +43,37 @@ public class LeYouGame {
                 .append("&ip=127.0.0.1")
                 .append("&lineCode=").append(lineCode)
                 .append("&KindID=").append(kindId);
-        String param = KaiYuanUtil.AESEncrypt(paramSb.toString(), aesKey);
-        String key = KaiYuanUtil.MD5(agent+timestamp+this.md5Key);
+        String param = AesUtils.AESEncrypt(paramSb.toString(), aesKey);
+        String key = AesUtils.MD5(agent+timestamp+this.md5Key);
+        StringBuilder urlSB = new StringBuilder();
+        urlSB.append(this.apiDomain).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
+        String result = HttpUtil.get(urlSB.toString());
+        return result;
+    }
+
+    /**
+     * 查询余额
+     * @return
+     * @throws Exception
+     */
+    public String queryBalance(){
+        String agent = this.agent;
+        String timestamp = String.valueOf(DateUtil.current());
+        String account = "GSTestAccount1";
+        String orderid = agent + DateUtil.format(new Date(), "yyyyMMddHHmmssSSS") + account;
+        String lineCode = "GSLY";
+        String kindId = "220";
+        String aesKey = this.aesKey;
+        StringBuilder paramSb = new StringBuilder();
+        paramSb.append("s=0&")
+                .append("account=").append(account)
+                .append("&money=0")
+                .append("&orderid=").append(orderid)
+                .append("&ip=127.0.0.1")
+                .append("&lineCode=").append(lineCode)
+                .append("&KindID=").append(kindId);
+        String param = AesUtils.AESEncrypt(paramSb.toString(), aesKey);
+        String key = AesUtils.MD5(agent+timestamp+this.md5Key);
         StringBuilder urlSB = new StringBuilder();
         urlSB.append(this.apiDomain).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
         String result = HttpUtil.get(urlSB.toString());
@@ -52,7 +81,7 @@ public class LeYouGame {
     }
 
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args){
         LeYouGame ly = new LeYouGame();
         System.out.println(ly.login());
     }
