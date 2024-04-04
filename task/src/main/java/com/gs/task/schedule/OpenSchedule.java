@@ -77,6 +77,28 @@ public class OpenSchedule {
     }
 
 
+    @Scheduled(cron = "0/14 * * * * ?")
+    public void bjpk10Open() {
+
+        // 多彩数据原
+        LotterySourceProperties.SourceMerchants merChant = lotterySourceProperties.getMerChant(LotterySourceEnum.DUOCAI);
+        HttpRequest httpRequest = HttpRequest.get(merChant.getUrl());
+        HttpResponse httpResponse = httpRequest.execute();
+        String body = httpResponse.body();
+        JSONObject jsonObject = JSONObject.parseObject(body);
+
+        LotteryDataService bjpk10LotteryDataService = lotteryDataClient.getSourceService(LotteryCodeEnum.BJPK10.getLotteryCode());
+        bjpk10LotteryDataService.openResult(merChant, jsonObject);
+
+
+
+        LotteryDataService molhcLotteryDataService = lotteryDataClient.getSourceService(LotteryCodeEnum.MO6HC.getLotteryCode());
+        molhcLotteryDataService.openResult(merChant, jsonObject);
+
+
+    }
+
+
 
 
 
