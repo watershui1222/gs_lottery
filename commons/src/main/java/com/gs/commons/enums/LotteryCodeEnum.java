@@ -17,6 +17,8 @@ public enum LotteryCodeEnum {
     GD11X5("GD11X5", "广东11选5"),
     BJKL8("BJKL8", "北京快乐8"),
     PCDD("PCDD", "PC蛋蛋"),
+    BJPK10("BJPK10", "北京PK10"),
+    MO6HC("MOLHC", "澳门六合彩"),
     ;
     private String lotteryCode;
     private String name;

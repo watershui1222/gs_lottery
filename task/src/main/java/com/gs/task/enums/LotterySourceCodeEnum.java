@@ -20,6 +20,8 @@ public enum LotterySourceCodeEnum {
     DUOCAI_GD11X5(LotterySourceEnum.DUOCAI.getCode(), LotteryCodeEnum.GD11X5.getLotteryCode(), "GD11X5"),
     DUOCAI_BJKL8(LotterySourceEnum.DUOCAI.getCode(), LotteryCodeEnum.BJKL8.getLotteryCode(), "BJKL8"),
     DUOCAI_PCDD(LotterySourceEnum.DUOCAI.getCode(), LotteryCodeEnum.PCDD.getLotteryCode(), "BJKL8"),
+    DUOCAI_BJPK10(LotterySourceEnum.DUOCAI.getCode(), LotteryCodeEnum.BJPK10.getLotteryCode(), "BJPK10"),
+    DUOCAI_MOLHC(LotterySourceEnum.DUOCAI.getCode(), LotteryCodeEnum.MO6HC.getLotteryCode(), "MOLHC"),
     ;
 
     private static Map<String, LotterySourceCodeEnum> lotterySourceCodeEnumMap;
