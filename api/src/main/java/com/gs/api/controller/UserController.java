@@ -443,6 +443,12 @@ public class UserController {
         String userName = JwtUtils.getUserName(httpServletRequest);
         UserInfo userInf = userInfoService.getUserByName(userName);
 
+        // 验证支付密码
+        String pwd = SecureUtil.md5(request.getPayPwd());
+        if (!StringUtils.equals(pwd, userInf.getPayPwd())) {
+            return R.error(MsgUtil.get("system.order.paypwderror"));
+        }
+
         Map<String, String> allParamByMap = sysParamService.getAllParamByMap();
 
         Integer accountLimit = MapUtil.getInt(allParamByMap, "account_limit", 10);
@@ -466,10 +472,16 @@ public class UserController {
 
     @ApiOperation(value = "绑定虚拟货币账户")
     @PostMapping("/bindVirAccount")
-    public R bindAccount(@Validated BindAccountRequest request, HttpServletRequest httpServletRequest) {
+    public R bindVirAccount(@Validated BindAccountRequest request, HttpServletRequest httpServletRequest) {
 
         String userName = JwtUtils.getUserName(httpServletRequest);
         UserInfo userInf = userInfoService.getUserByName(userName);
+
+        // 验证支付密码
+        String pwd = SecureUtil.md5(request.getPayPwd());
+        if (!StringUtils.equals(pwd, userInf.getPayPwd())) {
+            return R.error(MsgUtil.get("system.order.paypwderror"));
+        }
 
         Map<String, String> allParamByMap = sysParamService.getAllParamByMap();
 
@@ -481,7 +493,7 @@ public class UserController {
 
         UserAccount userAccount = new UserAccount();
         userAccount.setUserName(userInf.getUserName());
-        userAccount.setAccountType(1);
+        userAccount.setAccountType(4);
         userAccount.setChannelName(request.getCoinName());
         userAccount.setAccountNo(request.getAddress());
         userAccount.setAddress(request.getChannelType());
@@ -491,9 +503,22 @@ public class UserController {
         return R.ok();
     }
 
+    @ApiOperation(value = "删除收款账户")
+    @PostMapping("/delAccount")
+    public R delAccount(@Validated DelAccountRequest request, HttpServletRequest httpServletRequest) {
+
+        String userName = JwtUtils.getUserName(httpServletRequest);
+        userAccountService.remove(
+                new LambdaUpdateWrapper<UserAccount>()
+                        .eq(UserAccount::getUserName, userName)
+                        .eq(UserAccount::getId, request.getId()));
+
+        return R.ok();
+    }
+
 
     @ApiOperation(value = "获取用户所有收款账户")
-    @PostMapping("/AllAccount")
+    @GetMapping("/AllAccount")
     public R AllAccount(HttpServletRequest httpServletRequest) {
 
         String userName = JwtUtils.getUserName(httpServletRequest);
@@ -658,8 +683,13 @@ public class UserController {
     @GetMapping("/getReturnAmount")
     public R getReturnAmount(HttpServletRequest httpServletRequest) {
         String userName = JwtUtils.getUserName(httpServletRequest);
-        // TODO: 2024/4/5 查询返回金额 
-        return R.ok().put("data", RandomUtil.randomInt(1, 100));
+        Date now = new Date();
+        // 所有返水key
+        DateTime yesterday = DateUtil.offsetDay(now, -1);
+        String autoKey = RedisKeyUtil.AutoReturn(userName, yesterday);
+        Boolean flag = redisTemplate.hasKey(autoKey);
+        // TODO: 2024/4/5 查询返回金额
+        return R.ok().put("data", RandomUtil.randomInt(1, 100)).put("flag", flag);
     }
 
     @Transactional
