@@ -1,5 +1,4 @@
 package com.gs.api.controller;
-import java.util.Date;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
@@ -19,6 +18,7 @@ import com.gs.api.controller.request.*;
 import com.gs.api.utils.JwtUtils;
 import com.gs.commons.constants.Constant;
 import com.gs.commons.entity.*;
+import com.gs.commons.enums.PlatSubEnum;
 import com.gs.commons.service.*;
 import com.gs.commons.utils.*;
 import io.swagger.annotations.Api;
@@ -75,6 +75,15 @@ public class UserController {
 
     @Autowired
     private WithdrawService withdrawService;
+    @Autowired
+    private EduOrderService eduOrderService;
+
+    @Autowired
+    private KyRecordService kyRecordService;
+
+    @Autowired
+    private LyRecordService lyRecordService;
+
 
     @ApiOperation(value = "用户信息")
     @GetMapping("/info")
@@ -691,5 +700,95 @@ public class UserController {
         
         redisTemplate.opsForValue().set(autoKey, "true", 2, TimeUnit.DAYS);
         return R.ok();
+    }
+
+    @ApiOperation(value = "第三方游戏记录")
+    @GetMapping("/platOrder/list")
+    public R platOrderList(PlatOrderListRequest request, HttpServletRequest httpServletRequest) {
+        String userName = JwtUtils.getUserName(httpServletRequest);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put(Constant.PAGE, request.getPage());
+        params.put(Constant.LIMIT, request.getLimit());
+        params.put("userName", userName);
+        //1:今天 2:昨天 3:一周内 4:一月内
+        if (StringUtils.isNotBlank(request.getDateStr())) {
+            Date date = new Date();
+            if (StringUtils.equals(request.getDateStr(), "2")) {
+                date = DateUtil.offsetDay(date, -1);
+            } else if (StringUtils.equals(request.getDateStr(), "3")) {
+                date = DateUtil.offsetWeek(date, 1);
+            } else if (StringUtils.equals(request.getDateStr(), "4")) {
+                date = DateUtil.offsetMonth(date, 1);
+            }
+            Date startTime = DateUtil.beginOfDay(date);
+            Date endTime = DateUtil.endOfDay(date);
+
+            params.put("startTime", startTime);
+            params.put("endTime", endTime);
+        }
+
+        PageUtils pageUtils;
+        if (StringUtils.equals(PlatSubEnum.KY.getPlatSubCode(), request.getSubPlatCode())) {
+            pageUtils = kyRecordService.queryPage(params);
+        } else if (StringUtils.equals(PlatSubEnum.LY.getPlatSubCode(), request.getSubPlatCode())) {
+            pageUtils = lyRecordService.queryPage(params);
+        } else {
+            return R.error("未查到对应游戏厅方");
+        }
+
+        return R.ok().put("page", pageUtils);
+    }
+
+
+
+    @ApiOperation(value = "额度转换记录")
+    @GetMapping("/eduOrder/list")
+    public R eduOrderList(EduOrderListRequest request, HttpServletRequest httpServletRequest) {
+        String userName = JwtUtils.getUserName(httpServletRequest);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put(Constant.PAGE, request.getPage());
+        params.put(Constant.LIMIT, request.getLimit());
+        params.put("userName", userName);
+        params.put("platCode", request.getPlatCode());
+        //1:今天 2:昨天 3:一周内 4:一月内
+        if (StringUtils.isNotBlank(request.getDateStr())) {
+            Date date = new Date();
+            if (StringUtils.equals(request.getDateStr(), "2")) {
+                date = DateUtil.offsetDay(date, -1);
+            } else if (StringUtils.equals(request.getDateStr(), "3")) {
+                date = DateUtil.offsetWeek(date, 1);
+            } else if (StringUtils.equals(request.getDateStr(), "4")) {
+                date = DateUtil.offsetMonth(date, 1);
+            }
+            Date startTime = DateUtil.beginOfDay(date);
+            Date endTime = DateUtil.endOfDay(date);
+
+            params.put("startTime", startTime);
+            params.put("endTime", endTime);
+        }
+
+        PageUtils page = eduOrderService.queryPage(params);
+        if (CollUtil.isNotEmpty(page.getList())) {
+            List<EduOrder> pageList = (List<EduOrder>) page.getList();
+            JSONArray jsonArray = new JSONArray();
+            for (EduOrder eduOrder : pageList) {
+                JSONObject jsonObject = new JSONObject();
+                String transPlatStr = eduOrder.getEduType() == 1
+                        ? StrUtil.format("{}->{}", "平台", eduOrder.getPlatCode())
+                        : StrUtil.format("{}->{}", eduOrder.getPlatCode(), "平台");
+
+                jsonObject.put("transPlatStr", transPlatStr);
+                jsonObject.put("time", eduOrder.getCreateTime());
+                jsonObject.put("amount", eduOrder.getAmount());
+                jsonObject.put("status", eduOrder.getStatus());
+                jsonArray.add(jsonObject);
+
+            }
+            page.setList(jsonArray);
+        }
+
+        return R.ok().put("page", page);
     }
 }
