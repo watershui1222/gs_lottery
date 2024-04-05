@@ -5,6 +5,7 @@ import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.gs.commons.utils.AesUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
@@ -13,6 +14,7 @@ import java.util.Date;
 /**
  * 乐游
  */
+@Slf4j
 public class LeYouGame {
 
     @Value("${platform.LeYou.apiDomain}")
@@ -52,6 +54,7 @@ public class LeYouGame {
         StringBuilder urlSB = new StringBuilder();
         urlSB.append(this.apiDomain).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
         String result = HttpUtil.get(urlSB.toString());
+        log.info("乐游 login param= " + param + " result = " + result);
         JSONObject resJSON = JSONObject.parseObject(result);
         JSONObject d = resJSON.getJSONObject("d");
         if(d.getIntValue("code") == 0){
@@ -77,6 +80,7 @@ public class LeYouGame {
         StringBuilder urlSB = new StringBuilder();
         urlSB.append(this.apiDomain).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
         String result = HttpUtil.get(urlSB.toString());
+        log.info("乐游 queryBalance param= " + param + " result = " + result);
         JSONObject resJson = JSONObject.parseObject(result);
         JSONObject d = resJson.getJSONObject("d");
         if(d.getIntValue("code") == 0){
@@ -106,7 +110,7 @@ public class LeYouGame {
         StringBuilder urlSB = new StringBuilder();
         urlSB.append(this.apiDomain).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
         String result = HttpUtil.get(urlSB.toString());
-        System.out.println(result);
+        log.info("乐游 chargePoints param= " + param + " result = " + result);
         JSONObject res = JSONObject.parseObject(result);
         JSONObject d = res.getJSONObject("d");
         if(d.getIntValue("code") == 0){
@@ -138,7 +142,7 @@ public class LeYouGame {
         StringBuilder urlSB = new StringBuilder();
         urlSB.append(this.apiDomain).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
         String result = HttpUtil.get(urlSB.toString());
-        System.out.println(result);
+        log.info("乐游 refund param= " + param + " result = " + result);
         JSONObject res = JSONObject.parseObject(result);
         JSONObject d = res.getJSONObject("d");
         if(d.getIntValue("code") == 0){
@@ -167,7 +171,7 @@ public class LeYouGame {
         StringBuilder urlSB = new StringBuilder();
         urlSB.append(this.apiDomain).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
         String result = HttpUtil.get(urlSB.toString());
-        System.out.println(result);
+        log.info("乐游 orderQuery param= " + param + " result = " + result);
         JSONObject jsonResult = JSONObject.parseObject(result);
         JSONObject d = jsonResult.getJSONObject("d");
         int code = d.getIntValue("code");
@@ -195,7 +199,7 @@ public class LeYouGame {
         StringBuilder urlSB = new StringBuilder();
         urlSB.append(this.apiDomain).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
         String result = HttpUtil.get(urlSB.toString());
-        System.out.println(result);
+        log.info("乐游 kickOff param= " + param + " result = " + result);
         return "OK";
     }
 
@@ -219,7 +223,6 @@ public class LeYouGame {
         StringBuilder urlSB = new StringBuilder();
         urlSB.append(this.betRecordDomain).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
         String result = HttpUtil.get(urlSB.toString());
-        System.out.println(result);
         JSONObject jsonResult = JSONObject.parseObject(result);
         JSONObject d = jsonResult.getJSONObject("d");
         int code = d.getIntValue("code");

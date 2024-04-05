@@ -7,6 +7,7 @@ import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.gs.commons.utils.AesUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
@@ -17,6 +18,7 @@ import java.util.List;
 /**
  * CR皇冠体育
  */
+@Slf4j
 public class HuangGuanSport {
     @Value("${platform.ShaBa.agId}")
     public String agId = "2829";
@@ -47,9 +49,10 @@ public class HuangGuanSport {
         HttpResponse res = HttpUtil.createPost(this.apiUrl).contentType("application/json").charset("utf-8").body(param.toJSONString()).execute();
         String encryptRes = res.body();
         String result = AesUtils.AESDecrypt(encryptRes, this.secretKey);
+        log.info("皇冠 aglogin接口 param= " + param + " result = " + result);
         JSONObject resultJS = JSONObject.parseObject(result);
         if(StrUtil.equals(resultJS.getString("respcode"), "0000")){
-            token = resultJS.getString("token");
+            return resultJS.getString("token");
         }
         return token;
     }
@@ -78,9 +81,9 @@ public class HuangGuanSport {
             param.put("AGID", agId);
             HttpResponse res = HttpUtil.createPost(this.apiUrl).contentType("application/json").charset("utf-8").body(param.toJSONString()).execute();
             String resStr = res.body();
+            log.info("皇冠 createMember接口 param= " + param + " result = " + resStr);
             if(!JSONUtil.isTypeJSON(resStr)){
                 String result = AesUtils.AESDecrypt(resStr, this.secretKey);
-                System.out.println(result);
                 String respcode = JSONObject.parseObject(result).getString("respcode");
                 if(StrUtil.equals(respcode, "0000")){
                     //创建成功
@@ -88,6 +91,7 @@ public class HuangGuanSport {
                 }
             }
         }
+
         return "";
     }
 
@@ -158,6 +162,7 @@ public class HuangGuanSport {
             param.put("AGID", agId);
             HttpResponse res = HttpUtil.createPost(this.apiUrl).contentType("application/json").charset("utf-8").body(param.toJSONString()).execute();
             String resStr = res.body();
+            log.info("皇冠 launchGame接口 param= " + param + " result = " + resStr);
             if(!JSONUtil.isTypeJSON(resStr)){
                 String result = AesUtils.AESDecrypt(resStr, this.secretKey);
                 JSONObject resultJson = JSONObject.parseObject(result);
@@ -194,14 +199,9 @@ public class HuangGuanSport {
             param.put("Request", requestStr);
             param.put("Method", "Deposit");
             param.put("AGID", agId);
-            HttpResponse res = null;
-            try {
-                res = HttpUtil.createPost(this.apiUrl).contentType("application/json").charset("utf-8").body(param.toJSONString()).execute();
-            } catch (Exception e) {
-                //结果不确定
-                return "needcheck";
-            }
+            HttpResponse res = HttpUtil.createPost(this.apiUrl).contentType("application/json").charset("utf-8").body(param.toJSONString()).execute();
             String resStr = res.body();
+            log.info("皇冠 deposit param= " + param + " result = " + resStr);
             if(!JSONUtil.isTypeJSON(resStr)){
                 String result = AesUtils.AESDecrypt(resStr, this.secretKey);
                 System.out.println(result);
@@ -241,6 +241,7 @@ public class HuangGuanSport {
             param.put("AGID", agId);
             HttpResponse res = HttpUtil.createPost(this.apiUrl).contentType("application/json").charset("utf-8").body(param.toJSONString()).execute();
             String resStr = res.body();
+            log.info("皇冠 withdraw接口 param= " + param + " result = " + resStr);
             if(!JSONUtil.isTypeJSON(resStr)){
                 String result = AesUtils.AESDecrypt(resStr, this.secretKey);
                 System.out.println(result);
@@ -276,6 +277,7 @@ public class HuangGuanSport {
             param.put("AGID", agId);
             HttpResponse res = HttpUtil.createPost(this.apiUrl).contentType("application/json").charset("utf-8").body(param.toJSONString()).execute();
             String resStr = res.body();
+            log.info("皇冠 chkMemberBalance接口 param= " + param + " result = " + resStr);
             if(!JSONUtil.isTypeJSON(resStr)){
                 String result = AesUtils.AESDecrypt(resStr, this.secretKey);
                 System.out.println(result);
@@ -311,6 +313,7 @@ public class HuangGuanSport {
             param.put("AGID", agId);
             HttpResponse res = HttpUtil.createPost(this.apiUrl).contentType("application/json").charset("utf-8").body(param.toJSONString()).execute();
             String resStr = res.body();
+            log.info("皇冠 kickOutMem接口 param= " + param + " result = " + resStr);
             if(!JSONUtil.isTypeJSON(resStr)){
                 String result = AesUtils.AESDecrypt(resStr, this.secretKey);
                 System.out.println(result);
@@ -370,7 +373,6 @@ public class HuangGuanSport {
                     }
                 }
                 page++;
-                System.out.println("wagerTotalpage = " + wagerTotalpage);
             }while(page <= wagerTotalpage);
         }
         return recordList;

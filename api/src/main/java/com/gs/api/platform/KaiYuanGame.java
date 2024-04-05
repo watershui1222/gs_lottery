@@ -5,6 +5,7 @@ import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.gs.commons.utils.AesUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
@@ -13,6 +14,7 @@ import java.util.Date;
 /**
  * 开源棋牌
  */
+@Slf4j
 public class KaiYuanGame {
 
     @Value("${platform.KaiYuan.prefixURL}")
@@ -57,6 +59,7 @@ public class KaiYuanGame {
         if(d.getIntValue("code") == 0){
             return d.getString("url");
         }
+        log.error("开元 获取游戏URL失败 param= " + param + " result = " + result);
         return "";
     }
 
@@ -81,8 +84,9 @@ public class KaiYuanGame {
         JSONObject d = jsonResult.getJSONObject("d");
         BigDecimal money = BigDecimal.ZERO;
         if(d != null){
-            money = d.getBigDecimal("money") == null ? BigDecimal.ZERO : d.getBigDecimal("money");
+            return d.getBigDecimal("money") == null ? BigDecimal.ZERO : d.getBigDecimal("money");
         }
+        log.error("开元 获取用户余额失败 param= " + param + " result = " + result);
         return money;
     }
 
@@ -108,6 +112,7 @@ public class KaiYuanGame {
         StringBuilder urlSB = new StringBuilder();
         urlSB.append(this.prefixURL).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
         String result = HttpUtil.get(urlSB.toString());
+        log.info("开元 上分接口 param= " + param + " result = " + result);
         JSONObject res = JSONObject.parseObject(result);
         JSONObject d = res.getJSONObject("d");
         if(d.getIntValue("code") == 0){
@@ -138,7 +143,7 @@ public class KaiYuanGame {
         StringBuilder urlSB = new StringBuilder();
         urlSB.append(this.prefixURL).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
         String result = HttpUtil.get(urlSB.toString());
-        System.out.println(result);
+        log.info("开元 下分接口 param= " + param + " result = " + result);
         JSONObject res = JSONObject.parseObject(result);
         JSONObject d = res.getJSONObject("d");
         if(d.getIntValue("code") == 0){
@@ -167,7 +172,7 @@ public class KaiYuanGame {
         StringBuilder urlSB = new StringBuilder();
         urlSB.append(this.prefixURL).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
         String result = HttpUtil.get(urlSB.toString());
-        System.out.println(result);
+        log.info("开元 转账订单确认接口 param= " + param + " result = " + result);
         JSONObject jsonResult = JSONObject.parseObject(result);
         JSONObject d = jsonResult.getJSONObject("d");
         int code = d.getIntValue("code");
@@ -195,7 +200,6 @@ public class KaiYuanGame {
         StringBuilder urlSB = new StringBuilder();
         urlSB.append(this.prefixURL).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
         String result = HttpUtil.get(urlSB.toString());
-        System.out.println(result);
         return "OK";
     }
 
@@ -243,8 +247,8 @@ public class KaiYuanGame {
         return "OK";
     }
 
-    public static void main(String[] args){
-        KaiYuanGame k = new KaiYuanGame();
-        System.out.println(k.getRecord());
-    }
+//    public static void main(String[] args){
+//        KaiYuanGame k = new KaiYuanGame();
+//        System.out.println(k.getRecord());
+//    }
 }
