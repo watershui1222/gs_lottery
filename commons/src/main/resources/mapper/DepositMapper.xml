@@ -16,6 +16,7 @@
             <result property="operName" column="oper_name" jdbcType="VARCHAR"/>
             <result property="remark" column="remark" jdbcType="VARCHAR"/>
             <result property="accountDetail" column="account_detail" jdbcType="VARCHAR"/>
+            <result property="depositDetail" column="deposit_detail" jdbcType="VARCHAR"/>
             <result property="status" column="status" jdbcType="INTEGER"/>
     </resultMap>
 
@@ -23,6 +24,7 @@
         id,user_name,order_no,
         amount,deposit_type,create_time,
         check_time,update_time,oper_name,
-        remark,account_detail,status
+        remark,account_detail,deposit_detail,
+        status
     </sql>
 </mapper>

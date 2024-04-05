@@ -14,11 +14,17 @@
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="operName" column="oper_name" jdbcType="VARCHAR"/>
             <result property="pxh" column="pxh" jdbcType="INTEGER"/>
+            <result property="status" column="status" jdbcType="INTEGER"/>
+            <result property="remark" column="remark" jdbcType="VARCHAR"/>
+            <result property="minAmount" column="min_amount" jdbcType="DECIMAL"/>
+            <result property="maxAmount" column="max_amount" jdbcType="DECIMAL"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,channel_name,channel_type,
         account_no,exchange_rate,create_time,
-        update_time,oper_name,pxh
+        update_time,oper_name,pxh,
+        status,remark,min_amount,
+        max_amount
     </sql>
 </mapper>

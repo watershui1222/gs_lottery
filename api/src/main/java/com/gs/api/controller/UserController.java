@@ -1,9 +1,12 @@
 package com.gs.api.controller;
+import java.util.Date;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.DesensitizedUtil;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import com.alibaba.fastjson2.JSONArray;
@@ -23,6 +26,7 @@ import com.gs.commons.utils.RedisKeyUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.User;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +71,9 @@ public class UserController {
 
     @Autowired
     private TransactionRecordService transactionRecordService;
+
+    @Autowired
+    private UserAccountService userAccountService;
 
     @ApiOperation(value = "用户信息")
     @GetMapping("/info")
@@ -416,5 +423,92 @@ public class UserController {
         }
 
         return R.ok().put("page", page);
+    }
+
+
+    @ApiOperation(value = "绑定银行收款账户")
+    @PostMapping("/bindBankAccount")
+    public R bindAccount(@Validated BindBankAccountRequest request, HttpServletRequest httpServletRequest) {
+
+        String userName = JwtUtils.getUserName(httpServletRequest);
+        UserInfo userInf = userInfoService.getUserByName(userName);
+
+        Map<String, String> allParamByMap = sysParamService.getAllParamByMap();
+
+        Integer accountLimit = MapUtil.getInt(allParamByMap, "account_limit", 10);
+        long count = userAccountService.count(new LambdaQueryWrapper<UserAccount>().eq(UserAccount::getUserName, userName));
+        if (count >= accountLimit) {
+            return R.error(StrUtil.format(MsgUtil.get("system.withdraw.account.limit"), accountLimit));
+        }
+
+        UserAccount userAccount = new UserAccount();
+        userAccount.setUserName(userInf.getUserName());
+        userAccount.setAccountType(1);
+        userAccount.setChannelName(request.getBankName());
+        userAccount.setAccountNo(request.getBankNo());
+        userAccount.setAddress(request.getAddress());
+        userAccount.setRealName(request.getPayeeName());
+        userAccount.setCreateTime(new Date());
+        userAccountService.save(userAccount);
+        return R.ok();
+    }
+
+
+    @ApiOperation(value = "绑定虚拟货币账户")
+    @PostMapping("/bindVirAccount")
+    public R bindAccount(@Validated BindAccountRequest request, HttpServletRequest httpServletRequest) {
+
+        String userName = JwtUtils.getUserName(httpServletRequest);
+        UserInfo userInf = userInfoService.getUserByName(userName);
+
+        Map<String, String> allParamByMap = sysParamService.getAllParamByMap();
+
+        Integer accountLimit = MapUtil.getInt(allParamByMap, "account_limit", 10);
+        long count = userAccountService.count(new LambdaQueryWrapper<UserAccount>().eq(UserAccount::getUserName, userName));
+        if (count >= accountLimit) {
+            return R.error(StrUtil.format(MsgUtil.get("system.withdraw.account.limit"), accountLimit));
+        }
+
+        UserAccount userAccount = new UserAccount();
+        userAccount.setUserName(userInf.getUserName());
+        userAccount.setAccountType(1);
+        userAccount.setChannelName(request.getCoinName());
+        userAccount.setAccountNo(request.getAddress());
+        userAccount.setAddress(request.getChannelType());
+        userAccount.setRealName(null);
+        userAccount.setCreateTime(new Date());
+        userAccountService.save(userAccount);
+        return R.ok();
+    }
+
+
+    @ApiOperation(value = "获取用户所有收款账户")
+    @PostMapping("/AllAccount")
+    public R AllAccount(HttpServletRequest httpServletRequest) {
+
+        String userName = JwtUtils.getUserName(httpServletRequest);
+        List<UserAccount> list = userAccountService.list(
+                new LambdaQueryWrapper<UserAccount>()
+                        .eq(UserAccount::getUserName, userName)
+                        .orderByDesc(UserAccount::getCreateTime)
+        );
+
+        JSONArray array = new JSONArray();
+        for (UserAccount userAccount : list) {
+            JSONObject obj = new JSONObject();
+            obj.put("id", userAccount.getId());
+            obj.put("accountType", userAccount.getAccountType());
+            obj.put("channelName", userAccount.getChannelName());
+            String accountNo = userAccount.getAccountNo();
+            if (accountNo.length() >= 10) {
+                accountNo = accountNo.substring(0,4) + "****" + accountNo.substring(accountNo.length() - 4, accountNo.length());
+//                accountNo = DesensitizedUtil.idCardNum(accountNo, 2, 4);
+            }
+            obj.put("accountNo", accountNo);
+            obj.put("address", userAccount.getAddress());
+            obj.put("realName", userAccount.getRealName());
+            array.add(obj);
+        }
+        return R.ok().put("list", array);
     }
 }

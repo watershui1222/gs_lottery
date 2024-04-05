@@ -68,8 +68,8 @@
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="CompanyAccount" />
-                  <option name="tableName" value="t_company_account" />
+                  <option name="className" value="Withdraw" />
+                  <option name="tableName" value="t_withdraw" />
                 </TableUIInfo>
               </list>
             </option>
