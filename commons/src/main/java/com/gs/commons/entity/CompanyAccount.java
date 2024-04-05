@@ -76,6 +76,18 @@ public class CompanyAccount implements Serializable {
     @TableField(value = "remark")
     private String remark;
 
+    /**
+     * 0:启用 1:停用
+     */
+    @TableField(value = "status")
+    private Integer status;
+
+    /**
+     * 值越大越靠前
+     */
+    @TableField(value = "pxh")
+    private Integer pxh;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

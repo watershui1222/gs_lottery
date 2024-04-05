@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.google.common.collect.Lists;
 import com.gs.commons.entity.Lottery;
 import com.gs.commons.entity.OpenresultJsk3;
@@ -17,7 +18,6 @@ import com.gs.task.service.LotteryDataService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -57,14 +57,16 @@ public class PcddLotteryDataServiceImpl extends LotteryDataService<OpenresultJsk
             return;
         }
 
-
         // 昨日最后一期期数
-        String yesterdayQsKey = RedisKeyUtil.bjkl8YesterdayQs(lottery.getLotteryCode(), DateUtil.offsetDay(today, -1));
-        String yesterdayQsValue = redisTemplate.opsForValue().get(yesterdayQsKey);
-        if (StringUtils.isEmpty(yesterdayQsValue)) {
-            yesterdayQsValue = lottery.getYesterdayQs();
+        OpenresultPcdd pcdd = openresultPcddService.getOne(
+                new LambdaQueryWrapper<OpenresultPcdd>()
+                        .orderByDesc(OpenresultPcdd::getOpenResultTime)
+        ,false);
+        if (pcdd == null) {
+            log.info("PCDD未获取到昨日最后一期");
+            return;
         }
-        Integer qsValue = Integer.valueOf(yesterdayQsValue);
+        Integer qsValue = Integer.valueOf(pcdd.getPlatQs());
 
         // 判断当前日期是否进行排期
         String paiqiKey = RedisKeyUtil.PaiqiGenerateKey(lottery.getLotteryCode(), today);
@@ -98,8 +100,6 @@ public class PcddLotteryDataServiceImpl extends LotteryDataService<OpenresultJsk
             firstOpenResult = DateUtil.offsetMinute(open.getOpenResultTime(), lottery.getQsTime());
 
         }
-        String todayQsKey = RedisKeyUtil.bjkl8YesterdayQs(lottery.getLotteryCode(), today);
-        redisTemplate.opsForValue().set(todayQsKey, String.valueOf(qsValue), 2, TimeUnit.DAYS);
         openresultPcddService.saveBatch(paiqiList);
         redisTemplate.opsForValue().set(paiqiKey, "true", 2, TimeUnit.DAYS);
     }

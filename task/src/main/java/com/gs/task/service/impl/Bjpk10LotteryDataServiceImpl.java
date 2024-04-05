@@ -4,10 +4,8 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.gs.commons.entity.Lottery;
-import com.gs.commons.entity.OpenresultBjkl8;
-import com.gs.commons.entity.OpenresultBjpk10;
-import com.gs.commons.entity.OpenresultJsk3;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.gs.commons.entity.*;
 import com.gs.commons.enums.LotteryCodeEnum;
 import com.gs.commons.service.OpenresultBjkl8Service;
 import com.gs.commons.service.OpenresultBjpk10Service;
@@ -59,12 +57,15 @@ public class Bjpk10LotteryDataServiceImpl extends LotteryDataService<OpenresultJ
 
 
         // 昨日最后一期期数
-        String yesterdayQsKey = RedisKeyUtil.bjkl8YesterdayQs(lottery.getLotteryCode(), DateUtil.offsetDay(today, -1));
-        String yesterdayQsValue = redisTemplate.opsForValue().get(yesterdayQsKey);
-        if (StringUtils.isEmpty(yesterdayQsValue)) {
-            yesterdayQsValue = lottery.getYesterdayQs();
+        OpenresultBjpk10 pcdd = openresultBjpk10Service.getOne(
+                new LambdaQueryWrapper<OpenresultBjpk10>()
+                        .orderByDesc(OpenresultBjpk10::getOpenResultTime)
+                ,false);
+        if (pcdd == null) {
+            log.info("PCDD未获取到昨日最后一期");
+            return;
         }
-        Integer qsValue = Integer.valueOf(yesterdayQsValue);
+        Integer qsValue = Integer.valueOf(pcdd.getPlatQs());
 
         // 判断当前日期是否进行排期
         String paiqiKey = RedisKeyUtil.PaiqiGenerateKey(lottery.getLotteryCode(), today);
@@ -98,8 +99,6 @@ public class Bjpk10LotteryDataServiceImpl extends LotteryDataService<OpenresultJ
             firstOpenResult = DateUtil.offsetMinute(open.getOpenResultTime(), lottery.getQsTime());
 
         }
-        String todayQsKey = RedisKeyUtil.bjkl8YesterdayQs(lottery.getLotteryCode(), today);
-        redisTemplate.opsForValue().set(todayQsKey, String.valueOf(qsValue), 2, TimeUnit.DAYS);
         openresultBjpk10Service.saveBatch(paiqiList);
         redisTemplate.opsForValue().set(paiqiKey, "true", 2, TimeUnit.DAYS);
     }

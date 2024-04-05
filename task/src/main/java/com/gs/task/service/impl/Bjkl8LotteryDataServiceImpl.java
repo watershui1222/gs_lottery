@@ -4,8 +4,10 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.gs.commons.entity.Lottery;
 import com.gs.commons.entity.OpenresultBjkl8;
+import com.gs.commons.entity.OpenresultBjpk10;
 import com.gs.commons.entity.OpenresultJsk3;
 import com.gs.commons.enums.LotteryCodeEnum;
 import com.gs.commons.service.OpenresultBjkl8Service;
@@ -57,12 +59,15 @@ public class Bjkl8LotteryDataServiceImpl extends LotteryDataService<OpenresultJs
 
 
         // 昨日最后一期期数
-        String yesterdayQsKey = RedisKeyUtil.bjkl8YesterdayQs(lottery.getLotteryCode(), DateUtil.offsetDay(today, -1));
-        String yesterdayQsValue = redisTemplate.opsForValue().get(yesterdayQsKey);
-        if (StringUtils.isEmpty(yesterdayQsValue)) {
-            yesterdayQsValue = lottery.getYesterdayQs();
+        OpenresultBjkl8 pcdd = openresultBjkl8Service.getOne(
+                new LambdaQueryWrapper<OpenresultBjkl8>()
+                        .orderByDesc(OpenresultBjkl8::getOpenResultTime)
+                ,false);
+        if (pcdd == null) {
+            log.info("PCDD未获取到昨日最后一期");
+            return;
         }
-        Integer qsValue = Integer.valueOf(yesterdayQsValue);
+        Integer qsValue = Integer.valueOf(pcdd.getPlatQs());
 
         // 判断当前日期是否进行排期
         String paiqiKey = RedisKeyUtil.PaiqiGenerateKey(lottery.getLotteryCode(), today);
@@ -96,8 +101,6 @@ public class Bjkl8LotteryDataServiceImpl extends LotteryDataService<OpenresultJs
             firstOpenResult = DateUtil.offsetMinute(open.getOpenResultTime(), lottery.getQsTime());
 
         }
-        String todayQsKey = RedisKeyUtil.bjkl8YesterdayQs(lottery.getLotteryCode(), today);
-        redisTemplate.opsForValue().set(todayQsKey, String.valueOf(qsValue), 2, TimeUnit.DAYS);
         openresultBjkl8Service.saveBatch(paiqiList);
         redisTemplate.opsForValue().set(paiqiKey, "true", 2, TimeUnit.DAYS);
     }
