@@ -23,7 +23,7 @@ public class PqSchedule {
     private LotteryDataClient lotteryDataClient;
 
 
-    @Scheduled(cron = "0/10 * * * * ?")
+    @Scheduled(cron = "${paiqiTask.cron.jsk3}")
     public void jsk3Paiqi1() {
 
         LotteryDataService pqService = lotteryDataClient.getSourceService(LotteryCodeEnum.JSK3.getLotteryCode());
@@ -35,7 +35,7 @@ public class PqSchedule {
     }
 
 
-    @Scheduled(cron = "0/10 * * * * ?")
+    @Scheduled(cron = "${paiqiTask.cron.cqssc}")
     public void cqsscPaiqi1() {
 
         LotteryDataService pqService = lotteryDataClient.getSourceService(LotteryCodeEnum.CQSSC.getLotteryCode());
@@ -46,7 +46,7 @@ public class PqSchedule {
 
     }
 
-    @Scheduled(cron = "0/10 * * * * ?")
+    @Scheduled(cron = "${paiqiTask.cron.ft}")
     public void ftPaiqi1() {
 
         LotteryDataService pqService = lotteryDataClient.getSourceService(LotteryCodeEnum.FT.getLotteryCode());
@@ -58,7 +58,7 @@ public class PqSchedule {
     }
 
 
-    @Scheduled(cron = "0/10 * * * * ?")
+    @Scheduled(cron = "${paiqiTask.cron.gd11x5}")
     public void gd11x5Paiqi1() {
 
         LotteryDataService pqService = lotteryDataClient.getSourceService(LotteryCodeEnum.GD11X5.getLotteryCode());
@@ -69,7 +69,7 @@ public class PqSchedule {
 
     }
 
-    @Scheduled(cron = "0/10 * * * * ?")
+    @Scheduled(cron = "${paiqiTask.cron.bjkl8}")
     public void bjkl8Paiqi1() {
 
         LotteryDataService pqService = lotteryDataClient.getSourceService(LotteryCodeEnum.BJKL8.getLotteryCode());
@@ -81,7 +81,7 @@ public class PqSchedule {
     }
 
 
-    @Scheduled(cron = "0/10 * * * * ?")
+    @Scheduled(cron = "${paiqiTask.cron.pcdd}")
     public void pcddPaiqi1() {
 
         LotteryDataService pqService = lotteryDataClient.getSourceService(LotteryCodeEnum.PCDD.getLotteryCode());
@@ -92,7 +92,7 @@ public class PqSchedule {
 
     }
 
-    @Scheduled(cron = "0/10 * * * * ?")
+    @Scheduled(cron = "${paiqiTask.cron.bjpk10}")
     public void bjpk10Paiqi1() {
 
         LotteryDataService pqService = lotteryDataClient.getSourceService(LotteryCodeEnum.BJPK10.getLotteryCode());
@@ -104,7 +104,7 @@ public class PqSchedule {
     }
 
 
-    @Scheduled(cron = "0/10 * * * * ?")
+    @Scheduled(cron = "${paiqiTask.cron.mo6hc}")
     public void mo6hcPaiqi1() {
 
         LotteryDataService pqService = lotteryDataClient.getSourceService(LotteryCodeEnum.MO6HC.getLotteryCode());
@@ -114,6 +114,18 @@ public class PqSchedule {
 
 
     }
+
+
+//    @Scheduled(cron = "0/10 * * * * ?")
+//    public void fc3dPaiqi1() {
+//
+//        LotteryDataService pqService = lotteryDataClient.getSourceService(LotteryCodeEnum.FC3D.getLotteryCode());
+//
+//        pqService.generatePaiqi(new Date());
+//        pqService.generatePaiqi(DateUtil.tomorrow());
+//
+//
+//    }
 
 
 }

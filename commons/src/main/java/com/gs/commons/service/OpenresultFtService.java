@@ -3,8 +3,10 @@ package com.gs.commons.service;
 import com.gs.commons.entity.OpenresultFt;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.gs.commons.entity.OpenresultJsk3;
+import com.gs.commons.utils.PageUtils;
 
 import java.util.List;
+import java.util.Map;
 
 /**
 * @author tommm
@@ -13,4 +15,5 @@ import java.util.List;
 */
 public interface OpenresultFtService extends IService<OpenresultFt> {
     int batchOpenResult(List<OpenresultFt> list);
+    PageUtils queryPage(Map<String,Object> params);
 }

@@ -400,8 +400,8 @@ public class UserController {
             businessTypeMap.put(5, "额度转出");
             businessTypeMap.put(6, "返水");
             businessTypeMap.put(7, "优惠活动");
-            businessTypeMap.put(8, "后台入款");
-            businessTypeMap.put(9, "后台扣款");
+            businessTypeMap.put(8, "人工上分");
+            businessTypeMap.put(9, "人工下分");
             JSONArray arr = new JSONArray();
             for (TransactionRecord temp : list) {
                 JSONObject obj = new JSONObject();

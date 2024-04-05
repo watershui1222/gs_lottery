@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.gs.commons.mapper.OpenresultJsk3Mapper">
+<mapper namespace="com.gs.commons.mapper.OpenresultFc3dMapper">
 
-    <resultMap id="BaseResultMap" type="com.gs.commons.entity.OpenresultJsk3">
+    <resultMap id="BaseResultMap" type="com.gs.commons.entity.OpenresultFc3d">
             <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="qs" column="qs" jdbcType="VARCHAR"/>
             <result property="platQs" column="plat_qs" jdbcType="VARCHAR"/>
@@ -24,38 +24,13 @@
         open_time,close_time,open_result_time,
         create_time,update_time
     </sql>
-    
-   <insert id="insertBatchOrUpdate" parameterType="java.util.List">
-
-   INSERT INTO t_openresult_jsk3(
-      qs,
-      plat_qs,
-      open_result,
-      open_status,
-     curr_count,
-     open_time,
-     close_time,
-     open_result_time,
-     create_time,
-     update_time
-     )
-       values
-       <foreach collection="list" item="i" separator=",">
-           (
-            #{i.qs}, #{i.platQs}, #{i.openResult}, #{i.openStatus}, #{i.currCount},
-           #{i.openTime}, #{i.closeTime}, #{i.openResultTime}, #{i.createTime}, #{i.updateTime}
-           )
-       </foreach>
-       ON DUPLICATE  KEY UPDATE
-       update_time = VALUES(update_time)
-   </insert>
 
     <update id="batchOpenResult" parameterType="java.util.List">
         <foreach collection="list" item="item" separator=";">
-            update t_openresult_jsk3
+            update t_openresult_fc3d
             set open_status = #{item.openStatus},
-                open_result = #{item.openResult},
-                update_time = #{item.updateTime}
+            open_result = #{item.openResult},
+            update_time = #{item.updateTime}
             where plat_qs = #{item.platQs} and open_status = 1
         </foreach>
     </update>

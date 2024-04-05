@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
-public class Jsk3LotteryDataServiceImpl extends LotteryDataService<OpenresultJsk3> {
+public class Jsk3LotteryDataServiceImpl extends LotteryDataService {
 
     @Autowired
     private OpenresultJsk3Service openresultJsk3Service;

@@ -1,16 +1,16 @@
 package com.gs.task.service.impl;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gs.commons.entity.Lottery;
-import com.gs.commons.entity.OpenresultBjpk10;
+import com.gs.commons.entity.OpenresultFc3d;
+import com.gs.commons.entity.OpenresultJsk3;
+import com.gs.commons.entity.OpenresultMo6hc;
 import com.gs.commons.enums.LotteryCodeEnum;
-import com.gs.commons.service.OpenresultBjpk10Service;
+import com.gs.commons.service.OpenresultFc3dService;
+import com.gs.commons.service.OpenresultMo6hcService;
 import com.gs.commons.utils.RedisKeyUtil;
 import com.gs.task.config.LotterySourceProperties;
 import com.gs.task.enums.LotterySourceCodeEnum;
@@ -27,23 +27,24 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
-public class Bjpk10LotteryDataServiceImpl extends LotteryDataService {
+public class Fc3dLotteryDataServiceImpl extends LotteryDataService {
 
     @Autowired
-    private OpenresultBjpk10Service openresultBjpk10Service;
+    private OpenresultFc3dService openresultFc3dService;
 
     @Autowired
     private StringRedisTemplate redisTemplate;
 
-
     @Override
     public LotteryCodeEnum lotteryKindCode() {
-        return LotteryCodeEnum.BJPK10;
+        return LotteryCodeEnum.FC3D;
     }
 
     @Override
     public String getPaiqiQs(Date todayDate, Integer currCount) {
-        return String.valueOf(currCount);
+        String todayDateStr = DateUtil.format(todayDate, "yyyy");
+        String qs = todayDateStr + String.format("%03d", DateUtil.dayOfYear(todayDate));
+        return qs;
     }
 
 
@@ -54,21 +55,6 @@ public class Bjpk10LotteryDataServiceImpl extends LotteryDataService {
             log.info("彩种代码[{}]未开启", lotteryKindCode().getLotteryCode());
             return;
         }
-
-
-        // 昨日最后一期期数
-        LambdaQueryWrapper<OpenresultBjpk10> wrapper =
-                new LambdaQueryWrapper<OpenresultBjpk10>()
-                        .orderByDesc(OpenresultBjpk10::getOpenResultTime);
-
-        Page<OpenresultBjpk10> page = openresultBjpk10Service.page(new Page<>(1, 1), wrapper);
-        List<OpenresultBjpk10> records = page.getRecords();
-        if (CollUtil.isEmpty(records)) {
-            log.info("BJPK10未获取到昨日最后一期");
-            return;
-        }
-        Integer qsValue = Integer.valueOf(records.get(0).getPlatQs());
-
         // 判断当前日期是否进行排期
         String paiqiKey = RedisKeyUtil.PaiqiGenerateKey(lottery.getLotteryCode(), today);
         Boolean hasKey = redisTemplate.hasKey(paiqiKey);
@@ -81,11 +67,10 @@ public class Bjpk10LotteryDataServiceImpl extends LotteryDataService {
         String todayDateStr = DateUtil.format(today, "YYMMdd");
 
         DateTime firstOpenResult = DateUtil.parseDateTime(DateUtil.formatDate(today) + " " + lottery.getFirstQsTime());
-        List<OpenresultBjpk10> paiqiList = new ArrayList<>();
+        List<OpenresultFc3d> paiqiList = new ArrayList<>();
         for (Integer i = 1; i <= lottery.getDayCount(); i++) {
-            qsValue++;
-            OpenresultBjpk10 open = new OpenresultBjpk10();
-            String qs = getPaiqiQs(today, qsValue);
+            OpenresultFc3d open = new OpenresultFc3d();
+            String qs = getPaiqiQs(today, i);
             open.setQs(qs);
             open.setPlatQs(qs);
             open.setOpenResult(null);
@@ -99,16 +84,15 @@ public class Bjpk10LotteryDataServiceImpl extends LotteryDataService {
             paiqiList.add(open);
             // 下一期开奖时间
             firstOpenResult = DateUtil.offsetMinute(open.getOpenResultTime(), lottery.getQsTime());
-
         }
-        openresultBjpk10Service.saveBatch(paiqiList);
+        openresultFc3dService.saveBatch(paiqiList);
         redisTemplate.opsForValue().set(paiqiKey, "true", 2, TimeUnit.DAYS);
     }
 
     @Override
     public void openResult(LotterySourceProperties.SourceMerchants merchants, JSONObject jsonObject) {
 
-        List<OpenresultBjpk10> list = new ArrayList<>();
+        List<OpenresultFc3d> list = new ArrayList<>();
 
         // 获取对应上游彩种代码
         LotterySourceCodeEnum sourceCodeEnum = LotterySourceCodeEnum.getLotterySourceCode(merchants.getCode(), lotteryKindCode().getLotteryCode());
@@ -123,7 +107,7 @@ public class Bjpk10LotteryDataServiceImpl extends LotteryDataService {
         JSONArray jsks = jsonObject.getJSONArray(lotterySourceLotteryCode);
         for (int i = 0; i < jsks.size(); i++) {
             JSONObject openObj = jsks.getJSONObject(i);
-            OpenresultBjpk10 openresultJsk3 = new OpenresultBjpk10();
+            OpenresultFc3d openresultJsk3 = new OpenresultFc3d();
             openresultJsk3.setPlatQs(openObj.getString("issue"));
             openresultJsk3.setOpenResult(openObj.getString("code"));
             openresultJsk3.setOpenStatus(0);
@@ -131,6 +115,7 @@ public class Bjpk10LotteryDataServiceImpl extends LotteryDataService {
             openresultJsk3.setUpdateTime(new Date());
             list.add(openresultJsk3);
         }
-        openresultBjpk10Service.batchOpenResult(list);
+        openresultFc3dService.batchOpenResult(list);
     }
+
 }

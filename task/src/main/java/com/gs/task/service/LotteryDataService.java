@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
 
-public abstract class LotteryDataService<T> {
+public abstract class LotteryDataService {
     @Autowired
     private LotteryService lotteryService;
 

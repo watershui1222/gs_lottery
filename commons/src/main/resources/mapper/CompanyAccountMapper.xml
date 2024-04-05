@@ -15,12 +15,14 @@
             <result property="type" column="type" jdbcType="INTEGER"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="remark" column="remark" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="INTEGER"/>
+            <result property="pxh" column="pxh" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,account_name,payee_name,
         account_no,address,min_amount,
         max_amount,type,create_time,
-        remark
+        remark,status,pxh
     </sql>
 </mapper>
