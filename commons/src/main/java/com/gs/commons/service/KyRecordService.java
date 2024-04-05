@@ -2,8 +2,10 @@ package com.gs.commons.service;
 
 import com.gs.commons.entity.KyRecord;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.gs.commons.utils.PageUtils;
 
 import java.util.List;
+import java.util.Map;
 
 /**
 * @author 69000
@@ -13,5 +15,6 @@ import java.util.List;
 public interface KyRecordService extends IService<KyRecord> {
 
     int batchInsertOrUpdate(List<KyRecord> list);
+    PageUtils queryPage(Map<String,Object> params);
 
 }
