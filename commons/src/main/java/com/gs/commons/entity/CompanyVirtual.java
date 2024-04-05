@@ -70,6 +70,30 @@ public class CompanyVirtual implements Serializable {
     @TableField(value = "pxh")
     private Integer pxh;
 
+    /**
+     * 0:启用 1:停用
+     */
+    @TableField(value = "status")
+    private Integer status;
+
+    /**
+     * 备注
+     */
+    @TableField(value = "remark")
+    private String remark;
+
+    /**
+     * 最小金额
+     */
+    @TableField(value = "min_amount")
+    private BigDecimal minAmount;
+
+    /**
+     * 最大金额
+     */
+    @TableField(value = "max_amount")
+    private BigDecimal maxAmount;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

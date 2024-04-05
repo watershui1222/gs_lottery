@@ -16,16 +16,13 @@
             <result property="operName" column="oper_name" jdbcType="VARCHAR"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="accountType" column="account_type" jdbcType="INTEGER"/>
-            <result property="channelName" column="channel_name" jdbcType="VARCHAR"/>
-            <result property="address" column="address" jdbcType="VARCHAR"/>
-            <result property="realName" column="real_name" jdbcType="VARCHAR"/>
+            <result property="accountDetail" column="account_detail" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,user_name,order_no,
         amount,create_time,check_time,
         status,remark,oper_name,
-        update_time,account_type,channel_name,
-        address,real_name
+        update_time,account_type,account_detail
     </sql>
 </mapper>

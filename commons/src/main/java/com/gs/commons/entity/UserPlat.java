@@ -18,7 +18,7 @@ public class UserPlat implements Serializable {
     /**
      * id
      */
-    @TableField(value = "id")
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     /**

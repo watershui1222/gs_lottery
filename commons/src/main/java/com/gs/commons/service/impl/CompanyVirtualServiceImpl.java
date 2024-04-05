@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 /**
 * @author 69000
 * @description 针对表【t_company_virtual】的数据库操作Service实现
-* @createDate 2024-04-03 17:29:44
+* @createDate 2024-04-05 16:22:05
 */
 @Service
 public class CompanyVirtualServiceImpl extends ServiceImpl<CompanyVirtualMapper, CompanyVirtual>

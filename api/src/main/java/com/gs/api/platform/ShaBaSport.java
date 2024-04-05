@@ -5,6 +5,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
@@ -13,6 +14,7 @@ import java.util.Date;
 /**
  * 沙巴体育
  */
+@Slf4j
 public class ShaBaSport {
 
     @Value("${platform.ShaBa.operatorID}")
@@ -48,6 +50,7 @@ public class ShaBaSport {
         param.put("mintransfer", mintransfer);
         param.put("maxtransfer", maxtransfer);
         String result = HttpUtil.post(apiUrlStr, param);
+        log.info("沙巴 createMember param= " + param + " result = " + result);
         JSONObject resJSON = JSONObject.parseObject(result);
         if(resJSON.getIntValue("error_code") == 0){
             //成功
@@ -71,12 +74,12 @@ public class ShaBaSport {
         param.put("vendor_member_id", vendor_member_id);
         param.put("platform", platform);
         String result = HttpUtil.post(apiUrlStr, param);
+        log.info("沙巴 getSabaUrl param= " + param + " result = " + result);
         JSONObject resJSON = JSONObject.parseObject(result);
         if(resJSON.getIntValue("error_code") == 0){
             //成功
             return resJSON.getString("Data");
         }
-        System.out.println(result);
         return "FAIL";
     }
 
@@ -94,6 +97,7 @@ public class ShaBaSport {
         param.put("vendor_member_ids", vendor_member_ids);
         param.put("wallet_id", wallet_id);
         String result = HttpUtil.post(apiUrlStr, param);
+        log.info("沙巴 getBalance param= " + param + " result = " + result);
         JSONObject resJSON = JSONObject.parseObject(result);
         if(resJSON.getIntValue("error_code") == 0){
             //成功
@@ -103,7 +107,6 @@ public class ShaBaSport {
                 return obj.getBigDecimal("balance");
             }
         }
-        System.out.println(result);
         return BigDecimal.ZERO;
     }
 
@@ -129,6 +132,7 @@ public class ShaBaSport {
         param.put("direction", direction);
         param.put("wallet_id", wallet_id);
         String result = HttpUtil.post(apiUrlStr, param);
+        log.info("沙巴 transferIn param= " + param + " result = " + result);
         JSONObject resJSON = JSONObject.parseObject(result);
         int error_code = resJSON.getIntValue("error_code");
         if(error_code == 0){
@@ -144,7 +148,6 @@ public class ShaBaSport {
                 return "还需调用确认订单接口";
             }
         }
-        System.out.println(result);
         return "FAIL";
     }
 
@@ -170,6 +173,7 @@ public class ShaBaSport {
         param.put("direction", direction);
         param.put("wallet_id", wallet_id);
         String result = HttpUtil.post(apiUrlStr, param);
+        log.info("沙巴 transferOut param= " + param + " result = " + result);
         JSONObject resJSON = JSONObject.parseObject(result);
         int error_code = resJSON.getIntValue("error_code");
         if(error_code == 0){
@@ -185,7 +189,6 @@ public class ShaBaSport {
                 return "还需调用确认订单接口";
             }
         }
-        System.out.println(result);
         return "FAIL";
     }
 
@@ -203,6 +206,7 @@ public class ShaBaSport {
         param.put("vendor_trans_id", vendor_trans_id);
         param.put("wallet_id", wallet_id);
         String result = HttpUtil.post(apiUrlStr, param);
+        log.info("沙巴 checkFundTransfer param= " + param + " result = " + result);
         JSONObject resJSON = JSONObject.parseObject(result);
         int error_code = resJSON.getIntValue("error_code");
         if(error_code == 0){
@@ -222,7 +226,6 @@ public class ShaBaSport {
                 return "还需调用确认订单接口";
             }
         }
-        System.out.println(result);
         return "FAIL";
     }
 
@@ -238,12 +241,12 @@ public class ShaBaSport {
         param.put("vendor_id", vendor_id);
         param.put("vendor_member_id", vendor_member_id);
         String result = HttpUtil.post(apiUrlStr, param);
+        log.info("沙巴 kickUser param= " + param + " result = " + result);
         JSONObject resJSON = JSONObject.parseObject(result);
         int error_code = resJSON.getIntValue("error_code");
         if(error_code == 0){
             return "OK";
         }
-        System.out.println(result);
         return "FAIL";
     }
 
