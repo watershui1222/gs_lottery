@@ -1,22 +1,22 @@
 package com.gs.task.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.gs.commons.entity.*;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.gs.commons.entity.Lottery;
+import com.gs.commons.entity.OpenresultBjpk10;
 import com.gs.commons.enums.LotteryCodeEnum;
-import com.gs.commons.service.OpenresultBjkl8Service;
 import com.gs.commons.service.OpenresultBjpk10Service;
 import com.gs.commons.utils.RedisKeyUtil;
 import com.gs.task.config.LotterySourceProperties;
 import com.gs.task.enums.LotterySourceCodeEnum;
 import com.gs.task.service.LotteryDataService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -57,15 +57,17 @@ public class Bjpk10LotteryDataServiceImpl extends LotteryDataService {
 
 
         // 昨日最后一期期数
-        OpenresultBjpk10 pcdd = openresultBjpk10Service.getOne(
+        LambdaQueryWrapper<OpenresultBjpk10> wrapper =
                 new LambdaQueryWrapper<OpenresultBjpk10>()
-                        .orderByDesc(OpenresultBjpk10::getOpenResultTime)
-                ,false);
-        if (pcdd == null) {
+                        .orderByDesc(OpenresultBjpk10::getOpenResultTime);
+
+        Page<OpenresultBjpk10> page = openresultBjpk10Service.page(new Page<>(1, 1), wrapper);
+        List<OpenresultBjpk10> records = page.getRecords();
+        if (CollUtil.isEmpty(records)) {
             log.info("PCDD未获取到昨日最后一期");
             return;
         }
-        Integer qsValue = Integer.valueOf(pcdd.getPlatQs());
+        Integer qsValue = Integer.valueOf(records.get(0).getPlatQs());
 
         // 判断当前日期是否进行排期
         String paiqiKey = RedisKeyUtil.PaiqiGenerateKey(lottery.getLotteryCode(), today);
