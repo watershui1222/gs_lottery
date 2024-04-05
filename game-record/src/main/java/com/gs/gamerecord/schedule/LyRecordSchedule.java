@@ -49,7 +49,7 @@ public class LyRecordSchedule {
     @Autowired
     private LyRecordService lyRecordService;
 
-    @Scheduled(cron = "0/20 * * * * ?")
+    @Scheduled(cron = "0/30 * * * * ?")
     public void lyRecord() throws Exception {
         Date now = new Date();
         PlatRecordControl ly = platRecordControlService.getOne(
