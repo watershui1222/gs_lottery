@@ -2,8 +2,10 @@ package com.gs.commons.service;
 
 import com.gs.commons.entity.LyRecord;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.gs.commons.utils.PageUtils;
 
 import java.util.List;
+import java.util.Map;
 
 /**
 * @author richard
@@ -13,4 +15,5 @@ import java.util.List;
 public interface LyRecordService extends IService<LyRecord> {
 
     int batchInsertOrUpdate(List<LyRecord> lyRecords);
+    PageUtils queryPage(Map<String,Object> params);
 }

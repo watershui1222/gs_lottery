@@ -2,6 +2,7 @@ package com.gs.api.controller;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
@@ -10,7 +11,10 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.gs.api.controller.VO.LotteryHandicapVo;
 import com.gs.api.controller.VO.LotteryPlayVo;
+import com.gs.api.controller.request.EduOrderListRequest;
+import com.gs.api.controller.request.LotteryOrderListRequest;
 import com.gs.api.controller.request.OpenResultHistoryRequest;
+import com.gs.api.utils.JwtUtils;
 import com.gs.commons.constants.Constant;
 import com.gs.commons.entity.*;
 import com.gs.commons.enums.LotteryCodeEnum;
@@ -27,12 +31,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import sun.nio.cs.ext.SJIS;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -73,6 +75,10 @@ public class LotteryController {
     private OpenresultMo6hcService openresultMo6hcService;
     @Autowired
     private OpenresultPcddService openresultPcddService;
+
+    @Autowired
+    private LotteryOrderService lotteryOrderService;
+
 
     @ApiOperation(value = "获取指定彩种下的所有盘口以及玩法")
     @GetMapping("/getAllPlay/{lotteryCode}")
@@ -223,6 +229,43 @@ public class LotteryController {
 
         return R.ok().put("page", pageUtils).put("lotteryType", lottery.getLotteryType());
 
+    }
+
+
+    @ApiOperation(value = "彩票投注记录")
+    @GetMapping("/lotteryrder/list")
+    public R lotteryrderList(LotteryOrderListRequest request, HttpServletRequest httpServletRequest) {
+        String userName = JwtUtils.getUserName(httpServletRequest);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put(Constant.PAGE, request.getPage());
+        params.put(Constant.LIMIT, request.getLimit());
+        params.put("userName", userName);
+        params.put("lotteryCode", request.getLotteryCode());
+        params.put("orderStatus", request.getOrderStatus());
+
+        PageUtils page = lotteryOrderService.queryPage(params);
+        if (CollUtil.isNotEmpty(page.getList())) {
+            List<LotteryOrder> pageList = (List<LotteryOrder>) page.getList();
+            JSONArray jsonArray = new JSONArray();
+            for (LotteryOrder lotteryOrder : pageList) {
+                JSONObject jsonObject = new JSONObject();
+
+                jsonObject.put("lotteryName", lotteryOrder.getLotteryName());
+                jsonObject.put("playName", lotteryOrder.getPlayName());
+                jsonObject.put("qs", lotteryOrder.getQs());
+                jsonObject.put("betAmount", lotteryOrder.getBetAmount());
+                jsonObject.put("betTime", lotteryOrder.getBetTime());
+                jsonObject.put("bonusAmount", lotteryOrder.getBonusAmount());
+                jsonObject.put("openResult", lotteryOrder.getOpenResult());
+                jsonObject.put("orderStatus", lotteryOrder.getOrderStatus());
+                jsonArray.add(jsonObject);
+
+            }
+            page.setList(jsonArray);
+        }
+
+        return R.ok().put("page", page);
     }
 
 
