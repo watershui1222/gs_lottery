@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
-public class Bjkl8LotteryDataServiceImpl extends LotteryDataService<OpenresultJsk3> {
+public class Bjkl8LotteryDataServiceImpl extends LotteryDataService {
 
     @Autowired
     private OpenresultBjkl8Service openresultBjkl8Service;

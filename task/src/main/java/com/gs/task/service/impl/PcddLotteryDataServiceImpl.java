@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
-public class PcddLotteryDataServiceImpl extends LotteryDataService<OpenresultJsk3> {
+public class PcddLotteryDataServiceImpl extends LotteryDataService {
 
     @Autowired
     private OpenresultPcddService openresultPcddService;
