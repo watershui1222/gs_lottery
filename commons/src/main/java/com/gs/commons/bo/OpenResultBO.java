@@ -14,10 +14,6 @@ public class OpenResultBO {
      */
     private String qs;
 
-    /**
-     * 三方期号
-     */
-    private String platQs;
 
     /**
      * 开奖号码
@@ -29,20 +25,7 @@ public class OpenResultBO {
      */
     private Integer openStatus;
 
-    /**
-     * 当前第N期
-     */
-    private Integer currCount;
 
-    /**
-     * 开盘时间
-     */
-    private Date openTime;
-
-    /**
-     * 封盘时间
-     */
-    private Date closeTime;
 
     /**
      * 开奖时间
