@@ -251,9 +251,9 @@ public class LeYouGame {
     }
 
 
-    public static void main(String[] args){
-        LeYouGame ly = new LeYouGame();
-        System.out.println(ly.getRecord());
-    }
+//    public static void main(String[] args){
+//        LeYouGame ly = new LeYouGame();
+//        System.out.println(ly.getRecord());
+//    }
 
 }

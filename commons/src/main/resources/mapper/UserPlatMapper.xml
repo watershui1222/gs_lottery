@@ -9,12 +9,13 @@
             <result property="userName" column="user_name" jdbcType="VARCHAR"/>
             <result property="platCode" column="plat_code" jdbcType="VARCHAR"/>
             <result property="platUserName" column="plat_user_name" jdbcType="VARCHAR"/>
+            <result property="platUserPassword" column="plat_user_password" jdbcType="VARCHAR"/>
             <result property="status" column="status" jdbcType="INTEGER"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,user_name,plat_code,
-        plat_user_name,status,create_time
+        plat_user_name,plat_user_password,status,create_time
     </sql>
 </mapper>
