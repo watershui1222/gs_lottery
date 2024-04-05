@@ -2,6 +2,7 @@ package com.gs.api.controller;
 import java.util.Date;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.NumberUtil;
@@ -18,7 +19,6 @@ import com.gs.api.controller.request.*;
 import com.gs.api.utils.JwtUtils;
 import com.gs.commons.constants.Constant;
 import com.gs.commons.entity.*;
-import com.gs.commons.enums.PlatSubEnum;
 import com.gs.commons.service.*;
 import com.gs.commons.utils.*;
 import io.swagger.annotations.Api;
@@ -75,14 +75,6 @@ public class UserController {
 
     @Autowired
     private WithdrawService withdrawService;
-
-    @Autowired
-    private KyRecordService kyRecordService;
-    @Autowired
-    private LyRecordService lyRecordService;
-
-    @Autowired
-    private EduOrderService eduOrderService;
 
     @ApiOperation(value = "用户信息")
     @GetMapping("/info")
@@ -653,97 +645,51 @@ public class UserController {
         return R.ok().put("page", page);
     }
 
-
-
-
-
-    @ApiOperation(value = "第三方游戏记录")
-    @GetMapping("/platOrder/list")
-    public R platOrderList(PlatOrderListRequest request, HttpServletRequest httpServletRequest) {
+    @ApiOperation(value = "获取返水金额")
+    @GetMapping("/getReturnAmount")
+    public R getReturnAmount(HttpServletRequest httpServletRequest) {
         String userName = JwtUtils.getUserName(httpServletRequest);
-
-        Map<String, Object> params = new HashMap<>();
-        params.put(Constant.PAGE, request.getPage());
-        params.put(Constant.LIMIT, request.getLimit());
-        params.put("userName", userName);
-        //1:今天 2:昨天 3:一周内 4:一月内
-        if (StringUtils.isNotBlank(request.getDateStr())) {
-            Date date = new Date();
-            if (StringUtils.equals(request.getDateStr(), "2")) {
-                date = DateUtil.offsetDay(date, -1);
-            } else if (StringUtils.equals(request.getDateStr(), "3")) {
-                date = DateUtil.offsetWeek(date, 1);
-            } else if (StringUtils.equals(request.getDateStr(), "4")) {
-                date = DateUtil.offsetMonth(date, 1);
-            }
-            Date startTime = DateUtil.beginOfDay(date);
-            Date endTime = DateUtil.endOfDay(date);
-
-            params.put("startTime", startTime);
-            params.put("endTime", endTime);
-        }
-
-        PageUtils pageUtils;
-        if (StringUtils.equals(PlatSubEnum.KY.getPlatSubCode(), request.getSubPlatCode())) {
-            pageUtils = kyRecordService.queryPage(params);
-        } else if (StringUtils.equals(PlatSubEnum.LY.getPlatSubCode(), request.getSubPlatCode())) {
-            pageUtils = lyRecordService.queryPage(params);
-        } else {
-            return R.error("未查到对应游戏厅方");
-        }
-
-        return R.ok().put("page", pageUtils);
+        // TODO: 2024/4/5 查询返回金额 
+        return R.ok().put("data", RandomUtil.randomInt(1, 100));
     }
 
-
-
-    @ApiOperation(value = "额度转换记录")
-    @GetMapping("/eduOrder/list")
-    public R eduOrderList(EduOrderListRequest request, HttpServletRequest httpServletRequest) {
+    @Transactional
+    @ApiOperation(value = "领取自助返水")
+    @GetMapping("/autoReturn")
+    public R autoReturn(HttpServletRequest httpServletRequest) throws Exception {
         String userName = JwtUtils.getUserName(httpServletRequest);
-
-        Map<String, Object> params = new HashMap<>();
-        params.put(Constant.PAGE, request.getPage());
-        params.put(Constant.LIMIT, request.getLimit());
-        params.put("userName", userName);
-        params.put("platCode", request.getPlatCode());
-        //1:今天 2:昨天 3:一周内 4:一月内
-        if (StringUtils.isNotBlank(request.getDateStr())) {
-            Date date = new Date();
-            if (StringUtils.equals(request.getDateStr(), "2")) {
-                date = DateUtil.offsetDay(date, -1);
-            } else if (StringUtils.equals(request.getDateStr(), "3")) {
-                date = DateUtil.offsetWeek(date, 1);
-            } else if (StringUtils.equals(request.getDateStr(), "4")) {
-                date = DateUtil.offsetMonth(date, 1);
-            }
-            Date startTime = DateUtil.beginOfDay(date);
-            Date endTime = DateUtil.endOfDay(date);
-
-            params.put("startTime", startTime);
-            params.put("endTime", endTime);
+        // 校验是否领取昨日金额
+        Date now = new Date();
+        // 所有返水key
+        DateTime yesterday = DateUtil.offsetDay(now, -1);
+        String autoKey = RedisKeyUtil.AutoReturn(userName, yesterday);
+        if (redisTemplate.hasKey(autoKey)) {
+            return R.error(MsgUtil.get("system.autoreturn.has"));
         }
 
-        PageUtils page = eduOrderService.queryPage(params);
-        if (CollUtil.isNotEmpty(page.getList())) {
-            List<EduOrder> pageList = (List<EduOrder>) page.getList();
-            JSONArray jsonArray = new JSONArray();
-            for (EduOrder eduOrder : pageList) {
-                JSONObject jsonObject = new JSONObject();
-                String transPlatStr = eduOrder.getEduType() == 1
-                        ? StrUtil.format("{}->{}", "平台", eduOrder.getPlatCode())
-                        : StrUtil.format("{}->{}", eduOrder.getPlatCode(), "平台");
+        UserInfo user = userInfoService.getUserByName(userName);
 
-                jsonObject.put("transPlatStr", transPlatStr);
-                jsonObject.put("time", eduOrder.getCreateTime());
-                jsonObject.put("amount", eduOrder.getAmount());
-                jsonObject.put("status", eduOrder.getStatus());
-                jsonArray.add(jsonObject);
-
-            }
-            page.setList(jsonArray);
-        }
-
-        return R.ok().put("page", page);
+        // TODO: 2024/4/5 计算返水金额业务
+        // 计算返水金额
+        BigDecimal amount = new BigDecimal(RandomUtil.randomInt(1, 100));
+        
+        // 给用户加钱
+        userInfoService.updateUserBalance(userName, amount);
+        // 添加流水记录
+        TransactionRecord transactionRecord = new TransactionRecord();
+        transactionRecord.setUserName(userName);
+        transactionRecord.setAmount(amount);
+        transactionRecord.setBeforeAmount(user.getBalance());
+        transactionRecord.setAfterAmount(NumberUtil.add(amount, user.getBalance()));
+        transactionRecord.setPayType(0);
+        transactionRecord.setBusinessType(7);
+        transactionRecord.setBusinessOrder(null);
+        transactionRecord.setCreateTime(now);
+        transactionRecord.setRemark("领取"+ DateUtil.formatDate(yesterday) +"返水：" + amount + "元");
+        transactionRecord.setOperName(null);
+        transactionRecordService.save(transactionRecord);
+        
+        redisTemplate.opsForValue().set(autoKey, "true", 2, TimeUnit.DAYS);
+        return R.ok();
     }
 }

@@ -211,6 +211,17 @@ public class RedisKeyUtil {
         return StrUtil.format(template, lotteryCode, DateUtil.format(date, "yyyyMMdd"));
     }
 
+    /**
+     * 自助返水key
+     * @param userName
+     * @param date
+     * @return
+     */
+    public static String AutoReturn(String userName, Date date) {
+        String template = "return:{}:{}";
+        return StrUtil.format(template, userName, DateUtil.format(date, "yyyyMMdd"));
+    }
+
 
     public static String bjkl8YesterdayQs(String lotteryCode, Date date) {
         String template = "{}:yesterday:{}";
