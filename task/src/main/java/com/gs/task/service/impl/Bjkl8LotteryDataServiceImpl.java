@@ -1,10 +1,12 @@
 package com.gs.task.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gs.commons.entity.Lottery;
 import com.gs.commons.entity.OpenresultBjkl8;
 import com.gs.commons.entity.OpenresultBjpk10;
@@ -59,15 +61,17 @@ public class Bjkl8LotteryDataServiceImpl extends LotteryDataService {
 
 
         // 昨日最后一期期数
-        OpenresultBjkl8 pcdd = openresultBjkl8Service.getOne(
+        LambdaQueryWrapper<OpenresultBjkl8> wrapper =
                 new LambdaQueryWrapper<OpenresultBjkl8>()
-                        .orderByDesc(OpenresultBjkl8::getOpenResultTime)
-                ,false);
-        if (pcdd == null) {
-            log.info("PCDD未获取到昨日最后一期");
+                        .orderByDesc(OpenresultBjkl8::getOpenResultTime);
+
+        Page<OpenresultBjkl8> page = openresultBjkl8Service.page(new Page<>(1, 1), wrapper);
+        List<OpenresultBjkl8> records = page.getRecords();
+        if (CollUtil.isEmpty(records)) {
+            log.info("BJKL8未获取到昨日最后一期");
             return;
         }
-        Integer qsValue = Integer.valueOf(pcdd.getPlatQs());
+        Integer qsValue = Integer.valueOf(records.get(0).getPlatQs());
 
         // 判断当前日期是否进行排期
         String paiqiKey = RedisKeyUtil.PaiqiGenerateKey(lottery.getLotteryCode(), today);
