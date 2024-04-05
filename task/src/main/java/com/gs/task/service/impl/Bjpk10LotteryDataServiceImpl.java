@@ -64,7 +64,7 @@ public class Bjpk10LotteryDataServiceImpl extends LotteryDataService {
         Page<OpenresultBjpk10> page = openresultBjpk10Service.page(new Page<>(1, 1), wrapper);
         List<OpenresultBjpk10> records = page.getRecords();
         if (CollUtil.isEmpty(records)) {
-            log.info("PCDD未获取到昨日最后一期");
+            log.info("PK10未获取到昨日最后一期");
             return;
         }
         Integer qsValue = Integer.valueOf(records.get(0).getPlatQs());

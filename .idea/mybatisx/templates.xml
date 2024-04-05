@@ -68,8 +68,8 @@
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="OpenresultFc3d" />
-                  <option name="tableName" value="t_openresult_fc3d" />
+                  <option name="className" value="CompanyAccount" />
+                  <option name="tableName" value="t_company_account" />
                 </TableUIInfo>
               </list>
             </option>
