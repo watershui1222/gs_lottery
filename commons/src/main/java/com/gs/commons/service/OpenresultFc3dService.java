@@ -2,8 +2,10 @@ package com.gs.commons.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.gs.commons.entity.OpenresultFc3d;
+import com.gs.commons.utils.PageUtils;
 
 import java.util.List;
+import java.util.Map;
 
 /**
 * @author tommm
@@ -12,4 +14,5 @@ import java.util.List;
 */
 public interface OpenresultFc3dService extends IService<OpenresultFc3d> {
     int batchOpenResult(List<OpenresultFc3d> list);
+    PageUtils queryPage(Map<String,Object> params);
 }
