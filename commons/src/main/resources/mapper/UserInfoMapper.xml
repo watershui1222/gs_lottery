@@ -40,4 +40,9 @@
         update_time,last_time,last_ip,
         remark,register_ip
     </sql>
+
+    <!-- 修改用户余额 -->
+    <update id="updateUserBalance">
+        update t_user_info set balance = balance + #{balance} where balance + #{balance} >= 0 and user_name = #{userName}
+    </update>
 </mapper>

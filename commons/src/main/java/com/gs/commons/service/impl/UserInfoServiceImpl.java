@@ -8,6 +8,8 @@ import com.gs.commons.mapper.UserInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 /**
 * @author 69000
 * @description 针对表【t_user_info】的数据库操作Service实现
@@ -23,6 +25,14 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
     @Override
     public UserInfo getUserByName(String userName) {
         return getOne(new LambdaQueryWrapper<UserInfo>().eq(UserInfo::getUserName, userName));
+    }
+
+    @Override
+    public void updateUserBalance(String userName, BigDecimal balance) throws Exception {
+        int updateUserBalance = userInfoMapper.updateUserBalance(userName, balance);
+        if (updateUserBalance <= 0) {
+            throw new Exception("修改用户余额失败.");
+        }
     }
 
 }

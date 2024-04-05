@@ -2,6 +2,9 @@ package com.gs.commons.service;
 
 import com.gs.commons.entity.Withdraw;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.gs.commons.utils.PageUtils;
+
+import java.util.Map;
 
 /**
 * @author 69000
@@ -10,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface WithdrawService extends IService<Withdraw> {
 
+    PageUtils queryPage(Map<String,Object> params);
 }

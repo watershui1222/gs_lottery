@@ -4,7 +4,7 @@ import java.util.Date;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.DesensitizedUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
@@ -19,19 +19,16 @@ import com.gs.api.utils.JwtUtils;
 import com.gs.commons.constants.Constant;
 import com.gs.commons.entity.*;
 import com.gs.commons.service.*;
-import com.gs.commons.utils.MsgUtil;
-import com.gs.commons.utils.PageUtils;
-import com.gs.commons.utils.R;
-import com.gs.commons.utils.RedisKeyUtil;
+import com.gs.commons.utils.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.User;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -74,6 +71,9 @@ public class UserController {
 
     @Autowired
     private UserAccountService userAccountService;
+
+    @Autowired
+    private WithdrawService withdrawService;
 
     @ApiOperation(value = "用户信息")
     @GetMapping("/info")
@@ -510,5 +510,137 @@ public class UserController {
             array.add(obj);
         }
         return R.ok().put("list", array);
+    }
+
+
+    @Transactional
+    @ApiOperation(value = "用户提现")
+    @PostMapping("/withdraw")
+    public R withdraw(@Validated WithdrawRequest request, HttpServletRequest httpServletRequest) throws Exception {
+
+        String userName = JwtUtils.getUserName(httpServletRequest);
+        UserInfo userInf = userInfoService.getUserByName(userName);
+
+        Date now = new Date();
+        Map<String, String> params = sysParamService.getAllParamByMap();
+        // 验证时间段
+        String withdrawTimeStr = params.get("withdraw_time");
+        if (StringUtils.isNotBlank(withdrawTimeStr)) {
+            String today = DateUtil.formatDate(now);
+            String[] timeArr = withdrawTimeStr.split("-");
+            Date beginTime = DateUtil.parse(today + " " + timeArr[0]);
+            Date endTime = DateUtil.parse(today + " " + timeArr[1]);
+            if (!DateUtil.isIn(now, beginTime, endTime)) {
+                return R.error(MsgUtil.get("system.withdraw.time") + ":" + withdrawTimeStr);
+            }
+        }
+
+        // 验证支付密码
+        String pwd = SecureUtil.md5(request.getPayPwd());
+        if (!StringUtils.equals(pwd, userInf.getPayPwd())) {
+            return R.error(MsgUtil.get("system.order.paypwderror"));
+        }
+
+        // 验证资金冻结
+        if (userInf.getPayStatus().intValue() == 1) {
+            return R.error(MsgUtil.get("system.user.funds.enable"));
+        }
+
+        // 查询是否还有待审核的订单
+        long noFinish = withdrawService.count(
+                new LambdaQueryWrapper<Withdraw>()
+                        .eq(Withdraw::getUserName, userName)
+                        .eq(Withdraw::getStatus, 0)
+        );
+        if (noFinish > 0) {
+            return R.error(MsgUtil.get("system.withdraw.hasorder"));
+        }
+
+
+        BigDecimal amount = new BigDecimal(request.getAmount());
+        // 校验余额是否充足
+        if (amount.doubleValue() > userInf.getBalance().doubleValue()) {
+            return R.error(MsgUtil.get("system.order.balance"));
+        }
+        // 查询提现账户信息
+        UserAccount userAccount = userAccountService.getOne(
+                new LambdaQueryWrapper<UserAccount>()
+                        .eq(UserAccount::getId, request.getAccountId())
+                        .eq(UserAccount::getUserName, userName)
+        );
+        if (userAccount == null) {
+            return R.error(MsgUtil.get("system.withdraw.noaccount"));
+        }
+
+        // 扣除用户金额
+        userInfoService.updateUserBalance(userName, amount.negate());
+
+        // 提现记录
+        String withdrawOrderNo = IdUtils.getWithdrawOrderNo();
+        Withdraw withdraw = new Withdraw();
+        withdraw.setUserName(userName);
+        withdraw.setOrderNo(withdrawOrderNo);
+        withdraw.setAmount(amount);
+        withdraw.setCreateTime(now);
+        withdraw.setCheckTime(null);
+        withdraw.setStatus(0);
+        withdraw.setRemark(null);
+        withdraw.setOperName(null);
+        withdraw.setUpdateTime(null);
+        withdraw.setAccountType(userAccount.getAccountType());
+        String accountDetail = "";
+        if (userAccount.getAccountType().intValue() == 1) {
+            accountDetail = StrUtil.format("银行名称:{}|银行卡号:{}|持卡人:{}|开户网点:{}", userAccount.getChannelName(), userAccount.getAccountNo(), userAccount.getRealName(), userAccount.getAddress());
+        } else if (userAccount.getAccountType().intValue() == 4) {
+            accountDetail = StrUtil.format("币种:{}|网络:{}|地址:{}", userAccount.getChannelName(), userAccount.getAddress(), userAccount.getAccountNo());
+        }
+        withdraw.setAccountDetail(accountDetail);
+        withdrawService.save(withdraw);
+        // 资金流水记录
+        TransactionRecord transactionRecord = new TransactionRecord();
+        transactionRecord.setUserName(userName);
+        transactionRecord.setAmount(amount.negate());
+        transactionRecord.setBeforeAmount(userInf.getBalance());
+        transactionRecord.setAfterAmount(NumberUtil.sub(userInf.getBalance(), amount));
+        transactionRecord.setPayType(1);
+        transactionRecord.setBusinessType(1);
+        transactionRecord.setBusinessOrder(withdrawOrderNo);
+        transactionRecord.setCreateTime(now);
+        transactionRecord.setRemark("用户提现" + amount + "元");
+        transactionRecord.setOperName(null);
+        transactionRecordService.save(transactionRecord);
+        return R.ok(MsgUtil.get("system.withdraw.success"));
+    }
+
+    @ApiOperation(value = "用户提现记录")
+    @GetMapping("/withdraw/record")
+    public R withdrawRecord(@Validated PageBaseRequest request, HttpServletRequest httpServletRequest) {
+        String userName = JwtUtils.getUserName(httpServletRequest);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put(Constant.PAGE, request.getPage());
+        params.put(Constant.LIMIT, request.getLimit());
+        params.put("userName", userName);
+        PageUtils page = withdrawService.queryPage(params);
+        List<Withdraw> list = (List<Withdraw>) page.getList();
+
+        if (CollUtil.isNotEmpty(list)) {
+            Map<Integer, String> businessTypeMap = new HashMap<>();
+            businessTypeMap.put(0, "充值");
+            JSONArray arr = new JSONArray();
+            for (Withdraw temp : list) {
+                JSONObject obj = new JSONObject();
+                obj.put("time", temp.getCreateTime());
+                obj.put("amount", temp.getAmount());
+                obj.put("checkTime", temp.getCheckTime());
+                obj.put("status", temp.getStatus());
+                obj.put("remark", temp.getRemark());
+                obj.put("orderId", temp.getOrderNo());
+                obj.put("accountDetail", temp.getAccountDetail());
+                arr.add(obj);
+            }
+            page.setList(arr);
+        }
+        return R.ok().put("page", page);
     }
 }
