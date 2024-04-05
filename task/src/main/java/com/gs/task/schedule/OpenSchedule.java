@@ -29,7 +29,7 @@ public class OpenSchedule {
     private LotteryDataClient lotteryDataClient;
 
 
-    @Scheduled(cron = "0/10 * * * * ?")
+    @Scheduled(cron = "${openTask.cron.cron5m}")
     public void jsk3Open() {
 
         // 多彩数据原
@@ -53,7 +53,7 @@ public class OpenSchedule {
 
 
 
-    @Scheduled(cron = "0/12 * * * * ?")
+    @Scheduled(cron = "${openTask.cron.cron20m}")
     public void ssxwOpen() {
 
         // 多彩数据原
@@ -77,7 +77,7 @@ public class OpenSchedule {
     }
 
 
-    @Scheduled(cron = "0/14 * * * * ?")
+    @Scheduled(cron = "${openTask.cron.cron1440m}")
     public void bjpk10Open() {
 
         // 多彩数据原

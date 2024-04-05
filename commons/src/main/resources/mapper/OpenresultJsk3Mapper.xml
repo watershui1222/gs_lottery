@@ -55,7 +55,6 @@
             update t_openresult_jsk3
             set open_status = #{item.openStatus},
                 open_result = #{item.openResult},
-                open_result_time = #{item.openResultTime},
                 update_time = #{item.updateTime}
             where plat_qs = #{item.platQs} and open_status = 1
         </foreach>

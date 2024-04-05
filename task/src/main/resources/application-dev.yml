@@ -24,13 +24,25 @@ lottery:
         url: https://vip.manycai.com/K2653601ec5af9f/p/5.json
         code: duocai
 
-# 昨日的最后一起期号
-bjkl8:
-  yesterday-qs: 1249149
-pcdd:
-  yesterday-qs: 1249149
-bjpk10:
-  yesterday-qs: 806523
+
+# 开奖cron表达式
+openTask:
+  cron:
+    cron5m: 0/10 * * * * ?
+    cron20m: 0/12 * * * * ?
+    cron1440m: 0/14 * * * * ?
+
+# 排期cron表达式
+paiqiTask:
+  cron:
+    jsk3: 0/10 * * * * ?
+    cqssc: 0/10 * * * * ?
+    ft: 0/10 * * * * ?
+    gd11x5: 0/10 * * * * ?
+    bjkl8: 0/10 * * * * ?
+    pcdd: 0/10 * * * * ?
+    bjpk10: 0/10 * * * * ?
+    mo6hc: 0/10 * * * * ?
 
 
 

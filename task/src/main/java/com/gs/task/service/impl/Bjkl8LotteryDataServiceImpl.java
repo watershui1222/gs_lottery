@@ -35,8 +35,6 @@ public class Bjkl8LotteryDataServiceImpl extends LotteryDataService<OpenresultJs
     @Autowired
     private StringRedisTemplate redisTemplate;
 
-    @Value("${bjkl8.yesterday-qs}")
-    private Integer yesterdayQs;
 
     @Override
     public LotteryCodeEnum lotteryKindCode() {
@@ -62,7 +60,7 @@ public class Bjkl8LotteryDataServiceImpl extends LotteryDataService<OpenresultJs
         String yesterdayQsKey = RedisKeyUtil.bjkl8YesterdayQs(lottery.getLotteryCode(), DateUtil.offsetDay(today, -1));
         String yesterdayQsValue = redisTemplate.opsForValue().get(yesterdayQsKey);
         if (StringUtils.isEmpty(yesterdayQsValue)) {
-            yesterdayQsValue = String.valueOf(yesterdayQs);
+            yesterdayQsValue = lottery.getYesterdayQs();
         }
         Integer qsValue = Integer.valueOf(yesterdayQsValue);
 

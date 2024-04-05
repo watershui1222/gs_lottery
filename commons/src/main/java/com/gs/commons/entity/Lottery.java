@@ -105,6 +105,9 @@ public class Lottery implements Serializable {
     @TableField(value = "qs_time")
     private Integer qsTime;
 
+    @TableField(value = "yesterday_qs")
+    private String yesterdayQs;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }
