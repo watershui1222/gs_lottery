@@ -29,8 +29,8 @@ lottery:
 openTask:
   cron:
     cron5m: 0/10 * * * * ?
-    cron20m: 0/12 * * * * ?
-    cron1440m: 0/14 * * * * ?
+    cron20m: 0/10 * * * * ?
+    cron1440m: 0/10 * * * * ?
 
 # 排期cron表达式
 paiqiTask:
