@@ -83,22 +83,10 @@ public class Withdraw implements Serializable {
     private Integer accountType;
 
     /**
-     * 通道名称
+     * 用户收款信息详情
      */
-    @TableField(value = "channel_name")
-    private String channelName;
-
-    /**
-     * 开户网点
-     */
-    @TableField(value = "address")
-    private String address;
-
-    /**
-     * 持卡人姓名
-     */
-    @TableField(value = "real_name")
-    private String realName;
+    @TableField(value = "account_detail")
+    private String accountDetail;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
