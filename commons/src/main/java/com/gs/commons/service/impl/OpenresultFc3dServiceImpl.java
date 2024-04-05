@@ -5,11 +5,16 @@ import cn.hutool.core.map.MapUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gs.commons.bo.OpenResultBO;
+import com.gs.commons.bo.OpenresultTimeBO;
+import com.gs.commons.entity.OpenresultBjkl8;
 import com.gs.commons.entity.OpenresultFc3d;
+import com.gs.commons.entity.OpenresultFt;
 import com.gs.commons.mapper.OpenresultFc3dMapper;
 import com.gs.commons.service.OpenresultFc3dService;
+import com.gs.commons.utils.BeanUtil;
 import com.gs.commons.utils.PageUtils;
 import com.gs.commons.utils.Query;
 import icu.mhb.mybatisplus.plugln.tookit.Lists;
@@ -57,6 +62,20 @@ public class OpenresultFc3dServiceImpl extends ServiceImpl<OpenresultFc3dMapper,
             }
         }
         return new PageUtils(openResultBOList, (int) page.getTotal(), (int) page.getSize(), (int) page.getCurrent());
+    }
+
+    @Override
+    public OpenresultTimeBO getCurrentQs(Date date) {
+        List<OpenresultFc3d> list = this.list(Wrappers.lambdaQuery(OpenresultFc3d.class)
+                .ge(OpenresultFc3d::getOpenTime, date)
+                .le(OpenresultFc3d::getOpenResultTime, date)
+        );
+        if (CollUtil.isNotEmpty(list)) {
+            OpenresultTimeBO openresultTimeBO = new OpenresultTimeBO();
+            BeanUtil.copyPropertiesIgnoreNull(list.get(0), openresultTimeBO);
+            return openresultTimeBO;
+        }
+        return null;
     }
 }
 
