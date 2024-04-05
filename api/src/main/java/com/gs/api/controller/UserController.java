@@ -2,6 +2,7 @@ package com.gs.api.controller;
 import java.util.Date;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.NumberUtil;
@@ -642,5 +643,53 @@ public class UserController {
             page.setList(arr);
         }
         return R.ok().put("page", page);
+    }
+
+    @ApiOperation(value = "获取返水金额")
+    @GetMapping("/getReturnAmount")
+    public R getReturnAmount(HttpServletRequest httpServletRequest) {
+        String userName = JwtUtils.getUserName(httpServletRequest);
+        // TODO: 2024/4/5 查询返回金额 
+        return R.ok().put("data", RandomUtil.randomInt(1, 100));
+    }
+
+    @Transactional
+    @ApiOperation(value = "领取自助返水")
+    @GetMapping("/autoReturn")
+    public R autoReturn(HttpServletRequest httpServletRequest) throws Exception {
+        String userName = JwtUtils.getUserName(httpServletRequest);
+        // 校验是否领取昨日金额
+        Date now = new Date();
+        // 所有返水key
+        DateTime yesterday = DateUtil.offsetDay(now, -1);
+        String autoKey = RedisKeyUtil.AutoReturn(userName, yesterday);
+        if (redisTemplate.hasKey(autoKey)) {
+            return R.error(MsgUtil.get("system.autoreturn.has"));
+        }
+
+        UserInfo user = userInfoService.getUserByName(userName);
+
+        // TODO: 2024/4/5 计算返水金额业务
+        // 计算返水金额
+        BigDecimal amount = new BigDecimal(RandomUtil.randomInt(1, 100));
+        
+        // 给用户加钱
+        userInfoService.updateUserBalance(userName, amount);
+        // 添加流水记录
+        TransactionRecord transactionRecord = new TransactionRecord();
+        transactionRecord.setUserName(userName);
+        transactionRecord.setAmount(amount);
+        transactionRecord.setBeforeAmount(user.getBalance());
+        transactionRecord.setAfterAmount(NumberUtil.add(amount, user.getBalance()));
+        transactionRecord.setPayType(0);
+        transactionRecord.setBusinessType(7);
+        transactionRecord.setBusinessOrder(null);
+        transactionRecord.setCreateTime(now);
+        transactionRecord.setRemark("领取"+ DateUtil.formatDate(yesterday) +"返水：" + amount + "元");
+        transactionRecord.setOperName(null);
+        transactionRecordService.save(transactionRecord);
+        
+        redisTemplate.opsForValue().set(autoKey, "true", 2, TimeUnit.DAYS);
+        return R.ok();
     }
 }
