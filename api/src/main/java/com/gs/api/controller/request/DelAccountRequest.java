@@ -15,9 +15,4 @@ public class DelAccountRequest {
     @NotNull(message = "system.param.err")
     @ApiModelProperty(value = "id", example = "1", required = true)
     private String id;
-
-    @NotNull(message = "validation.user.register.paypwd")
-    @Pattern(regexp = RegConstant.WITHDRAW_PWD_REG, message = "validation.user.register.paypwd")
-    @ApiModelProperty(value = "支付密码", example = "123456", required = true)
-    private String payPwd;
 }

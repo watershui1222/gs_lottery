@@ -472,7 +472,7 @@ public class UserController {
 
     @ApiOperation(value = "绑定虚拟货币账户")
     @PostMapping("/bindVirAccount")
-    public R bindAccount(@Validated BindAccountRequest request, HttpServletRequest httpServletRequest) {
+    public R bindVirAccount(@Validated BindAccountRequest request, HttpServletRequest httpServletRequest) {
 
         String userName = JwtUtils.getUserName(httpServletRequest);
         UserInfo userInf = userInfoService.getUserByName(userName);
@@ -493,7 +493,7 @@ public class UserController {
 
         UserAccount userAccount = new UserAccount();
         userAccount.setUserName(userInf.getUserName());
-        userAccount.setAccountType(1);
+        userAccount.setAccountType(4);
         userAccount.setChannelName(request.getCoinName());
         userAccount.setAccountNo(request.getAddress());
         userAccount.setAddress(request.getChannelType());
@@ -508,14 +508,6 @@ public class UserController {
     public R delAccount(@Validated DelAccountRequest request, HttpServletRequest httpServletRequest) {
 
         String userName = JwtUtils.getUserName(httpServletRequest);
-        UserInfo userInf = userInfoService.getUserByName(userName);
-
-        // 验证支付密码
-        String pwd = SecureUtil.md5(request.getPayPwd());
-        if (!StringUtils.equals(pwd, userInf.getPayPwd())) {
-            return R.error(MsgUtil.get("system.order.paypwderror"));
-        }
-
         userAccountService.remove(
                 new LambdaUpdateWrapper<UserAccount>()
                         .eq(UserAccount::getUserName, userName)
