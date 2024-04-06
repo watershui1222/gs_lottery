@@ -44,7 +44,7 @@ public class LyServiceImpl implements PlatService {
         UserPlat userPlat = userPlatService.getOne(
                 new LambdaQueryWrapper<UserPlat>()
                         .eq(UserPlat::getUserName, userName)
-                        .eq(UserPlat::getPlatCode, "KY")
+                        .eq(UserPlat::getPlatCode, "LY")
         );
         if (userPlat != null) {
             return userPlat;

@@ -30,7 +30,7 @@ public class AgServiceImpl implements PlatService {
         UserPlat userPlat = userPlatService.getOne(
                 new LambdaQueryWrapper<UserPlat>()
                         .eq(UserPlat::getUserName, userName)
-                        .eq(UserPlat::getPlatCode, "KY")
+                        .eq(UserPlat::getPlatCode, "AG")
         );
         if (userPlat != null) {
             return userPlat;

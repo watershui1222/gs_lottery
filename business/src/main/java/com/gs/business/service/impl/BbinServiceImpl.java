@@ -36,7 +36,7 @@ public class BbinServiceImpl implements PlatService {
         UserPlat userPlat = userPlatService.getOne(
                 new LambdaQueryWrapper<UserPlat>()
                         .eq(UserPlat::getUserName, userName)
-                        .eq(UserPlat::getPlatCode, "KY")
+                        .eq(UserPlat::getPlatCode, "BBIN")
         );
         if (userPlat != null) {
             return userPlat;

@@ -19,11 +19,15 @@ import com.gs.gamerecord.utils.HgConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 皇冠定时任务
@@ -50,6 +54,9 @@ public class HgRecordSchedule {
 
     @Autowired
     private HgRecordService hgRecordService;
+
+    @Resource
+    private StringRedisTemplate redisTemplate;
 
     @Scheduled(cron = "0 0/2 * * * ?")
     public void hgRecord() throws Exception {
@@ -157,6 +164,10 @@ public class HgRecordSchedule {
     }
 
     public String agLogin() {
+        String tokenKey = "HGtokenkey";
+        if(redisTemplate.hasKey(tokenKey)){
+            return redisTemplate.opsForValue().get(tokenKey);
+        }
         String token = "";
         JSONObject param = new JSONObject();
         JSONObject request = new JSONObject();
@@ -173,7 +184,9 @@ public class HgRecordSchedule {
         log.info("皇冠 aglogin接口 param= " + param + " result = " + result);
         JSONObject resultJS = JSONObject.parseObject(result);
         if(StrUtil.equals(resultJS.getString("respcode"), "0000")){
-            return resultJS.getString("token");
+            token = resultJS.getString("token");
+            redisTemplate.opsForValue().set(tokenKey, token, 36, TimeUnit.HOURS);
+            return token;
         }
         return token;
     }
