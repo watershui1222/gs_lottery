@@ -394,9 +394,9 @@ public class UserController {
             if (StringUtils.equals(request.getDateStr(), "2")) {
                 date = DateUtil.offsetDay(date, -1);
             } else if (StringUtils.equals(request.getDateStr(), "3")) {
-                date = DateUtil.offsetWeek(date, 1);
+                date = DateUtil.offsetWeek(date, -1);
             } else if (StringUtils.equals(request.getDateStr(), "4")) {
-                date = DateUtil.offsetMonth(date, 1);
+                date = DateUtil.offsetMonth(date, -1);
             }
             Date startTime = DateUtil.beginOfDay(date);
             Date endTime = DateUtil.endOfDay(date);
@@ -747,9 +747,9 @@ public class UserController {
             if (StringUtils.equals(request.getDateStr(), "2")) {
                 date = DateUtil.offsetDay(date, -1);
             } else if (StringUtils.equals(request.getDateStr(), "3")) {
-                date = DateUtil.offsetWeek(date, 1);
+                date = DateUtil.offsetWeek(date, -1);
             } else if (StringUtils.equals(request.getDateStr(), "4")) {
-                date = DateUtil.offsetMonth(date, 1);
+                date = DateUtil.offsetMonth(date, -1);
             }
             Date startTime = DateUtil.beginOfDay(date);
             Date endTime = DateUtil.endOfDay(date);
