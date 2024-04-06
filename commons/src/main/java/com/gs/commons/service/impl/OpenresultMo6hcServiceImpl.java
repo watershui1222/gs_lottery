@@ -69,9 +69,9 @@ public class OpenresultMo6hcServiceImpl extends ServiceImpl<OpenresultMo6hcMappe
     public OpenresultTimeBO getOneDataByTime(Date currentTime, Date lastTime) {
 
         LambdaQueryWrapper<OpenresultMo6hc> wrapper = Wrappers.lambdaQuery(OpenresultMo6hc.class)
-                .ge(null != currentTime, OpenresultMo6hc::getOpenTime, currentTime)
-                .le(null != currentTime, OpenresultMo6hc::getOpenResultTime, currentTime)
-                .ge(null != lastTime, OpenresultMo6hc::getOpenResultTime, lastTime)
+                .le(null != currentTime, OpenresultMo6hc::getOpenTime, currentTime)
+                .ge(null != currentTime, OpenresultMo6hc::getOpenResultTime, currentTime)
+                .le(null != lastTime, OpenresultMo6hc::getOpenResultTime, lastTime)
                 .orderByDesc(OpenresultMo6hc::getOpenResultTime);
 
 

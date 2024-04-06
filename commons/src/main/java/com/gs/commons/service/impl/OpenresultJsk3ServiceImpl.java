@@ -73,9 +73,9 @@ public class OpenresultJsk3ServiceImpl extends ServiceImpl<OpenresultJsk3Mapper,
     public OpenresultTimeBO getOneDataByTime(Date currentTime, Date lastTime) {
 
         LambdaQueryWrapper<OpenresultJsk3> wrapper = Wrappers.lambdaQuery(OpenresultJsk3.class)
-                .ge(null != currentTime, OpenresultJsk3::getOpenTime, currentTime)
-                .le(null != currentTime, OpenresultJsk3::getOpenResultTime, currentTime)
-                .ge(null != lastTime, OpenresultJsk3::getOpenResultTime, lastTime)
+                .le(null != currentTime, OpenresultJsk3::getOpenTime, currentTime)
+                .ge(null != currentTime, OpenresultJsk3::getOpenResultTime, currentTime)
+                .le(null != lastTime, OpenresultJsk3::getOpenResultTime, lastTime)
                 .orderByDesc(OpenresultJsk3::getOpenResultTime);
 
 

@@ -69,9 +69,9 @@ public class OpenresultBjpk10ServiceImpl extends ServiceImpl<OpenresultBjpk10Map
     public OpenresultTimeBO getOneDataByTime(Date currentTime, Date lastTime) {
 
         LambdaQueryWrapper<OpenresultBjpk10> wrapper = Wrappers.lambdaQuery(OpenresultBjpk10.class)
-                .ge(null != currentTime, OpenresultBjpk10::getOpenTime, currentTime)
-                .le(null != currentTime, OpenresultBjpk10::getOpenResultTime, currentTime)
-                .ge(null != lastTime, OpenresultBjpk10::getOpenResultTime, lastTime)
+                .le(null != currentTime, OpenresultBjpk10::getOpenTime, currentTime)
+                .ge(null != currentTime, OpenresultBjpk10::getOpenResultTime, currentTime)
+                .le(null != lastTime, OpenresultBjpk10::getOpenResultTime, lastTime)
                 .orderByDesc(OpenresultBjpk10::getOpenResultTime);
 
 

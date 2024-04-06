@@ -70,9 +70,9 @@ public class OpenresultCqsscServiceImpl extends ServiceImpl<OpenresultCqsscMappe
     public OpenresultTimeBO getOneDataByTime(Date currentTime, Date lastTime) {
 
         LambdaQueryWrapper<OpenresultCqssc> wrapper = Wrappers.lambdaQuery(OpenresultCqssc.class)
-                .ge(null != currentTime, OpenresultCqssc::getOpenTime, currentTime)
-                .le(null != currentTime, OpenresultCqssc::getOpenResultTime, currentTime)
-                .ge(null != lastTime, OpenresultCqssc::getOpenResultTime, lastTime)
+                .le(null != currentTime, OpenresultCqssc::getOpenTime, currentTime)
+                .ge(null != currentTime, OpenresultCqssc::getOpenResultTime, currentTime)
+                .le(null != lastTime, OpenresultCqssc::getOpenResultTime, lastTime)
                 .orderByDesc(OpenresultCqssc::getOpenResultTime);
 
 

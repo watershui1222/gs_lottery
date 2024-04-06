@@ -67,9 +67,9 @@ public class OpenresultFc3dServiceImpl extends ServiceImpl<OpenresultFc3dMapper,
     public OpenresultTimeBO getOneDataByTime(Date currentTime, Date lastTime) {
 
         LambdaQueryWrapper<OpenresultFc3d> wrapper = Wrappers.lambdaQuery(OpenresultFc3d.class)
-                .ge(null != currentTime, OpenresultFc3d::getOpenTime, currentTime)
-                .le(null != currentTime, OpenresultFc3d::getOpenResultTime, currentTime)
-                .ge(null != lastTime, OpenresultFc3d::getOpenResultTime, lastTime)
+                .le(null != currentTime, OpenresultFc3d::getOpenTime, currentTime)
+                .ge(null != currentTime, OpenresultFc3d::getOpenResultTime, currentTime)
+                .le(null != lastTime, OpenresultFc3d::getOpenResultTime, lastTime)
                 .orderByDesc(OpenresultFc3d::getOpenResultTime);
 
 

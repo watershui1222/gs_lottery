@@ -68,9 +68,9 @@ public class OpenresultBjkl8ServiceImpl extends ServiceImpl<OpenresultBjkl8Mappe
     public OpenresultTimeBO getOneDataByTime(Date currentTime, Date lastTime) {
 
         LambdaQueryWrapper<OpenresultBjkl8> wrapper = Wrappers.lambdaQuery(OpenresultBjkl8.class)
-                .ge(null != currentTime, OpenresultBjkl8::getOpenTime, currentTime)
-                .le(null != currentTime, OpenresultBjkl8::getOpenResultTime, currentTime)
-                .ge(null != lastTime, OpenresultBjkl8::getOpenResultTime, lastTime)
+                .le(null != currentTime, OpenresultBjkl8::getOpenTime, currentTime)
+                .ge(null != currentTime, OpenresultBjkl8::getOpenResultTime, currentTime)
+                .le(null != lastTime, OpenresultBjkl8::getOpenResultTime, lastTime)
                 .orderByDesc(OpenresultBjkl8::getOpenResultTime);
 
 

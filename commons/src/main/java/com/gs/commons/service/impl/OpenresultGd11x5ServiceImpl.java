@@ -69,9 +69,9 @@ public class OpenresultGd11x5ServiceImpl extends ServiceImpl<OpenresultGd11x5Map
     public OpenresultTimeBO getOneDataByTime(Date currentTime, Date lastTime) {
 
         LambdaQueryWrapper<OpenresultGd11x5> wrapper = Wrappers.lambdaQuery(OpenresultGd11x5.class)
-                .ge(null != currentTime, OpenresultGd11x5::getOpenTime, currentTime)
-                .le(null != currentTime, OpenresultGd11x5::getOpenResultTime, currentTime)
-                .ge(null != lastTime, OpenresultGd11x5::getOpenResultTime, lastTime)
+                .le(null != currentTime, OpenresultGd11x5::getOpenTime, currentTime)
+                .ge(null != currentTime, OpenresultGd11x5::getOpenResultTime, currentTime)
+                .le(null != lastTime, OpenresultGd11x5::getOpenResultTime, lastTime)
                 .orderByDesc(OpenresultGd11x5::getOpenResultTime);
 
 

@@ -68,9 +68,9 @@ public class OpenresultPcddServiceImpl extends ServiceImpl<OpenresultPcddMapper,
     public OpenresultTimeBO getOneDataByTime(Date currentTime, Date lastTime) {
 
         LambdaQueryWrapper<OpenresultPcdd> wrapper = Wrappers.lambdaQuery(OpenresultPcdd.class)
-                .ge(null != currentTime, OpenresultPcdd::getOpenTime, currentTime)
-                .le(null != currentTime, OpenresultPcdd::getOpenResultTime, currentTime)
-                .ge(null != lastTime, OpenresultPcdd::getOpenResultTime, lastTime)
+                .le(null != currentTime, OpenresultPcdd::getOpenTime, currentTime)
+                .ge(null != currentTime, OpenresultPcdd::getOpenResultTime, currentTime)
+                .le(null != lastTime, OpenresultPcdd::getOpenResultTime, lastTime)
                 .orderByDesc(OpenresultPcdd::getOpenResultTime);
 
 

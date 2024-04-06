@@ -3,6 +3,7 @@ package com.gs.api.controller;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
@@ -30,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -236,8 +238,8 @@ public class LotteryController {
 
 
     @ApiOperation(value = "彩票投注记录")
-    @GetMapping("/lotteryrder/list")
-    public R lotteryrderList(LotteryOrderListRequest request, HttpServletRequest httpServletRequest) {
+    @GetMapping("/lotteryOrder/list")
+    public R lotteryOrderList(LotteryOrderListRequest request, HttpServletRequest httpServletRequest) {
         String userName = JwtUtils.getUserName(httpServletRequest);
 
         Map<String, Object> params = new HashMap<>();
@@ -272,9 +274,9 @@ public class LotteryController {
     }
 
 
-    @ApiOperation(value = "彩票倒计时")
-    @GetMapping("/time")
-    public R lotteryTime(LotteryTimeRequest request, HttpServletRequest httpServletRequest) {
+    @ApiOperation(value = "获取当前期和上期开奖")
+    @GetMapping("/lotteryQsTime")
+    public R lotteryTime(@Validated LotteryTimeRequest request, HttpServletRequest httpServletRequest) {
         String userName = JwtUtils.getUserName(httpServletRequest);
         Date now = new Date();
         OpenresultTimeBO currentQsData;
@@ -317,12 +319,13 @@ public class LotteryController {
         } else {
             return R.error("未查询到该彩种");
         }
-
         // 当前期
         JSONObject nowQsJson = new JSONObject();
         String nowQs = (null == currentQsData) ? "" : currentQsData.getQs();
-        long nowCloseSeconds = (null == currentQsData) ? -1L : DateUtil.between(currentQsData.getCloseTime(), now, DateUnit.SECOND);
-        long nowOpenSeconds = (null == currentQsData) ? -1L : DateUtil.between(currentQsData.getOpenResultTime(), now, DateUnit.SECOND);
+
+
+        long nowCloseSeconds = (null == currentQsData) ? -1L : (currentQsData.getCloseTime().getTime() - now.getTime()) / 1000L;
+        long nowOpenSeconds = (null == currentQsData) ? -1L : (currentQsData.getOpenResultTime().getTime() - now.getTime()) / 1000L;
         nowQsJson.put("qs", nowQs);
         nowQsJson.put("closeSeconds", nowCloseSeconds);
         nowQsJson.put("openSeconds", nowOpenSeconds);
@@ -330,11 +333,11 @@ public class LotteryController {
         // 上一期
         JSONObject lastQsJson = new JSONObject();
         String lastQs = (null == lastQsData) ? "" : lastQsData.getQs();
-        String openResult = (null == lastQsData) ? "" : lastQsData.getOpenResult();
+        String openResult = (null == lastQsData) ? "" : StringUtils.defaultString(lastQsData.getOpenResult());
         lastQsJson.put("qs", lastQs);
         lastQsJson.put("openResult", openResult);
 
-        return R.ok().put("nowQs", nowQsJson).put("lastQsJson", lastQs);
+        return R.ok().put("nowQs", nowQsJson).put("lastQs", lastQsJson);
     }
 
 }

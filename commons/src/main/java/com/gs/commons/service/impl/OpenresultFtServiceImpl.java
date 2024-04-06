@@ -67,9 +67,9 @@ public class OpenresultFtServiceImpl extends ServiceImpl<OpenresultFtMapper, Ope
     public OpenresultTimeBO getOneDataByTime(Date currentTime, Date lastTime) {
 
         LambdaQueryWrapper<OpenresultFt> wrapper = Wrappers.lambdaQuery(OpenresultFt.class)
-                .ge(null != currentTime, OpenresultFt::getOpenTime, currentTime)
-                .le(null != currentTime, OpenresultFt::getOpenResultTime, currentTime)
-                .ge(null != lastTime, OpenresultFt::getOpenResultTime, lastTime)
+                .le(null != currentTime, OpenresultFt::getOpenTime, currentTime)
+                .ge(null != currentTime, OpenresultFt::getOpenResultTime, currentTime)
+                .le(null != lastTime, OpenresultFt::getOpenResultTime, lastTime)
                 .orderByDesc(OpenresultFt::getOpenResultTime);
 
 
