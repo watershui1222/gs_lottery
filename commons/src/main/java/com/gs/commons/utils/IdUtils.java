@@ -26,4 +26,8 @@ public class IdUtils {
     public static String getTransactionOrderNo() {
         return "T" + IdUtil.getSnowflakeNextIdStr();
     }
+
+    public static String getLotteryOrderNo() {
+        return "L" + IdUtil.getSnowflakeNextIdStr();
+    }
 }

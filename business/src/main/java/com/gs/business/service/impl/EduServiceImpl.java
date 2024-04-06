@@ -42,6 +42,7 @@ public class EduServiceImpl implements EduService {
 
         // 添加流水记录
         TransactionRecord transactionRecord = new TransactionRecord();
+        transactionRecord.setTrxId(IdUtils.getTransactionOrderNo());
         transactionRecord.setUserName(userName);
         transactionRecord.setAmount(amount.negate());
         transactionRecord.setBeforeAmount(userInfo.getBalance());
@@ -78,6 +79,7 @@ public class EduServiceImpl implements EduService {
         userInfoService.updateUserBalance(userName, amount);
         // 添加流水记录
         TransactionRecord transactionRecord = new TransactionRecord();
+        transactionRecord.setTrxId(IdUtils.getTransactionOrderNo());
         transactionRecord.setUserName(userName);
         transactionRecord.setAmount(amount);
         transactionRecord.setBeforeAmount(userInfo.getBalance());

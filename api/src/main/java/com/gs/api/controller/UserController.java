@@ -1,4 +1,5 @@
 package com.gs.api.controller;
+import java.util.Date;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
@@ -9,13 +10,19 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.extra.servlet.ServletUtil;
+import cn.hutool.http.HtmlUtil;
+import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.sql.StringEscape;
 import com.gs.api.controller.request.*;
 import com.gs.api.utils.JwtUtils;
+import com.gs.business.client.LotteryClient;
+import com.gs.business.pojo.LotteryCurrQsBO;
+import com.gs.business.service.LotteryBetService;
 import com.gs.commons.constants.Constant;
 import com.gs.commons.entity.*;
 import com.gs.commons.enums.LotteryCodeEnum;
@@ -41,6 +48,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Api(value = "用户相关", tags = "用户")
@@ -84,7 +92,6 @@ public class UserController {
 
     @Autowired
     private LyRecordService lyRecordService;
-
 
     @ApiOperation(value = "用户信息")
     @GetMapping("/info")
@@ -412,14 +419,15 @@ public class UserController {
             Map<Integer, String> businessTypeMap = new HashMap<>();
             businessTypeMap.put(0, "充值");
             businessTypeMap.put(1, "提现");
-            businessTypeMap.put(2, "彩票奖金");
-            businessTypeMap.put(3, "彩票撤单");
-            businessTypeMap.put(4, "额度转入");
-            businessTypeMap.put(5, "额度转出");
-            businessTypeMap.put(6, "返水");
-            businessTypeMap.put(7, "优惠活动");
-            businessTypeMap.put(8, "人工上分");
-            businessTypeMap.put(9, "人工下分");
+            businessTypeMap.put(2, "下注");
+            businessTypeMap.put(3, "彩票奖金");
+            businessTypeMap.put(4, "彩票撤单");
+            businessTypeMap.put(5, "额度转入");
+            businessTypeMap.put(6, "额度转出");
+            businessTypeMap.put(7, "返水");
+            businessTypeMap.put(8, "优惠活动");
+            businessTypeMap.put(9, "人工上分");
+            businessTypeMap.put(10, "人工下分");
             JSONArray arr = new JSONArray();
             for (TransactionRecord temp : list) {
                 JSONObject obj = new JSONObject();
@@ -634,6 +642,7 @@ public class UserController {
         withdrawService.save(withdraw);
         // 资金流水记录
         TransactionRecord transactionRecord = new TransactionRecord();
+        transactionRecord.setTrxId(IdUtils.getTransactionOrderNo());
         transactionRecord.setUserName(userName);
         transactionRecord.setAmount(amount.negate());
         transactionRecord.setBeforeAmount(userInf.getBalance());
@@ -717,6 +726,7 @@ public class UserController {
         userInfoService.updateUserBalance(userName, amount);
         // 添加流水记录
         TransactionRecord transactionRecord = new TransactionRecord();
+        transactionRecord.setTrxId(IdUtils.getTransactionOrderNo());
         transactionRecord.setUserName(userName);
         transactionRecord.setAmount(amount);
         transactionRecord.setBeforeAmount(user.getBalance());
@@ -822,6 +832,8 @@ public class UserController {
                 jsonObject.put("status", eduOrder.getStatus());
                 jsonObject.put("type", eduOrder.getEduType());
                 jsonObject.put("orderNo", eduOrder.getOrderNo());
+                jsonObject.put("platOrderNo", eduOrder.getPlatOrderNo());
+                jsonObject.put("remark", eduOrder.getRemark());
                 jsonArray.add(jsonObject);
 
             }

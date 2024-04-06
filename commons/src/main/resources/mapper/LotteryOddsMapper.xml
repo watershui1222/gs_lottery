@@ -12,7 +12,9 @@
             <result property="status" column="status" jdbcType="INTEGER"/>
             <result property="lotteryCode" column="lottery_code" jdbcType="VARCHAR"/>
             <result property="handicapCode" column="handicap_code" jdbcType="VARCHAR"/>
+            <result property="handicapName" column="handicap_name" jdbcType="VARCHAR"/>
             <result property="playCode" column="play_code" jdbcType="VARCHAR"/>
+            <result property="playName" column="play_name" jdbcType="VARCHAR"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="pxh" column="pxh" jdbcType="INTEGER"/>
@@ -22,7 +24,8 @@
     <sql id="Base_Column_List">
         id,hm_code,hm_name,
         odds,status,lottery_code,
-        handicap_code,play_code,create_time,
-        update_time,pxh,group_name
+        handicap_code,handicap_name,play_code,
+        play_name,create_time,update_time,
+        pxh,group_name
     </sql>
 </mapper>

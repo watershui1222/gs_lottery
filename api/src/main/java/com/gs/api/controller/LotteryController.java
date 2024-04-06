@@ -3,6 +3,9 @@ package com.gs.api.controller;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.http.HtmlUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
@@ -10,15 +13,20 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.gs.api.controller.VO.LotteryHandicapVo;
 import com.gs.api.controller.VO.LotteryPlayVo;
+import com.gs.api.controller.request.LotteryBetRequest;
 import com.gs.api.controller.request.LotteryOrderListRequest;
 import com.gs.api.controller.request.LotteryTimeRequest;
 import com.gs.api.controller.request.OpenResultHistoryRequest;
 import com.gs.api.utils.JwtUtils;
+import com.gs.business.client.LotteryClient;
+import com.gs.business.pojo.LotteryCurrQsBO;
+import com.gs.business.service.LotteryBetService;
 import com.gs.commons.bo.OpenresultTimeBO;
 import com.gs.commons.constants.Constant;
 import com.gs.commons.entity.*;
 import com.gs.commons.enums.LotteryCodeEnum;
 import com.gs.commons.service.*;
+import com.gs.commons.utils.IdUtils;
 import com.gs.commons.utils.PageUtils;
 import com.gs.commons.utils.R;
 import io.swagger.annotations.Api;
@@ -28,12 +36,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -82,6 +88,13 @@ public class LotteryController {
     private LotteryOrderService lotteryOrderService;
     @Autowired
     private SysParamService sysParamService;
+
+    @Autowired
+    private LotteryBetService lotteryBetService;
+    @Autowired
+    private LotteryClient lotteryClient;
+    @Autowired
+    private UserInfoService userInfoService;
 
 
 
@@ -173,10 +186,11 @@ public class LotteryController {
         JSONArray jsonArray = new JSONArray();
         for (LotteryOdds lotteryOdds : oddsList) {
             JSONObject object = new JSONObject();
-            object.put("code", lotteryOdds.getHmCode());
+//            object.put("code", lotteryOdds.getHmCode());
             object.put("name", lotteryOdds.getHmName());
             object.put("odds", lotteryOdds.getOdds());
             object.put("g", lotteryOdds.getGroupName());
+            object.put("id", lotteryOdds.getId());
             jsonArray.add(object);
         }
 
@@ -404,4 +418,109 @@ public class LotteryController {
         return R.ok().put("nowQs", nowQsJson).put("lastQs", lastQsJson);
     }
 
+    @ApiOperation(value = "彩票投注")
+    @PostMapping("/bet")
+    public R bet(@Validated LotteryBetRequest request, HttpServletRequest httpServletRequest) throws Exception {
+        String userName = JwtUtils.getUserName(httpServletRequest);
+        // 总投注额
+        BigDecimal betAmount = new BigDecimal("0");
+        // 投注期号
+        String qs = request.getQs();
+        // 彩种代码
+        String lotterCode = request.getLotterCode();
+        // 获取彩种信息
+        Lottery lottery = lotteryService.getLotteryInfo(lotterCode);
+        if (lottery == null || lottery.getStatus().intValue() == 1) {
+            return R.error("获取彩种信息错误!");
+        }
+        // 获取当前期数信息
+        LotteryCurrQsBO currQs = lotteryClient.getCurrQs(lottery.getLotteryCode());
+        if (currQs == null) {
+            return R.error("已封盘");
+        }
+        if (!StringUtils.equals(currQs.getQs(), qs)) {
+            return R.error("当前最新期数为:[" + currQs.getQs() + "],请重新投注");
+        }
+
+        Date now = new Date();
+        // 投注内容
+        List<LotteryOrder> orders = new ArrayList<>();
+        String betContent = HtmlUtil.unescape(request.getBetContent());
+        System.out.println(betContent);
+        JSONArray betContentArr = JSON.parseArray(betContent);
+        // 获取所有投注项信息
+        Set<String> oddsIds = new HashSet<>();
+        for (int i = 0; i < betContentArr.size(); i++) {
+            JSONObject betContentObj = betContentArr.getJSONObject(i);
+            String oddsId = betContentObj.getString("oddsId");
+            oddsIds.add(oddsId);
+        }
+        List<LotteryOdds> lotteryOddsList = lotteryOddsService.list(
+                new LambdaQueryWrapper<LotteryOdds>()
+                        .in(LotteryOdds::getId, oddsIds)
+                        .eq(LotteryOdds::getLotteryCode, lotterCode)
+        );
+        if (CollUtil.isEmpty(lotteryOddsList)) {
+            throw new Exception("获取投注项内容失败");
+        }
+        Map<String, LotteryOdds> lotteryOddsMap = lotteryOddsList.stream().collect(Collectors.toMap(item-> String.valueOf(item.getId()), item->item));
+
+        for (int i = 0; i < betContentArr.size(); i++) {
+            JSONObject betContentObj = betContentArr.getJSONObject(i);
+            String playCode = betContentObj.getString("playCode");
+            String hm = betContentObj.getString("hm");
+            String oddsId = betContentObj.getString("oddsId");
+            BigDecimal amount = betContentObj.getBigDecimal("amount");
+            betAmount = NumberUtil.add(betAmount, amount);
+
+            LotteryOdds lotteryOdds = lotteryOddsMap.get(oddsId);
+            if (lotteryOdds == null || !StringUtils.equals(lotteryOdds.getPlayCode(), playCode)) {
+                throw new Exception("非法参数");
+            }
+
+            // 组装投注记录
+            LotteryOrder order = new LotteryOrder();
+            order.setUserName(userName);
+            order.setOrderNo(IdUtils.getLotteryOrderNo());
+            order.setLotteryCode(lottery.getLotteryCode());
+            order.setLotteryName(lottery.getLotteryName());
+            order.setHandicapCode(lotteryOdds.getHandicapCode());
+            order.setPlayCode(playCode);
+            order.setPlayName(lotteryOdds.getPlayName());
+            order.setBetContent(hm);
+            order.setOdds(lotteryOdds.getOdds());
+            order.setQs(currQs.getQs());
+            order.setBetAmount(amount);
+            order.setBonusAmount(new BigDecimal("0"));
+            order.setProfitAmount(new BigDecimal("0"));
+            order.setBetTime(now);
+            order.setSettleTime(null);
+            order.setSettleStatus(0);
+            order.setOrderStatus(0);
+            order.setOpenResult(null);
+            order.setOpenResultTime(currQs.getOpenResultTime());
+            order.setSettleGroup(RandomUtil.randomInt(0, 9));
+            orders.add(order);
+        }
+
+        // 校验投注项规则
+        checkPlayRules(betContentArr);
+
+        // 用户信息
+        UserInfo user = userInfoService.getUserByName(userName);
+        if (betAmount.doubleValue() > user.getBalance().doubleValue()) {
+            return R.error("账户余额不足");
+        }
+
+        lotteryBetService.bet(user, betAmount, orders);
+        return R.ok("投注成功!");
+    }
+
+    /**
+     * 校验投注项规则
+     * @param betContentArr
+     */
+    private void checkPlayRules(JSONArray betContentArr) {
+
+    }
 }
