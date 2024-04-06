@@ -15,6 +15,14 @@ public class IdUtils {
         return "W" + IdUtil.getSnowflakeNextIdStr();
     }
 
+    public static String getPlatInOrderNo() {
+        return "IN" + IdUtil.getSnowflakeNextIdStr();
+    }
+
+    public static String getPlatOutOrderNo() {
+        return "OUT" + IdUtil.getSnowflakeNextIdStr();
+    }
+
     public static String getTransactionOrderNo() {
         return "T" + IdUtil.getSnowflakeNextIdStr();
     }

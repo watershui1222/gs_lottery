@@ -1,21 +1,29 @@
 package com.gs.api.controller;
 
-import cn.hutool.core.util.RandomUtil;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.gs.api.controller.request.PlatDepositRequest;
+import com.gs.api.controller.request.PlatWithdrawRequest;
 import com.gs.api.utils.JwtUtils;
 import com.gs.business.client.PlatClient;
+import com.gs.business.service.EduService;
+import com.gs.commons.entity.EduOrder;
+import com.gs.commons.entity.UserInfo;
+import com.gs.commons.entity.UserPlat;
+import com.gs.commons.service.EduOrderService;
+import com.gs.commons.service.UserInfoService;
+import com.gs.commons.utils.IdUtils;
 import com.gs.commons.utils.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Slf4j
 @Api(value = "三方平台相关", tags = "三方平台相关")
@@ -25,16 +33,27 @@ public class PlatController {
 
     @Autowired
     private StringRedisTemplate redisTemplate;
-
     @Autowired
     private PlatClient platClient;
+    @Autowired
+    private UserInfoService userInfoService;
+    @Autowired
+    private EduService eduService;
+    @Autowired
+    private EduOrderService eduOrderService;
 
 
     @ApiOperation(value = "获取三方平台余额")
     @GetMapping("/getBalancec/{platCode}")
     public R getBalancec(@PathVariable("platCode") String platCode, HttpServletRequest httpServletRequest) throws Exception {
         String userName = JwtUtils.getUserName(httpServletRequest);
-        BigDecimal amount = platClient.queryBalance(platCode, userName);
+        // 注册
+        UserPlat userPlat = platClient.register(platCode, userName);
+        if (userPlat == null) {
+            throw new Exception("平台:" + userPlat.getPlatCode() + "注册失败");
+        }
+        // 查余额
+        BigDecimal amount = platClient.queryBalance(userPlat);
         return R.ok().put("balance", amount);
     }
 
@@ -42,7 +61,100 @@ public class PlatController {
     @GetMapping("/login/{platCode}")
     public R login(@PathVariable("platCode") String platCode, HttpServletRequest httpServletRequest) throws Exception {
         String userName = JwtUtils.getUserName(httpServletRequest);
-        String loginUrl = platClient.getLoginUrl(platCode, userName);
+        // 注册
+        UserPlat userPlat = platClient.register(platCode, userName);
+        if (userPlat == null) {
+            throw new Exception("平台:" + userPlat.getPlatCode() + "注册失败");
+        }
+        // 获取登录链接
+        String loginUrl = platClient.getLoginUrl(userPlat);
         return R.ok().put("loginUrl", loginUrl);
+    }
+
+    @ApiOperation(value = "额度转入")
+    @PostMapping("/deposit")
+    public R deposit(@Validated PlatDepositRequest request, HttpServletRequest httpServletRequest) throws Exception {
+        String userName = JwtUtils.getUserName(httpServletRequest);
+        // 校验余额是否充足
+        UserInfo userInfo = userInfoService.getUserByName(userName);
+        BigDecimal amount = new BigDecimal(request.getAmount());
+        if (amount.doubleValue() < 1) {
+            return R.error("请输入大于1的金额");
+        }
+        if (amount.doubleValue() > userInfo.getBalance().doubleValue()) {
+            return R.error("余额不足");
+        }
+        // 注册
+        UserPlat userPlat = platClient.register(request.getPlatCode(), userName);
+        if (userPlat == null) {
+            throw new Exception("平台:" + userPlat.getPlatCode() + "注册失败");
+        }
+        // 生产三方订单号
+        String depositOrderNo = platClient.getDepositOrderNo(userPlat.getPlatCode(), amount, userPlat);
+        // 生成订单、扣除用户金额
+        EduOrder eduOrder = eduService.saveOrderAndSubAmount(userPlat.getUserName(), amount, userPlat.getPlatCode(), depositOrderNo);
+        // 调用三方充值
+        boolean success = platClient.deposit(userPlat, amount, eduOrder);
+        if (success) {
+            // 调用三方成功,修改额度订单记录
+            eduOrderService.update(
+                    new LambdaUpdateWrapper<EduOrder>()
+                            .eq(EduOrder::getOrderNo, eduOrder.getOrderNo())
+                            .set(EduOrder::getStatus, 0)
+                            .set(EduOrder::getUpdateTime, new Date())
+            );
+            return R.ok();
+        } else {
+            // 调用失败,联系客服处理
+        }
+        return R.error("额度转入失败,请联系客服处理");
+    }
+
+    @ApiOperation(value = "额度转出")
+    @PostMapping("/withdraw")
+    public R withdraw(@Validated PlatWithdrawRequest request, HttpServletRequest httpServletRequest) throws Exception {
+        String userName = JwtUtils.getUserName(httpServletRequest);
+        // 注册
+        UserPlat userPlat = platClient.register(request.getPlatCode(), userName);
+        if (userPlat == null) {
+            throw new Exception("平台:" + userPlat.getPlatCode() + "注册失败");
+        }
+        // 金额
+        BigDecimal amount = new BigDecimal(request.getAmount());
+        if (amount.doubleValue() < 1) {
+            return R.error("请输入大于1的金额");
+        }
+        // 查询第三方余额
+        BigDecimal platBalance = platClient.queryBalance(userPlat);
+        if (amount.doubleValue() > platBalance.doubleValue()) {
+            return R.error("第三方余额不足.");
+        }
+        // 生产三方订单号
+        String withdrawOrderNo = platClient.getWithdrawOrderNo(userPlat.getPlatCode(), amount, userPlat);
+        // 添加额度转换记录
+        Date now = new Date();
+        String orderNo = IdUtils.getPlatOutOrderNo();
+        EduOrder eduOrder = new EduOrder();
+        eduOrder.setUserName(userName);
+        eduOrder.setOrderNo(orderNo);
+        eduOrder.setPlatOrderNo(withdrawOrderNo);
+        eduOrder.setAmount(amount);
+        eduOrder.setEduType(1);
+        eduOrder.setPlatCode(userPlat.getPlatCode());
+        eduOrder.setStatus(-1);
+        eduOrder.setCreateTime(now);
+        eduOrder.setUpdateTime(now);
+        eduOrder.setRemark("[" + userPlat.getPlatCode() + "]额度转出至平台:" + amount + "元");
+        eduOrderService.save(eduOrder);
+        // 调用三方充值
+        boolean success = platClient.withdraw(userPlat, amount, eduOrder);
+        if (success) {
+            // 调用三方成功,给用户加钱
+            eduService.AddMoneyAndTranscationRecord(userName, amount, userPlat.getPlatCode(), withdrawOrderNo, eduOrder.getOrderNo());
+            return R.ok();
+        } else {
+            // 调用失败,联系客服处理
+        }
+        return R.error("额度转入失败,请联系客服处理");
     }
 }

@@ -39,7 +39,7 @@ public class KyServiceImpl implements PlatService {
     private UserPlatService userPlatService;
 
     @Override
-    public UserPlat registerBalance(String userName) throws Exception {
+    public UserPlat register(String userName) throws Exception {
         // 查询是否注册平台
         UserPlat userPlat = userPlatService.getOne(
                 new LambdaQueryWrapper<UserPlat>()
@@ -144,5 +144,79 @@ public class KyServiceImpl implements PlatService {
             throw new Exception("开元登录失败");
         }
         return d.getString("url");
+    }
+
+    @Override
+    public boolean deposit(BigDecimal amount, UserPlat userPlat, String platOrderNo) throws Exception {
+        String agent = this.agent;
+        String timestamp = String.valueOf(DateUtil.current());
+        String account = userPlat.getPlatUserName();
+        BigDecimal money = amount;
+        String orderid = platOrderNo;
+        String aesKey = this.aesKey;
+        StringBuilder paramSb = new StringBuilder();
+        paramSb.append("s=2&")
+                .append("account=").append(account)
+                .append("&money=").append(money)
+                .append("&orderid=").append(orderid);
+        String param = AesUtils.AESEncrypt(paramSb.toString(), aesKey, true);
+        String key = AesUtils.MD5(agent + timestamp + this.md5Key);
+        StringBuilder urlSB = new StringBuilder();
+        urlSB.append(this.prefixURL).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
+        String result = HttpUtil.get(urlSB.toString());
+        log.info("开元额度转入返回:{}", result);
+        JSONObject res = JSONObject.parseObject(result);
+        JSONObject d = res.getJSONObject("d");
+        return d.getIntValue("code") == 0;
+    }
+
+    @Override
+    public boolean withdraw(BigDecimal amount, UserPlat userPlat, String platOrderNo) throws Exception {
+        String agent = this.agent;
+        String timestamp = String.valueOf(DateUtil.current());
+        String account = userPlat.getPlatUserName();
+        BigDecimal money = amount;//这里如果要全部带出需要查询一遍
+        String orderid = platOrderNo;
+        String aesKey = this.aesKey;
+        StringBuilder paramSb = new StringBuilder();
+        paramSb.append("s=3&")
+                .append("account=").append(account)
+                .append("&money=").append(money)
+                .append("&orderid=").append(orderid);
+        String param = AesUtils.AESEncrypt(paramSb.toString(), aesKey,true);
+        String key = AesUtils.MD5(agent+timestamp+this.md5Key);
+        StringBuilder urlSB = new StringBuilder();
+        urlSB.append(this.prefixURL).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
+        String result = HttpUtil.get(urlSB.toString());
+        log.info("开元额度转出失败:{}", result);
+        JSONObject res = JSONObject.parseObject(result);
+        JSONObject d = res.getJSONObject("d");
+        return d.getIntValue("code") == 0;
+    }
+
+    @Override
+    public String getDepositOrderNo(BigDecimal amount, UserPlat userPlat) throws Exception {
+        return this.agent + DateUtil.format(new Date(), "yyyyMMddHHmmssSSS") + userPlat.getPlatUserName();
+    }
+
+    @Override
+    public String getWithdrawOrderNo(BigDecimal amount, UserPlat userPlat) throws Exception {
+        return this.agent + DateUtil.format(new Date(), "yyyyMMddHHmmssSSS") + userPlat.getPlatUserName();
+    }
+
+    @Override
+    public boolean logout(UserPlat userPlat) {
+        String agent = this.agent;
+        String timestamp = String.valueOf(DateUtil.current());
+        String account = userPlat.getPlatUserName();
+        String aesKey = this.aesKey;
+        StringBuilder paramSb = new StringBuilder();
+        paramSb.append("s=8&").append("account=").append(account);
+        String param = AesUtils.AESEncrypt(paramSb.toString(), aesKey, true);
+        String key = AesUtils.MD5(agent + timestamp + this.md5Key);
+        StringBuilder urlSB = new StringBuilder();
+        urlSB.append(this.prefixURL).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
+        HttpUtil.get(urlSB.toString());
+        return true;
     }
 }
