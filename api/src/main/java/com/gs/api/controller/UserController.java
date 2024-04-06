@@ -18,6 +18,7 @@ import com.gs.api.controller.request.*;
 import com.gs.api.utils.JwtUtils;
 import com.gs.commons.constants.Constant;
 import com.gs.commons.entity.*;
+import com.gs.commons.enums.LotteryCodeEnum;
 import com.gs.commons.enums.PlatSubEnum;
 import com.gs.commons.service.*;
 import com.gs.commons.utils.*;
@@ -747,12 +748,12 @@ public class UserController {
             if (StringUtils.equals(request.getDateStr(), "2")) {
                 date = DateUtil.offsetDay(date, -1);
             } else if (StringUtils.equals(request.getDateStr(), "3")) {
-                date = DateUtil.offsetWeek(date, 1);
+                date = DateUtil.offsetWeek(date, -1);
             } else if (StringUtils.equals(request.getDateStr(), "4")) {
-                date = DateUtil.offsetMonth(date, 1);
+                date = DateUtil.offsetMonth(date, -1);
             }
             Date startTime = DateUtil.beginOfDay(date);
-            Date endTime = DateUtil.endOfDay(date);
+            Date endTime = DateUtil.endOfDay(new Date());
 
             params.put("startTime", startTime);
             params.put("endTime", endTime);
@@ -767,7 +768,9 @@ public class UserController {
             return R.error("未查到对应游戏厅方");
         }
 
-        return R.ok().put("page", pageUtils);
+        PlatSubEnum platSubEnum = PlatSubEnum.getByCode(request.getSubPlatCode());
+        String platName = (null == platSubEnum) ? "" : platSubEnum.getPlatName();
+        return R.ok().put("page", pageUtils).put("platSubName", platName);
     }
 
 
@@ -814,6 +817,7 @@ public class UserController {
                 jsonObject.put("amount", eduOrder.getAmount());
                 jsonObject.put("status", eduOrder.getStatus());
                 jsonObject.put("type", eduOrder.getEduType());
+                jsonObject.put("orderNo", eduOrder.getOrderNo());
                 jsonArray.add(jsonObject);
 
             }
