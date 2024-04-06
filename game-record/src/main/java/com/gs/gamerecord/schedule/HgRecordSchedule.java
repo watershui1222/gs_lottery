@@ -38,15 +38,15 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class HgRecordSchedule {
 
-    @Value("${platform.ShaBa.agId}")
+    @Value("${platform.HuangGuan.agId}")
     public String agId;
-    @Value("${platform.ShaBa.agPassword}")
+    @Value("${platform.HuangGuan.agPassword}")
     public String agPassword;
-    @Value("${platform.ShaBa.agName}")
+    @Value("${platform.HuangGuan.agName}")
     public String agName;
-    @Value("${platform.ShaBa.secretKey}")
+    @Value("${platform.HuangGuan.secretKey}")
     public String secretKey;
-    @Value("${platform.ShaBa.apiUrl}")
+    @Value("${platform.HuangGuan.apiUrl}")
     public String apiUrl;
 
     @Autowired
