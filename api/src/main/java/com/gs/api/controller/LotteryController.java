@@ -2,6 +2,7 @@ package com.gs.api.controller;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.map.MapUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
@@ -35,6 +36,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Api(value = "彩票相关", tags = "彩票相关")
@@ -77,6 +80,9 @@ public class LotteryController {
 
     @Autowired
     private LotteryOrderService lotteryOrderService;
+    @Autowired
+    private SysParamService sysParamService;
+
 
 
     @ApiOperation(value = "获取指定彩种下的所有盘口以及玩法")
@@ -201,7 +207,7 @@ public class LotteryController {
         if (StringUtils.isNotBlank(request.getDateStr())) {
             if (StringUtils.equals(request.getDateStr(), "2")) {
                 startDate = DateUtil.offsetDay(startDate, -1);
-                endTime = startDate;
+                endTime = DateUtil.endOfDay(startDate);
             } else if (StringUtils.equals(request.getDateStr(), "3")) {
                 startDate = DateUtil.offsetWeek(startDate, -1);
             } else if (StringUtils.equals(request.getDateStr(), "4")) {
@@ -209,10 +215,8 @@ public class LotteryController {
             }
         }
         Date begin = DateUtil.beginOfDay(startDate);
-        Date end = DateUtil.endOfDay(endTime);
-
         params.put("startTime", begin);
-        params.put("nowTime", end);
+        params.put("nowTime", endTime);
 
 
 
@@ -286,6 +290,15 @@ public class LotteryController {
         params.put("startTime", begin);
         params.put("endTime", end);
 
+
+
+        Map<String, String> paramsMap = sysParamService.getAllParamByMap();
+        String resourceDomain = MapUtil.getStr(paramsMap, "resource_domain");
+
+        List<Lottery> list = lotteryService.list(Wrappers.lambdaQuery(Lottery.class));
+        Map<String, Lottery> lotteryMap = list.stream().collect(Collectors.toMap(Lottery::getLotteryCode, Function.identity()));
+
+
         PageUtils page = lotteryOrderService.queryPage(params);
         if (CollUtil.isNotEmpty(page.getList())) {
             List<LotteryOrder> pageList = (List<LotteryOrder>) page.getList();
@@ -294,11 +307,15 @@ public class LotteryController {
                 JSONObject jsonObject = new JSONObject();
 
                 jsonObject.put("lotteryName", lotteryOrder.getLotteryName());
+                jsonObject.put("gameCode", lotteryOrder.getLotteryCode());
+                Lottery lottery = lotteryMap.get(lotteryOrder.getLotteryCode());
+                jsonObject.put("lotteryImg", null == lottery || StringUtils.isEmpty(lottery.getImg()) ? "" : resourceDomain + StringUtils.defaultString(lottery.getImg()));
                 jsonObject.put("playName", lotteryOrder.getPlayName());
                 jsonObject.put("qs", lotteryOrder.getQs());
                 jsonObject.put("betAmount", lotteryOrder.getBetAmount());
                 jsonObject.put("betTime", lotteryOrder.getBetTime());
                 jsonObject.put("bonusAmount", lotteryOrder.getBonusAmount());
+                jsonObject.put("profitAmount", lotteryOrder.getProfitAmount());
                 jsonObject.put("openResult", lotteryOrder.getOpenResult());
                 jsonObject.put("betContent", lotteryOrder.getBetContent());
                 jsonObject.put("orderStatus", lotteryOrder.getOrderStatus());
@@ -308,7 +325,18 @@ public class LotteryController {
             page.setList(jsonArray);
         }
 
-        return R.ok().put("page", page);
+
+
+        List<LotteryOrder> queryList = lotteryOrderService.queryList(params);
+
+        double betAmountSum = 0;
+        double profitAmountSum = 0;
+        if (CollUtil.isNotEmpty(queryList)) {
+            betAmountSum = queryList.stream().mapToDouble(value -> value.getBetAmount().doubleValue()).sum();
+            profitAmountSum = queryList.stream().mapToDouble(value -> value.getProfitAmount().doubleValue()).sum();
+        }
+
+        return (R.ok().put("page", page).put("betAmountSum", betAmountSum).put("profitAmountSum", profitAmountSum));
     }
 
 
