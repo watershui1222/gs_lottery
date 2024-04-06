@@ -1,19 +1,14 @@
 package com.gs.api.controller;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.gs.api.controller.VO.LotteryHandicapVo;
 import com.gs.api.controller.VO.LotteryPlayVo;
-import com.gs.api.controller.request.EduOrderListRequest;
 import com.gs.api.controller.request.LotteryOrderListRequest;
 import com.gs.api.controller.request.LotteryTimeRequest;
 import com.gs.api.controller.request.OpenResultHistoryRequest;
@@ -36,7 +31,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import sun.nio.cs.ext.SJIS;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
