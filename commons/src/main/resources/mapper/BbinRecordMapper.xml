@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gs.commons.mapper.BbinRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.gs.commons.entity.BbinRecord">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+            <result property="platUserName" column="plat_user_name" jdbcType="VARCHAR"/>
+            <result property="orderNo" column="order_no" jdbcType="VARCHAR"/>
+            <result property="gameId" column="game_id" jdbcType="VARCHAR"/>
+            <result property="gameName" column="game_name" jdbcType="VARCHAR"/>
+            <result property="effectiveBet" column="effective_bet" jdbcType="DECIMAL"/>
+            <result property="allBet" column="all_bet" jdbcType="DECIMAL"/>
+            <result property="profit" column="profit" jdbcType="DECIMAL"/>
+            <result property="betTime" column="bet_time" jdbcType="TIMESTAMP"/>
+            <result property="wagersDate" column="wagers_date" jdbcType="TIMESTAMP"/>
+            <result property="settleTime" column="settle_time" jdbcType="TIMESTAMP"/>
+            <result property="modifiedDate" column="modified_date" jdbcType="TIMESTAMP"/>
+            <result property="resultStatus" column="result_status" jdbcType="VARCHAR"/>
+            <result property="openResult" column="open_result" jdbcType="VARCHAR"/>
+            <result property="card" column="card" jdbcType="VARCHAR"/>
+            <result property="serialId" column="serial_id" jdbcType="VARCHAR"/>
+            <result property="roundNo" column="round_no" jdbcType="VARCHAR"/>
+            <result property="wagerDetail" column="wager_detail" jdbcType="VARCHAR"/>
+            <result property="gameType" column="game_type" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_name,plat_user_name,
+        order_no,game_id,game_name,
+        effective_bet,all_bet,profit,
+        bet_time,wagers_date,settle_time,
+        modified_date,result_status,open_result,
+        card,serial_id,round_no,
+        wager_detail,game_type,create_time,
+        update_time
+    </sql>
+
+    <insert id="batchInsertOrUpdate" parameterType="java.util.List">
+        INSERT INTO t_bbin_record(
+        user_name,plat_user_name,
+        order_no,game_id,game_name,
+        effective_bet,all_bet,profit,
+        bet_time,wagers_date,settle_time,
+        modified_date,result_status,open_result,
+        card,serial_id,round_no,
+        wager_detail,game_type,create_time,
+        update_time
+        )
+        values
+        <foreach collection="list" item="i" separator=",">
+            (
+            #{i.userName}, #{i.platUserName}, #{i.orderNo}, #{i.gameId}, #{i.gameName},
+            #{i.effectiveBet}, #{i.allBet}, #{i.profit}, #{i.betTime}, #{i.wagersDate}, #{i.settleTime},
+            #{i.modifiedDate},#{i.resultStatus},#{i.openResult},
+            #{i.card},#{i.serialId},#{i.roundNo},
+            #{i.wagerDetail},#{i.gameType},#{i.createTime},#{i.updateTime}
+            )
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        update_time = VALUES(update_time)
+    </insert>
+</mapper>
