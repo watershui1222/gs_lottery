@@ -48,6 +48,8 @@ public class HgRecordSchedule {
     public String secretKey;
     @Value("${platform.HuangGuan.apiUrl}")
     public String apiUrl;
+    @Value("${platform.owner}")
+    public String owner;
 
     @Autowired
     private PlatRecordControlService platRecordControlService;
@@ -125,6 +127,14 @@ public class HgRecordSchedule {
                         for (Object obj:wagerDateArr) {
                             JSONObject wager = (JSONObject) obj;
                             HgRecord hgRecord = new HgRecord();
+                            //判断是不是本平台用户
+                            String ownerUsername = wager.getString("username");
+                            String subOwnerStr = ownerUsername.substring(0, 2);
+                            if(!StrUtil.equals(subOwnerStr, this.owner)){
+                                continue;
+                            }
+                            String username = ownerUsername.substring(2);
+                            hgRecord.setUserName(username);
                             hgRecord.setCreateTime(DateUtil.date());
                             hgRecord.setUpdateTime(DateUtil.date());
                             hgRecord.setGameName(HgConstants.GAME_NAME.getOrDefault(wager.getString("gtype"), wager.getString("gtype")));
@@ -141,7 +151,6 @@ public class HgRecordSchedule {
                             hgRecord.setRtype(wager.getString("rtype"));
                             hgRecord.setOddsFormat(wager.getString("oddsFormat"));
                             hgRecord.setWtype(wager.getString("wtype"));
-                            hgRecord.setUserName(wager.getString("username"));
                             hgRecord.setTnameAway(wager.getString("tname_away"));
                             hgRecord.setTnameHome(wager.getString("tname_home"));
                             hgRecord.setPlatUserName(wager.getString("username"));

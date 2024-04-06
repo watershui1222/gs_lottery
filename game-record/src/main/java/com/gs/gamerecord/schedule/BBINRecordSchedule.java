@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
@@ -40,6 +41,8 @@ public class BBINRecordSchedule {
     public String uppername;
     @Value("${platform.BBIN.apiDomain}")
     public String apiDomain;
+    @Value("${platform.owner}")
+    public String owner;
 
     @Autowired
     private PlatRecordControlService platRecordControlService;
@@ -115,7 +118,14 @@ public class BBINRecordSchedule {
             for (Object obj : data) {
                 JSONObject recordJson = (JSONObject) obj;
                 BbinRecord record = new BbinRecord();
-                record.setUserName(recordJson.getString("UserName"));
+                //判断是不是本平台用户
+                String ownerUsername = recordJson.getString("UserName");
+                String subOwnerStr = ownerUsername.substring(0, 2);
+                if(!StrUtil.equals(subOwnerStr, this.owner)){
+                    continue;
+                }
+                String username = ownerUsername.substring(2);
+                record.setUserName(username);
                 record.setPlatUserName(recordJson.getString("UserName"));
                 record.setOrderNo(recordJson.getString("WagersID"));
                 record.setGameId(recordJson.getString("GameType"));

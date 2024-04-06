@@ -3,6 +3,7 @@ package com.gs.gamerecord.schedule;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSONArray;
@@ -46,6 +47,8 @@ public class KyRecordSchedule {
     public String aesKey;
     @Value("${platform.KaiYuan.md5Key}")
     public String md5Key;
+    @Value("${platform.owner}")
+    public String owner;
 
     @Autowired
     private PlatRecordControlService platRecordControlService;
@@ -115,7 +118,14 @@ public class KyRecordSchedule {
             for (int i = 0; i < count; i++) {
                 String account = accounts.getString(i);
                 KyRecord kyRecord = new KyRecord();
-                kyRecord.setUserName(account.split("_")[1]);
+                String ownerUsername = account.split("_")[1];//还需去掉字符串前两位
+                //判断是不是本平台用户
+                String subOwnerStr = ownerUsername.substring(0, 2);
+                if(!StrUtil.equals(subOwnerStr, this.owner)){
+                    continue;
+                }
+                String username = ownerUsername.substring(2);
+                kyRecord.setUserName(username);
                 kyRecord.setPlatUserName(account);
                 kyRecord.setOrderNo(gameIds.getString(i));
                 kyRecord.setGameId(kindID.getString(i));
