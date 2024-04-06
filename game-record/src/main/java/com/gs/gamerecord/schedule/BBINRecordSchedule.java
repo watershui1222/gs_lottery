@@ -93,8 +93,8 @@ public class BBINRecordSchedule {
         String strA = RandomUtil.randomString(3);
         String date = DateUtil.format(endTime, "yyyy-MM-dd");//这里的date参数必须用endTime 日期串
         //这里至少-7 -12 不然很多dateerror 因为如果使用ModifiedTime查询 BBIN不支持大于2分钟前的数据检索  而区间必须是5min
-        String endtime = DateUtil.format(DateUtil.offsetMinute(endTime, -7), "HH:mm:ss");//当action为ModifiedTime，无法捞取最近2分钟内的下注记录。
-        String starttime = DateUtil.format(DateUtil.offsetMinute(endTime, -12), "HH:mm:ss");//当action为ModifiedTime，是捞取带入的区间内被异动的纪录(区间限定5分钟且无法捞取7天前)。
+        String endtime = DateUtil.format(DateUtil.offsetMinute(endTime, -10), "HH:mm:ss");//当action为ModifiedTime，无法捞取最近2分钟内的下注记录。
+        String starttime = DateUtil.format(DateUtil.offsetMinute(endTime, -15), "HH:mm:ss");//当action为ModifiedTime，是捞取带入的区间内被异动的纪录(区间限定5分钟且无法捞取7天前)。
         Date nowMd = DateUtil.offsetHour(DateUtil.date(), -12);
         String strB = AesUtils.MD5(website + keyB + DateUtil.format(nowMd, "yyyyMMdd"));//这里加密必须用当前美东时间
         String strC = RandomUtil.randomString(7);
@@ -239,8 +239,8 @@ public class BBINRecordSchedule {
         String strA = RandomUtil.randomString(3);
         String date = DateUtil.format(endTime, "yyyy-MM-dd");//这里的date参数必须用endTime 日期串
         //这里至少-7 -12 不然很多dateerror 因为如果使用ModifiedTime查询 BBIN不支持大于2分钟前的数据检索
-        String endtime = DateUtil.format(DateUtil.offsetMinute(endTime, -7), "HH:mm:ss");//当action为ModifiedTime，无法捞取最近2分钟内的下注记录。
-        String starttime = DateUtil.format(DateUtil.offsetMinute(endTime, -12), "HH:mm:ss");//当action为ModifiedTime，是捞取带入的区间内被异动的纪录(区间限定5分钟且无法捞取7天前)。
+        String endtime = DateUtil.format(DateUtil.offsetMinute(endTime, -10), "HH:mm:ss");//当action为ModifiedTime，无法捞取最近2分钟内的下注记录。
+        String starttime = DateUtil.format(DateUtil.offsetMinute(endTime, -15), "HH:mm:ss");//当action为ModifiedTime，是捞取带入的区间内被异动的纪录(区间限定5分钟且无法捞取7天前)。
         Date nowMd = DateUtil.offsetHour(DateUtil.date(), -12);
         String strB = AesUtils.MD5(website + keyB + DateUtil.format(nowMd, "yyyyMMdd"));
         String strC = RandomUtil.randomString(7);
@@ -307,8 +307,8 @@ public class BBINRecordSchedule {
         String strA = RandomUtil.randomString(3);
         String date = DateUtil.format(endTime, "yyyy-MM-dd");//这里的date参数必须用endTime 日期串
         //这里至少-7 -12 不然很多dateerror 因为如果使用ModifiedTime查询 BBIN不支持大于2分钟前的数据检索
-        String endtime = DateUtil.format(DateUtil.offsetMinute(endTime, -7), "HH:mm:ss");//当action为ModifiedTime，无法捞取最近2分钟内的下注记录。
-        String starttime = DateUtil.format(DateUtil.offsetMinute(endTime, -12), "HH:mm:ss");//当action为ModifiedTime，是捞取带入的区间内被异动的纪录(区间限定5分钟且无法捞取7天前)。
+        String endtime = DateUtil.format(DateUtil.offsetMinute(endTime, -10), "HH:mm:ss");//当action为ModifiedTime，无法捞取最近2分钟内的下注记录。
+        String starttime = DateUtil.format(DateUtil.offsetMinute(endTime, -15), "HH:mm:ss");//当action为ModifiedTime，是捞取带入的区间内被异动的纪录(区间限定5分钟且无法捞取7天前)。
         Date nowMd = DateUtil.offsetHour(DateUtil.date(), -12);
         String strB = AesUtils.MD5(website + keyB + DateUtil.format(nowMd, "yyyyMMdd"));
         String strC = RandomUtil.randomString(7);

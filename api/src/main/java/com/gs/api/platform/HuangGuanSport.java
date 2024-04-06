@@ -20,15 +20,15 @@ import java.util.List;
  */
 @Slf4j
 public class HuangGuanSport {
-    @Value("${platform.ShaBa.agId}")
+    @Value("${platform.HuangGuan.agId}")
     public String agId = "2829";
-    @Value("${platform.ShaBa.agPassword}")
+    @Value("${platform.HuangGuan.agPassword}")
     public String agPassword = "aaa123";
-    @Value("${platform.ShaBa.agName}")
+    @Value("${platform.HuangGuan.agName}")
     public String agName = "ZF946test";
-    @Value("${platform.ShaBa.secretKey}")
+    @Value("${platform.HuangGuan.secretKey}")
     public String secretKey = "9Sceij7Eka7331lR";
-    @Value("${platform.ShaBa.apiUrl}")
+    @Value("${platform.HuangGuan.apiUrl}")
     public String apiUrl = "https://api.orb-6789.com/app/control_API/agents/api_doaction.php";
 
     /**
@@ -188,7 +188,7 @@ public class HuangGuanSport {
             JSONObject request = new JSONObject();
             String memname = "GSTESTACCOUNT3";
             String amount = "200";
-            String payno = "GSTESTORDERNO1";//我方单号
+            String payno = "GSTESTORDERNO1";
             request.put("memname", memname);
             request.put("amount", amount);
             request.put("payno", payno);

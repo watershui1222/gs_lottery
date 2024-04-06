@@ -18,22 +18,22 @@ import java.util.Date;
 
 @Slf4j
 @Service
-public class KyServiceImpl implements PlatService {
+public class LyServiceImpl implements PlatService {
     /**
      * 平台标识
      */
     @Value("${platform.owner}")
     public String owner = "gs";
-    @Value("${platform.KaiYuan.prefixURL}")
-    public String prefixURL = "https://wc1-api.uaphl791.com/channelHandle";//接口地址
-    @Value("${platform.KaiYuan.recordURL}")
-    public String recordURL = "https://wc1-record.uaphl791.com/getRecordHandle";//拉单接口
-    @Value("${platform.KaiYuan.agent}")
-    public String agent = "73419";
-    @Value("${platform.KaiYuan.aesKey}")
-    public String aesKey = "77C3273B538BB6F9";
-    @Value("${platform.KaiYuan.md5Key}")
-    public String md5Key = "08A455C3E66DDF22";
+    @Value("${platform.LeYou.apiDomain}")
+    public String apiDomain = "https://wc1-api.kewmn686.com/channelHandle";
+    @Value("${platform.LeYou.agent}")
+    public String agent = "201373";
+    @Value("${platform.LeYou.aesKey}")
+    public String aesKey = "4686951BAA2E5234";
+    @Value("${platform.LeYou.md5Key}")
+    public String md5Key = "D08C49D1629ECF26";
+    @Value("${platform.LeYou.betRecordDomain}")
+    public String betRecordDomain = "https://wc1-record.kewmn686.com/getRecordHandle";
 
     @Autowired
     private UserPlatService userPlatService;
@@ -44,7 +44,7 @@ public class KyServiceImpl implements PlatService {
         UserPlat userPlat = userPlatService.getOne(
                 new LambdaQueryWrapper<UserPlat>()
                         .eq(UserPlat::getUserName, userName)
-                        .eq(UserPlat::getPlatCode, "ky")
+                        .eq(UserPlat::getPlatCode, "KY")
         );
         if (userPlat != null) {
             return userPlat;
@@ -52,7 +52,7 @@ public class KyServiceImpl implements PlatService {
 
         // 注册三方
         String timestamp = String.valueOf(DateUtil.current());
-        String account = this.owner + userName;
+        String account = this.owner + userName;;
         String orderid = this.agent + DateUtil.format(new Date(), "yyyyMMddHHmmssSSS") + account;
         String lineCode = "GS";
         String kindId = "0";
@@ -65,23 +65,23 @@ public class KyServiceImpl implements PlatService {
                 .append("&ip=127.0.0.1")
                 .append("&lineCode=").append(lineCode)
                 .append("&KindID=").append(kindId);
-        String param = AesUtils.AESEncrypt(paramSb.toString(), aesKey, true);
+        String param = AesUtils.AESEncrypt(paramSb.toString(), aesKey,true);
         String key = AesUtils.MD5(this.agent + timestamp + this.md5Key);
         StringBuilder urlSB = new StringBuilder();
-        urlSB.append(this.prefixURL).append("?").append("agent=").append(this.agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
+        urlSB.append(this.apiDomain).append("?").append("agent=").append(this.agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
         String result = HttpUtil.get(urlSB.toString());
-        log.info("开元登录返回:{}", result);
+        log.info("乐游登录返回:{}", result);
         JSONObject resJSON = JSONObject.parseObject(result);
         JSONObject d = resJSON.getJSONObject("d");
         if (d.getIntValue("code") != 0) {
-            log.error("开元 获取游戏URL失败 param= " + param + " result = " + result);
-            throw new Exception("开元注册失败");
+            log.error("乐游 获取游戏URL失败 param= " + param + " result = " + result);
+            throw new Exception("乐游注册失败");
         }
 
         // 执行注册逻辑
         UserPlat save = new UserPlat();
         save.setUserName(userName);
-        save.setPlatCode("KY");
+        save.setPlatCode("LY");
         save.setPlatUserName(account);
         save.setPlatUserPassword(null);
         save.setStatus(0);
@@ -97,29 +97,29 @@ public class KyServiceImpl implements PlatService {
         String account = userPlat.getPlatUserName();
         String aesKey = this.aesKey;
         StringBuilder paramSb = new StringBuilder();
-        paramSb.append("s=1&").append("account=").append(account);
-        String param = AesUtils.AESEncrypt(paramSb.toString(), aesKey, true);
+        paramSb.append("s=7&").append("account=").append(account);
+        String param = AesUtils.AESEncrypt(paramSb.toString(), aesKey,true);
         String key = AesUtils.MD5(agent + timestamp + this.md5Key);
         StringBuilder urlSB = new StringBuilder();
-        urlSB.append(this.prefixURL).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
+        urlSB.append(this.apiDomain).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
         String result = HttpUtil.get(urlSB.toString());
-        log.info("开元查询余额返回:{}", result);
+        log.info("乐游查询余额返回:{}", result);
         JSONObject jsonResult = JSONObject.parseObject(result);
         JSONObject d = jsonResult.getJSONObject("d");
-        BigDecimal money = BigDecimal.ZERO;
-        if (d != null) {
-            return d.getBigDecimal("money") == null ? BigDecimal.ZERO : d.getBigDecimal("money");
+        if (d != null && d.getIntValue("code") == 0) {
+            return d.getBigDecimal("freeMoney") == null ? BigDecimal.ZERO : d.getBigDecimal("freeMoney");
         }
-        log.error("开元 获取用户余额失败 param= " + param + " result = " + result);
-        return money;
+        log.error("乐游 获取用户余额失败 param= " + param + " result = " + result);
+        return BigDecimal.ZERO;
     }
 
     @Override
     public String getLoginUrl(UserPlat userPlat) throws Exception {
         // 注册三方
+        String agent = this.agent;
         String timestamp = String.valueOf(DateUtil.current());
         String account = userPlat.getPlatUserName();
-        String orderid = this.agent + DateUtil.format(new Date(), "yyyyMMddHHmmssSSS") + account;
+        String orderid = agent + DateUtil.format(new Date(), "yyyyMMddHHmmssSSS") + account;
         String lineCode = "GS";
         String kindId = "0";
         String aesKey = this.aesKey;
@@ -131,27 +131,26 @@ public class KyServiceImpl implements PlatService {
                 .append("&ip=127.0.0.1")
                 .append("&lineCode=").append(lineCode)
                 .append("&KindID=").append(kindId);
-        String param = AesUtils.AESEncrypt(paramSb.toString(), aesKey, true);
-        String key = AesUtils.MD5(this.agent + timestamp + this.md5Key);
+        String param = AesUtils.AESEncrypt(paramSb.toString(), aesKey,true);
+        String key = AesUtils.MD5(agent + timestamp + this.md5Key);
         StringBuilder urlSB = new StringBuilder();
-        urlSB.append(this.prefixURL).append("?").append("agent=").append(this.agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
+        urlSB.append(this.apiDomain).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
         String result = HttpUtil.get(urlSB.toString());
-        log.info("开元登录返回:{}", result);
+        log.info("乐游登录返回:{}", result);
         JSONObject resJSON = JSONObject.parseObject(result);
         JSONObject d = resJSON.getJSONObject("d");
         if (d.getIntValue("code") != 0) {
-            log.error("开元 获取游戏URL失败 param= " + param + " result = " + result);
-            throw new Exception("开元登录失败");
+            log.error("乐游 获取游戏URL失败 param= " + param + " result = " + result);
+            throw new Exception("乐游登录失败");
         }
         return d.getString("url");
     }
 
     @Override
-    public boolean deposit(BigDecimal amount, UserPlat userPlat, String platOrderNo) throws Exception {
+    public boolean deposit(BigDecimal money, UserPlat userPlat, String platOrderNo) throws Exception {
         String agent = this.agent;
         String timestamp = String.valueOf(DateUtil.current());
         String account = userPlat.getPlatUserName();
-        BigDecimal money = amount;
         String orderid = platOrderNo;
         String aesKey = this.aesKey;
         StringBuilder paramSb = new StringBuilder();
@@ -159,12 +158,12 @@ public class KyServiceImpl implements PlatService {
                 .append("account=").append(account)
                 .append("&money=").append(money)
                 .append("&orderid=").append(orderid);
-        String param = AesUtils.AESEncrypt(paramSb.toString(), aesKey, true);
+        String param = AesUtils.AESEncrypt(paramSb.toString(), aesKey,true);
         String key = AesUtils.MD5(agent + timestamp + this.md5Key);
         StringBuilder urlSB = new StringBuilder();
-        urlSB.append(this.prefixURL).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
+        urlSB.append(this.apiDomain).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
         String result = HttpUtil.get(urlSB.toString());
-        log.info("开元[{}]额度转入返回:{}", platOrderNo, result);
+        log.info("乐游[{}]额度转入返回:{}", platOrderNo, result);
         JSONObject res = JSONObject.parseObject(result);
         JSONObject d = res.getJSONObject("d");
         return d.getIntValue("code") == 0;
@@ -175,8 +174,8 @@ public class KyServiceImpl implements PlatService {
         String agent = this.agent;
         String timestamp = String.valueOf(DateUtil.current());
         String account = userPlat.getPlatUserName();
-        BigDecimal money = amount;//这里如果要全部带出需要查询一遍
-        String orderid = platOrderNo;
+        BigDecimal money = amount;
+        String orderid = agent + DateUtil.format(new Date(), "yyyyMMddHHmmssSSS") + account;
         String aesKey = this.aesKey;
         StringBuilder paramSb = new StringBuilder();
         paramSb.append("s=3&")
@@ -186,9 +185,9 @@ public class KyServiceImpl implements PlatService {
         String param = AesUtils.AESEncrypt(paramSb.toString(), aesKey,true);
         String key = AesUtils.MD5(agent+timestamp+this.md5Key);
         StringBuilder urlSB = new StringBuilder();
-        urlSB.append(this.prefixURL).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
+        urlSB.append(this.apiDomain).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
         String result = HttpUtil.get(urlSB.toString());
-        log.info("开元[{}]额度转出返回:{}",platOrderNo, result);
+        log.info("乐游额度转出返回:{}", result);
         JSONObject res = JSONObject.parseObject(result);
         JSONObject d = res.getJSONObject("d");
         return d.getIntValue("code") == 0;
@@ -212,10 +211,10 @@ public class KyServiceImpl implements PlatService {
         String aesKey = this.aesKey;
         StringBuilder paramSb = new StringBuilder();
         paramSb.append("s=8&").append("account=").append(account);
-        String param = AesUtils.AESEncrypt(paramSb.toString(), aesKey, true);
-        String key = AesUtils.MD5(agent + timestamp + this.md5Key);
+        String param = AesUtils.AESEncrypt(paramSb.toString(), aesKey,true);
+        String key = AesUtils.MD5(agent+timestamp+this.md5Key);
         StringBuilder urlSB = new StringBuilder();
-        urlSB.append(this.prefixURL).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
+        urlSB.append(this.apiDomain).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
         HttpUtil.get(urlSB.toString());
         return true;
     }
