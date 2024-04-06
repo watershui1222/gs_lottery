@@ -68,8 +68,8 @@
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="HgRecord" />
-                  <option name="tableName" value="t_hg_record" />
+                  <option name="className" value="BbinRecord" />
+                  <option name="tableName" value="t_bbin_record" />
                 </TableUIInfo>
               </list>
             </option>

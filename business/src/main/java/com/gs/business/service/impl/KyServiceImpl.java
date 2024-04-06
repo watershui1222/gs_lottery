@@ -188,7 +188,7 @@ public class KyServiceImpl implements PlatService {
         StringBuilder urlSB = new StringBuilder();
         urlSB.append(this.prefixURL).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
         String result = HttpUtil.get(urlSB.toString());
-        log.info("开元额度转出失败:{}", result);
+        log.info("开元额度转出返回:{}", result);
         JSONObject res = JSONObject.parseObject(result);
         JSONObject d = res.getJSONObject("d");
         return d.getIntValue("code") == 0;

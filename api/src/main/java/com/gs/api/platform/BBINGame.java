@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.TimeZone;
 
 /**
@@ -371,9 +372,11 @@ public class BBINGame {
         String strA = RandomUtil.randomString(3);
         DateTime now = DateUtil.date();
         DateTime mdTime = now.setTimeZone(TimeZone.getTimeZone("GMT-4"));
-        String date = DateUtil.format(mdTime, "yyyy-MM-dd");
-        String endtime = DateUtil.format(DateUtil.offsetMinute(mdTime, -2), "HH:mm:ss");//当action为ModifiedTime，无法捞取最近2分钟内的下注记录。
-        String starttime = DateUtil.format(DateUtil.offsetMinute(mdTime, -7), "HH:mm:ss");//当action为ModifiedTime，是捞取带入的区间内被异动的纪录(区间限定5分钟且无法捞取7天前)。
+        DateTime endDate = DateUtil.offsetMinute(mdTime, -2);
+        DateTime startDate = DateUtil.offsetMinute(mdTime, -7);
+        String date = DateUtil.format(endDate, "yyyy-MM-dd");
+        String endtime = DateUtil.format(endDate, "HH:mm:ss");//当action为ModifiedTime，无法捞取最近2分钟内的下注记录。
+        String starttime = DateUtil.format(startDate, "HH:mm:ss");//当action为ModifiedTime，是捞取带入的区间内被异动的纪录(区间限定5分钟且无法捞取7天前)。
         String strB = AesUtils.MD5(website + keyB + DateUtil.format(mdTime, "yyyyMMdd"));
         String strC = RandomUtil.randomString(7);
         String key = strA + strB + strC;
@@ -386,6 +389,7 @@ public class BBINGame {
         param.put("endtime", endtime);
         param.put("key", key.toLowerCase());
         String result = HttpUtil.post(apiUrl, param);
+        System.out.println(result);
         JSONObject resJson = JSONObject.parseObject(result);
         JSONArray data = resJson.getJSONArray("data");
         if(CollUtil.isNotEmpty(data)){
@@ -467,12 +471,12 @@ public class BBINGame {
         String uppername = this.uppername;
         String keyB = "U5fBm";
         String strA = RandomUtil.randomString(3);
-        DateTime now = DateUtil.date();
-        DateTime mdTime = now.setTimeZone(TimeZone.getTimeZone("GMT-4"));
-        String date = DateUtil.format(mdTime, "yyyy-MM-dd");
-        String endtime = DateUtil.format(DateUtil.offsetMinute(mdTime, -2), "HH:mm:ss");//当action为ModifiedTime，无法捞取最近2分钟内的下注记录。
-        String starttime = DateUtil.format(DateUtil.offsetMinute(mdTime, -7), "HH:mm:ss");//当action为ModifiedTime，是捞取带入的区间内被异动的纪录(区间限定5分钟且无法捞取7天前)。
-        String strB = AesUtils.MD5(website + keyB + DateUtil.format(mdTime, "yyyyMMdd"));
+        Date nowMd = DateUtil.offsetHour(DateUtil.date(), -12);
+        String date = DateUtil.format(nowMd, "yyyy-MM-dd");//这里的date参数必须用endTime 日期串
+        String endtime = DateUtil.format(DateUtil.offsetMinute(nowMd, -12), "HH:mm:ss");//当action为ModifiedTime，无法捞取最近2分钟内的下注记录。
+        String starttime = DateUtil.format(DateUtil.offsetMinute(nowMd, -17), "HH:mm:ss");//当action为ModifiedTime，是捞取带入的区间内被异动的纪录(区间限定5分钟且无法捞取7天前)。
+
+        String strB = AesUtils.MD5(website + keyB + DateUtil.format(nowMd, "yyyyMMdd"));
         String strC = RandomUtil.randomString(7);
         String key = strA + strB + strC;
         JSONObject param = new JSONObject();
@@ -505,9 +509,11 @@ public class BBINGame {
         String strA = RandomUtil.randomString(3);
         DateTime now = DateUtil.date();
         DateTime mdTime = now.setTimeZone(TimeZone.getTimeZone("GMT-4"));
-        String date = DateUtil.format(mdTime, "yyyy-MM-dd");
-        String endtime = DateUtil.format(DateUtil.offsetMinute(mdTime, -2), "HH:mm:ss");//当action为ModifiedTime，无法捞取最近2分钟内的下注记录。
-        String starttime = DateUtil.format(DateUtil.offsetMinute(mdTime, -7), "HH:mm:ss");//当action为ModifiedTime，是捞取带入的区间内被异动的纪录(区间限定5分钟且无法捞取7天前)。
+        DateTime endDate = DateUtil.offsetMinute(mdTime, -2);
+        DateTime startDate = DateUtil.offsetMinute(mdTime, -7);
+        String date = DateUtil.format(endDate, "yyyy-MM-dd");
+        String endtime = DateUtil.format(endDate, "HH:mm:ss");//当action为ModifiedTime，无法捞取最近2分钟内的下注记录。
+        String starttime = DateUtil.format(startDate, "HH:mm:ss");//当action为ModifiedTime，是捞取带入的区间内被异动的纪录(区间限定5分钟且无法捞取7天前)。
         String strB = AesUtils.MD5(website + keyB + DateUtil.format(mdTime, "yyyyMMdd"));
         String strC = RandomUtil.randomString(7);
         String key = strA + strB + strC;
@@ -520,6 +526,7 @@ public class BBINGame {
         param.put("endtime", endtime);
         param.put("key", key.toLowerCase());
         String result = HttpUtil.post(apiUrl, param);
+        System.out.println("getFishRecord result = " + result);
         JSONObject resJson = JSONObject.parseObject(result);
         JSONArray data = resJson.getJSONArray("data");
         if(CollUtil.isNotEmpty(data)){
@@ -551,9 +558,9 @@ public class BBINGame {
         return "";
     }
 
-//    public static void main(String[] args) {
-//        BBINGame bg = new BBINGame();
-//        System.out.println(bg.getFishRecord());
-//    }
+    public static void main(String[] args) {
+        BBINGame bg = new BBINGame();
+        System.out.println(bg.getFishRecord());
+    }
 
 }

@@ -51,7 +51,7 @@ public class HgRecordSchedule {
     @Autowired
     private HgRecordService hgRecordService;
 
-    @Scheduled(cron = "0/20 * * * * ?")
+    @Scheduled(cron = "0 0/2 * * * ?")
     public void hgRecord() throws Exception {
         Date now = new Date();
         PlatRecordControl hg = platRecordControlService.getOne(
