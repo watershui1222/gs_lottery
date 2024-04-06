@@ -1,6 +1,7 @@
 package com.gs.api.controller;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
@@ -13,8 +14,10 @@ import com.gs.api.controller.VO.LotteryHandicapVo;
 import com.gs.api.controller.VO.LotteryPlayVo;
 import com.gs.api.controller.request.EduOrderListRequest;
 import com.gs.api.controller.request.LotteryOrderListRequest;
+import com.gs.api.controller.request.LotteryTimeRequest;
 import com.gs.api.controller.request.OpenResultHistoryRequest;
 import com.gs.api.utils.JwtUtils;
+import com.gs.commons.bo.OpenresultTimeBO;
 import com.gs.commons.constants.Constant;
 import com.gs.commons.entity.*;
 import com.gs.commons.enums.LotteryCodeEnum;
@@ -266,6 +269,43 @@ public class LotteryController {
         }
 
         return R.ok().put("page", page);
+    }
+
+
+    @ApiOperation(value = "彩票倒计时")
+    @GetMapping("/time")
+    public R lotteryTime(LotteryTimeRequest request, HttpServletRequest httpServletRequest) {
+        String userName = JwtUtils.getUserName(httpServletRequest);
+        Date now = new Date();
+        OpenresultTimeBO currentQs = null;
+        if (StringUtils.equals(LotteryCodeEnum.BJKL8.getLotteryCode(), request.getLotteryCode())) {
+
+            currentQs = openresultBjkl8Service.getCurrentQs(now);
+        } else if (StringUtils.equals(LotteryCodeEnum.BJPK10.getLotteryCode(), request.getLotteryCode())) {
+            currentQs = openresultBjpk10Service.getCurrentQs(now);
+        } else if (StringUtils.equals(LotteryCodeEnum.CQSSC.getLotteryCode(), request.getLotteryCode())) {
+            currentQs = openresultCqsscService.getCurrentQs(now);
+        } else if (StringUtils.equals(LotteryCodeEnum.FC3D.getLotteryCode(), request.getLotteryCode())) {
+            currentQs = openresultFc3dService.getCurrentQs(now);
+        } else if (StringUtils.equals(LotteryCodeEnum.FT.getLotteryCode(), request.getLotteryCode())) {
+            currentQs = openresultFtService.getCurrentQs(now);
+        } else if (StringUtils.equals(LotteryCodeEnum.GD11X5.getLotteryCode(), request.getLotteryCode())) {
+            currentQs = openresultGd11x5Service.getCurrentQs(now);
+        } else if (StringUtils.equals(LotteryCodeEnum.JSK3.getLotteryCode(), request.getLotteryCode())) {
+            currentQs = openresultJsk3Service.getCurrentQs(now);
+        } else if (StringUtils.equals(LotteryCodeEnum.MO6HC.getLotteryCode(), request.getLotteryCode())) {
+            currentQs = openresultMo6hcService.getCurrentQs(now);
+        }else if (StringUtils.equals(LotteryCodeEnum.PCDD.getLotteryCode(), request.getLotteryCode())) {
+            currentQs = openresultPcddService.getCurrentQs(now);
+        } else {
+            return R.error("未查询到该彩种");
+        }
+
+        String qs = (null == currentQs) ? "" : currentQs.getQs();
+        long closeTime = (null == currentQs) ? -1L : DateUtil.between(currentQs.getCloseTime(), now, DateUnit.SECOND);
+        long openTime = (null == currentQs) ? -1L : DateUtil.between(currentQs.getOpenResultTime(), now, DateUnit.SECOND);
+
+        return R.ok().put("qs", qs).put("closeTime", closeTime).put("openTime", openTime);
     }
 
 

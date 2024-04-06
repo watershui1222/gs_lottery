@@ -5,11 +5,14 @@ import cn.hutool.core.map.MapUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gs.commons.bo.OpenResultBO;
+import com.gs.commons.bo.OpenresultTimeBO;
 import com.gs.commons.entity.OpenresultPcdd;
 import com.gs.commons.mapper.OpenresultPcddMapper;
 import com.gs.commons.service.OpenresultPcddService;
+import com.gs.commons.utils.BeanUtil;
 import com.gs.commons.utils.PageUtils;
 import com.gs.commons.utils.Query;
 import icu.mhb.mybatisplus.plugln.tookit.Lists;
@@ -58,6 +61,20 @@ public class OpenresultPcddServiceImpl extends ServiceImpl<OpenresultPcddMapper,
             }
         }
         return new PageUtils(openResultBOList, (int) page.getTotal(), (int) page.getSize(), (int) page.getCurrent());
+    }
+
+    @Override
+    public OpenresultTimeBO getCurrentQs(Date date) {
+        List<OpenresultPcdd> list = this.list(Wrappers.lambdaQuery(OpenresultPcdd.class)
+                .ge(OpenresultPcdd::getOpenTime, date)
+                .le(OpenresultPcdd::getOpenResultTime, date)
+        );
+        if (CollUtil.isNotEmpty(list)) {
+            OpenresultTimeBO openresultTimeBO = new OpenresultTimeBO();
+            BeanUtil.copyPropertiesIgnoreNull(list.get(0), openresultTimeBO);
+            return openresultTimeBO;
+        }
+        return null;
     }
 }
 

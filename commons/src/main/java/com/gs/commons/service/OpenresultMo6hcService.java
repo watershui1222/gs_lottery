@@ -1,10 +1,11 @@
 package com.gs.commons.service;
 
-import com.gs.commons.entity.OpenresultBjpk10;
-import com.gs.commons.entity.OpenresultMo6hc;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.gs.commons.bo.OpenresultTimeBO;
+import com.gs.commons.entity.OpenresultMo6hc;
 import com.gs.commons.utils.PageUtils;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -16,4 +17,5 @@ import java.util.Map;
 public interface OpenresultMo6hcService extends IService<OpenresultMo6hc> {
     int batchOpenResult(List<OpenresultMo6hc> list);
     PageUtils queryPage(Map<String,Object> params);
+    OpenresultTimeBO getCurrentQs(Date date);
 }

@@ -1,9 +1,11 @@
 package com.gs.commons.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.gs.commons.bo.OpenresultTimeBO;
 import com.gs.commons.entity.OpenresultFc3d;
 import com.gs.commons.utils.PageUtils;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -15,4 +17,5 @@ import java.util.Map;
 public interface OpenresultFc3dService extends IService<OpenresultFc3d> {
     int batchOpenResult(List<OpenresultFc3d> list);
     PageUtils queryPage(Map<String,Object> params);
+    OpenresultTimeBO getCurrentQs(Date date);
 }

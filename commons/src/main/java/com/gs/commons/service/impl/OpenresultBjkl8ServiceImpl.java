@@ -5,16 +5,17 @@ import cn.hutool.core.map.MapUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gs.commons.bo.OpenResultBO;
+import com.gs.commons.bo.OpenresultTimeBO;
 import com.gs.commons.entity.OpenresultBjkl8;
-import com.gs.commons.entity.TransactionRecord;
 import com.gs.commons.mapper.OpenresultBjkl8Mapper;
 import com.gs.commons.service.OpenresultBjkl8Service;
+import com.gs.commons.utils.BeanUtil;
 import com.gs.commons.utils.PageUtils;
 import com.gs.commons.utils.Query;
 import icu.mhb.mybatisplus.plugln.tookit.Lists;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -60,6 +61,20 @@ public class OpenresultBjkl8ServiceImpl extends ServiceImpl<OpenresultBjkl8Mappe
             }
         }
         return new PageUtils(openResultBOList, (int) page.getTotal(), (int) page.getSize(), (int) page.getCurrent());
+    }
+
+    @Override
+    public OpenresultTimeBO getCurrentQs(Date date) {
+        List<OpenresultBjkl8> list = this.list(Wrappers.lambdaQuery(OpenresultBjkl8.class)
+                .ge(OpenresultBjkl8::getOpenTime, date)
+                .le(OpenresultBjkl8::getOpenResultTime, date)
+        );
+        if (CollUtil.isNotEmpty(list)) {
+            OpenresultTimeBO openresultTimeBO = new OpenresultTimeBO();
+            BeanUtil.copyPropertiesIgnoreNull(list.get(0), openresultTimeBO);
+            return openresultTimeBO;
+        }
+        return null;
     }
 }
 
