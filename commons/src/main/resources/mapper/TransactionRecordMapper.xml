@@ -7,6 +7,7 @@
     <resultMap id="BaseResultMap" type="com.gs.commons.entity.TransactionRecord">
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+            <result property="trxId" column="trx_id" jdbcType="VARCHAR"/>
             <result property="amount" column="amount" jdbcType="DECIMAL"/>
             <result property="beforeAmount" column="before_amount" jdbcType="DECIMAL"/>
             <result property="afterAmount" column="after_amount" jdbcType="DECIMAL"/>
@@ -19,9 +20,9 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,user_name,amount,
-        before_amount,after_amount,pay_type,
-        business_type,business_order,create_time,
-        remark,oper_name
+        id,user_name,trx_id,
+        amount,before_amount,after_amount,
+        pay_type,business_type,business_order,
+        create_time,remark,oper_name
     </sql>
 </mapper>

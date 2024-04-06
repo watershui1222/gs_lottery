@@ -130,6 +130,18 @@ public class LotteryOrder implements Serializable {
     @TableField(value = "open_result")
     private String openResult;
 
+    /**
+     * 预计开奖时间
+     */
+    @TableField(value = "open_result_time")
+    private Date openResultTime;
+
+    /**
+     * 随机分组,结算用
+     */
+    @TableField(value = "settle_group")
+    private Integer settleGroup;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

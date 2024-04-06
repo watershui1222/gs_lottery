@@ -59,10 +59,22 @@ public class LotteryOdds implements Serializable {
     private String handicapCode;
 
     /**
+     * 盘口名称
+     */
+    @TableField(value = "handicap_name")
+    private String handicapName;
+
+    /**
      * 玩法代码
      */
     @TableField(value = "play_code")
     private String playCode;
+
+    /**
+     * 玩法名称
+     */
+    @TableField(value = "play_name")
+    private String playName;
 
     /**
      * 创建时间

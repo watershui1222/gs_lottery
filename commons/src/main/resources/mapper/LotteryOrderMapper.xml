@@ -24,6 +24,8 @@
             <result property="settleStatus" column="settle_status" jdbcType="INTEGER"/>
             <result property="orderStatus" column="order_status" jdbcType="INTEGER"/>
             <result property="openResult" column="open_result" jdbcType="VARCHAR"/>
+            <result property="openResultTime" column="open_result_time" jdbcType="TIMESTAMP"/>
+            <result property="settleGroup" column="settle_group" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -33,6 +35,6 @@
         odds,qs,bet_amount,
         bonus_amount,profit_amount,bet_time,
         settle_time,settle_status,order_status,
-        open_result
+        open_result,open_result_time,settle_group
     </sql>
 </mapper>

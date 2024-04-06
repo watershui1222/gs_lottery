@@ -29,6 +29,12 @@ public class TransactionRecord implements Serializable {
     private String userName;
 
     /**
+     * 流水号
+     */
+    @TableField(value = "trx_id")
+    private String trxId;
+
+    /**
      * 金额
      */
     @TableField(value = "amount")

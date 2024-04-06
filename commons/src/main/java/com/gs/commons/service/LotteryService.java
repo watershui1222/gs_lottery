@@ -10,4 +10,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface LotteryService extends IService<Lottery> {
 
+    Lottery getLotteryInfo(String lotteryCode);
 }
