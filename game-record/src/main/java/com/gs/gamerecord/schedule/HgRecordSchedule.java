@@ -55,7 +55,7 @@ public class HgRecordSchedule {
     @Autowired
     private HgRecordService hgRecordService;
 
-    @Resource
+    @Autowired
     private StringRedisTemplate redisTemplate;
 
     @Scheduled(cron = "0 0/2 * * * ?")

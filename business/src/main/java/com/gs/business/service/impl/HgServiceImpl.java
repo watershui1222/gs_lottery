@@ -277,12 +277,12 @@ public class HgServiceImpl implements PlatService {
 
     @Override
     public String getDepositOrderNo(BigDecimal amount, UserPlat userPlat) throws Exception {
-        return userPlat.getPlatUserName() + "INHG" + RandomUtil.randomString(7);
+        return "INHG" + DateUtil.format(new Date(), "yyyyMMddHHmmssSSS") + userPlat.getPlatUserName();
     }
 
     @Override
     public String getWithdrawOrderNo(BigDecimal amount, UserPlat userPlat) throws Exception {
-        return userPlat.getPlatUserName() + "OUTHG" + RandomUtil.randomString(7);
+        return "OUTHG" + DateUtil.format(new Date(), "yyyyMMddHHmmssSSS") +userPlat.getPlatUserName();
     }
 
     @Override
