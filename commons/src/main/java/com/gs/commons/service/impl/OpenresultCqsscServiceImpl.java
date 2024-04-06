@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gs.commons.bo.OpenResultBO;
 import com.gs.commons.bo.OpenresultTimeBO;
+import com.gs.commons.entity.OpenresultBjpk10;
 import com.gs.commons.entity.OpenresultCqssc;
 import com.gs.commons.entity.OpenresultFc3d;
 import com.gs.commons.mapper.OpenresultCqsscMapper;
@@ -46,6 +47,8 @@ public class OpenresultCqsscServiceImpl extends ServiceImpl<OpenresultCqsscMappe
     public PageUtils queryPage(Map<String, Object> params) {
         LambdaQueryWrapper<OpenresultCqssc> wrapper = new QueryWrapper<OpenresultCqssc>().lambda();
         Date nowTime = MapUtil.getDate(params, "nowTime");
+        Date startTime = MapUtil.getDate(params, "startTime");
+        wrapper.ge(null != startTime, OpenresultCqssc::getOpenResultTime, startTime);
         wrapper.le(null != nowTime, OpenresultCqssc::getOpenResultTime, nowTime);
         wrapper.orderByDesc(OpenresultCqssc::getOpenResultTime);
         IPage<OpenresultCqssc> page = this.page(
@@ -60,6 +63,7 @@ public class OpenresultCqsscServiceImpl extends ServiceImpl<OpenresultCqsscMappe
                 openResultBO.setOpenResult(record.getOpenResult());
                 openResultBO.setOpenStatus(record.getOpenStatus());
                 openResultBO.setOpenResultTime(record.getOpenResultTime());
+                openResultBO.setCurrCount(record.getCurrCount());
                 openResultBOList.add(openResultBO);
             }
         }

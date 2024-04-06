@@ -44,6 +44,8 @@ public class OpenresultBjkl8ServiceImpl extends ServiceImpl<OpenresultBjkl8Mappe
     public PageUtils queryPage(Map<String, Object> params) {
         LambdaQueryWrapper<OpenresultBjkl8> wrapper = new QueryWrapper<OpenresultBjkl8>().lambda();
         Date nowTime = MapUtil.getDate(params, "nowTime");
+        Date startTime = MapUtil.getDate(params, "startTime");
+        wrapper.ge(null != startTime, OpenresultBjkl8::getOpenResultTime, startTime);
         wrapper.le(null != nowTime, OpenresultBjkl8::getOpenResultTime, nowTime);
         wrapper.orderByDesc(OpenresultBjkl8::getOpenResultTime);
         IPage<OpenresultBjkl8> page = this.page(
@@ -58,6 +60,7 @@ public class OpenresultBjkl8ServiceImpl extends ServiceImpl<OpenresultBjkl8Mappe
                 openResultBO.setOpenResult(record.getOpenResult());
                 openResultBO.setOpenStatus(record.getOpenStatus());
                 openResultBO.setOpenResultTime(record.getOpenResultTime());
+                openResultBO.setCurrCount(record.getCurrCount());
                 openResultBOList.add(openResultBO);
             }
         }

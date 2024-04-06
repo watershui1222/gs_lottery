@@ -189,9 +189,33 @@ public class LotteryController {
         }
 
         Map<String, Object> params = new HashMap<>();
+        if (null == request.getPage()) {
+
+        }
         params.put(Constant.PAGE, request.getPage());
         params.put(Constant.LIMIT, request.getLimit());
-        params.put("nowTime", DateUtil.date());
+
+        //1:今天 2:昨天 3:一周内 4:一月内
+        Date startDate = new Date();
+        Date endTime = new Date();
+        if (StringUtils.isNotBlank(request.getDateStr())) {
+            if (StringUtils.equals(request.getDateStr(), "2")) {
+                startDate = DateUtil.offsetDay(startDate, -1);
+                endTime = startDate;
+            } else if (StringUtils.equals(request.getDateStr(), "3")) {
+                startDate = DateUtil.offsetWeek(startDate, -1);
+            } else if (StringUtils.equals(request.getDateStr(), "4")) {
+                startDate = DateUtil.offsetMonth(startDate, -1);
+            }
+        }
+        Date begin = DateUtil.beginOfDay(startDate);
+        Date end = DateUtil.endOfDay(endTime);
+
+        params.put("startTime", begin);
+        params.put("nowTime", end);
+
+
+
 
         PageUtils pageUtils;
         if (StringUtils.equals(LotteryCodeEnum.BJKL8.getLotteryCode(), request.getLotteryCode())) {
@@ -245,20 +269,22 @@ public class LotteryController {
 
         //1:今天 2:昨天 3:一周内 4:一月内
         Date startDate = new Date();
+        Date endTime = new Date();
         if (StringUtils.isNotBlank(request.getDateStr())) {
             if (StringUtils.equals(request.getDateStr(), "2")) {
                 startDate = DateUtil.offsetDay(startDate, -1);
+                endTime = startDate;
             } else if (StringUtils.equals(request.getDateStr(), "3")) {
                 startDate = DateUtil.offsetWeek(startDate, -1);
             } else if (StringUtils.equals(request.getDateStr(), "4")) {
                 startDate = DateUtil.offsetMonth(startDate, -1);
             }
         }
-        Date startTime = DateUtil.beginOfDay(startDate);
-        Date endTime = DateUtil.endOfDay(new Date());
+        Date begin = DateUtil.beginOfDay(startDate);
+        Date end = DateUtil.endOfDay(endTime);
 
-        params.put("startTime", startTime);
-        params.put("endTime", endTime);
+        params.put("startTime", begin);
+        params.put("endTime", end);
 
         PageUtils page = lotteryOrderService.queryPage(params);
         if (CollUtil.isNotEmpty(page.getList())) {
@@ -274,6 +300,7 @@ public class LotteryController {
                 jsonObject.put("betTime", lotteryOrder.getBetTime());
                 jsonObject.put("bonusAmount", lotteryOrder.getBonusAmount());
                 jsonObject.put("openResult", lotteryOrder.getOpenResult());
+                jsonObject.put("betContent", lotteryOrder.getBetContent());
                 jsonObject.put("orderStatus", lotteryOrder.getOrderStatus());
                 jsonArray.add(jsonObject);
 

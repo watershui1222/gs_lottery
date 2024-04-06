@@ -744,20 +744,22 @@ public class UserController {
         params.put("userName", userName);
         //1:今天 2:昨天 3:一周内 4:一月内
         Date startDate = new Date();
+        Date endTime = new Date();
         if (StringUtils.isNotBlank(request.getDateStr())) {
             if (StringUtils.equals(request.getDateStr(), "2")) {
                 startDate = DateUtil.offsetDay(startDate, -1);
+                endTime = startDate;
             } else if (StringUtils.equals(request.getDateStr(), "3")) {
                 startDate = DateUtil.offsetWeek(startDate, -1);
             } else if (StringUtils.equals(request.getDateStr(), "4")) {
                 startDate = DateUtil.offsetMonth(startDate, -1);
             }
         }
-        Date startTime = DateUtil.beginOfDay(startDate);
-        Date endTime = DateUtil.endOfDay(new Date());
+        Date begin = DateUtil.beginOfDay(startDate);
+        Date end = DateUtil.endOfDay(endTime);
 
-        params.put("startTime", startTime);
-        params.put("endTime", endTime);
+        params.put("startTime", begin);
+        params.put("endTime", end);
 
         PageUtils pageUtils;
         if (StringUtils.equals(PlatSubEnum.KY.getPlatSubCode(), request.getSubPlatCode())) {
@@ -787,20 +789,22 @@ public class UserController {
         params.put("platCode", request.getPlatCode());
         //1:今天 2:昨天 3:一周内 4:一月内
         Date startDate = new Date();
+        Date endTime = new Date();
         if (StringUtils.isNotBlank(request.getDateStr())) {
             if (StringUtils.equals(request.getDateStr(), "2")) {
                 startDate = DateUtil.offsetDay(startDate, -1);
+                endTime = startDate;
             } else if (StringUtils.equals(request.getDateStr(), "3")) {
                 startDate = DateUtil.offsetWeek(startDate, -1);
             } else if (StringUtils.equals(request.getDateStr(), "4")) {
                 startDate = DateUtil.offsetMonth(startDate, -1);
             }
         }
-        Date startTime = DateUtil.beginOfDay(startDate);
-        Date endTime = DateUtil.endOfDay(new Date());
+        Date begin = DateUtil.beginOfDay(startDate);
+        Date end = DateUtil.endOfDay(endTime);
 
-        params.put("startTime", startTime);
-        params.put("endTime", endTime);
+        params.put("startTime", begin);
+        params.put("endTime", end);
 
         PageUtils page = eduOrderService.queryPage(params);
         if (CollUtil.isNotEmpty(page.getList())) {

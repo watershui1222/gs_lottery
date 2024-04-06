@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gs.commons.bo.OpenResultBO;
 import com.gs.commons.bo.OpenresultTimeBO;
+import com.gs.commons.entity.OpenresultCqssc;
 import com.gs.commons.entity.OpenresultFc3d;
 import com.gs.commons.mapper.OpenresultFc3dMapper;
 import com.gs.commons.service.OpenresultFc3dService;
@@ -43,6 +44,8 @@ public class OpenresultFc3dServiceImpl extends ServiceImpl<OpenresultFc3dMapper,
     public PageUtils queryPage(Map<String, Object> params) {
         LambdaQueryWrapper<OpenresultFc3d> wrapper = new QueryWrapper<OpenresultFc3d>().lambda();
         Date nowTime = MapUtil.getDate(params, "nowTime");
+        Date startTime = MapUtil.getDate(params, "startTime");
+        wrapper.ge(null != startTime, OpenresultFc3d::getOpenResultTime, startTime);
         wrapper.le(null != nowTime, OpenresultFc3d::getOpenResultTime, nowTime);
         wrapper.orderByDesc(OpenresultFc3d::getOpenResultTime);
         IPage<OpenresultFc3d> page = this.page(
@@ -57,6 +60,7 @@ public class OpenresultFc3dServiceImpl extends ServiceImpl<OpenresultFc3dMapper,
                 openResultBO.setOpenResult(record.getOpenResult());
                 openResultBO.setOpenStatus(record.getOpenStatus());
                 openResultBO.setOpenResultTime(record.getOpenResultTime());
+                openResultBO.setCurrCount(record.getCurrCount());
                 openResultBOList.add(openResultBO);
             }
         }
