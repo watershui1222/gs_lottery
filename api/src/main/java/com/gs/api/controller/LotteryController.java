@@ -277,36 +277,64 @@ public class LotteryController {
     public R lotteryTime(LotteryTimeRequest request, HttpServletRequest httpServletRequest) {
         String userName = JwtUtils.getUserName(httpServletRequest);
         Date now = new Date();
-        OpenresultTimeBO currentQs = null;
+        OpenresultTimeBO currentQsData;
+        OpenresultTimeBO lastQsData;
         if (StringUtils.equals(LotteryCodeEnum.BJKL8.getLotteryCode(), request.getLotteryCode())) {
+            currentQsData = openresultBjkl8Service.getOneDataByTime(now, null);
+            lastQsData = openresultBjkl8Service.getOneDataByTime(null, now);
 
-            currentQs = openresultBjkl8Service.getCurrentQs(now);
         } else if (StringUtils.equals(LotteryCodeEnum.BJPK10.getLotteryCode(), request.getLotteryCode())) {
-            currentQs = openresultBjpk10Service.getCurrentQs(now);
+            currentQsData = openresultBjpk10Service.getOneDataByTime(now, null);
+            lastQsData = openresultBjpk10Service.getOneDataByTime(null, now);
+
         } else if (StringUtils.equals(LotteryCodeEnum.CQSSC.getLotteryCode(), request.getLotteryCode())) {
-            currentQs = openresultCqsscService.getCurrentQs(now);
+            currentQsData = openresultCqsscService.getOneDataByTime(now, null);
+            lastQsData = openresultCqsscService.getOneDataByTime(null, now);
+
         } else if (StringUtils.equals(LotteryCodeEnum.FC3D.getLotteryCode(), request.getLotteryCode())) {
-            currentQs = openresultFc3dService.getCurrentQs(now);
+            currentQsData = openresultFc3dService.getOneDataByTime(now, null);
+            lastQsData = openresultFc3dService.getOneDataByTime(null, now);
+
         } else if (StringUtils.equals(LotteryCodeEnum.FT.getLotteryCode(), request.getLotteryCode())) {
-            currentQs = openresultFtService.getCurrentQs(now);
+            currentQsData = openresultFtService.getOneDataByTime(now, null);
+            lastQsData = openresultFtService.getOneDataByTime(null, now);
+
         } else if (StringUtils.equals(LotteryCodeEnum.GD11X5.getLotteryCode(), request.getLotteryCode())) {
-            currentQs = openresultGd11x5Service.getCurrentQs(now);
+            currentQsData = openresultGd11x5Service.getOneDataByTime(now, null);
+            lastQsData = openresultGd11x5Service.getOneDataByTime(null, now);
+
         } else if (StringUtils.equals(LotteryCodeEnum.JSK3.getLotteryCode(), request.getLotteryCode())) {
-            currentQs = openresultJsk3Service.getCurrentQs(now);
+            currentQsData = openresultJsk3Service.getOneDataByTime(now, null);
+            lastQsData = openresultJsk3Service.getOneDataByTime(null, now);
+
         } else if (StringUtils.equals(LotteryCodeEnum.MO6HC.getLotteryCode(), request.getLotteryCode())) {
-            currentQs = openresultMo6hcService.getCurrentQs(now);
+            currentQsData = openresultMo6hcService.getOneDataByTime(now, null);
+            lastQsData = openresultMo6hcService.getOneDataByTime(null, now);
+
         }else if (StringUtils.equals(LotteryCodeEnum.PCDD.getLotteryCode(), request.getLotteryCode())) {
-            currentQs = openresultPcddService.getCurrentQs(now);
+            currentQsData = openresultPcddService.getOneDataByTime(now, null);
+            lastQsData = openresultPcddService.getOneDataByTime(null, now);
         } else {
             return R.error("未查询到该彩种");
         }
 
-        String qs = (null == currentQs) ? "" : currentQs.getQs();
-        long closeTime = (null == currentQs) ? -1L : DateUtil.between(currentQs.getCloseTime(), now, DateUnit.SECOND);
-        long openTime = (null == currentQs) ? -1L : DateUtil.between(currentQs.getOpenResultTime(), now, DateUnit.SECOND);
+        // 当前期
+        JSONObject nowQsJson = new JSONObject();
+        String nowQs = (null == currentQsData) ? "" : currentQsData.getQs();
+        long nowCloseSeconds = (null == currentQsData) ? -1L : DateUtil.between(currentQsData.getCloseTime(), now, DateUnit.SECOND);
+        long nowOpenSeconds = (null == currentQsData) ? -1L : DateUtil.between(currentQsData.getOpenResultTime(), now, DateUnit.SECOND);
+        nowQsJson.put("qs", nowQs);
+        nowQsJson.put("closeSeconds", nowCloseSeconds);
+        nowQsJson.put("openSeconds", nowOpenSeconds);
 
-        return R.ok().put("qs", qs).put("closeTime", closeTime).put("openTime", openTime);
+        // 上一期
+        JSONObject lastQsJson = new JSONObject();
+        String lastQs = (null == lastQsData) ? "" : lastQsData.getQs();
+        String openResult = (null == lastQsData) ? "" : lastQsData.getOpenResult();
+        lastQsJson.put("qs", lastQs);
+        lastQsJson.put("openResult", openResult);
+
+        return R.ok().put("nowQs", nowQsJson).put("lastQsJson", lastQs);
     }
-
 
 }

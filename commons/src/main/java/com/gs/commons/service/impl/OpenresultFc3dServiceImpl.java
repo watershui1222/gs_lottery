@@ -6,12 +6,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gs.commons.bo.OpenResultBO;
 import com.gs.commons.bo.OpenresultTimeBO;
-import com.gs.commons.entity.OpenresultBjkl8;
 import com.gs.commons.entity.OpenresultFc3d;
-import com.gs.commons.entity.OpenresultFt;
 import com.gs.commons.mapper.OpenresultFc3dMapper;
 import com.gs.commons.service.OpenresultFc3dService;
 import com.gs.commons.utils.BeanUtil;
@@ -65,14 +64,19 @@ public class OpenresultFc3dServiceImpl extends ServiceImpl<OpenresultFc3dMapper,
     }
 
     @Override
-    public OpenresultTimeBO getCurrentQs(Date date) {
-        List<OpenresultFc3d> list = this.list(Wrappers.lambdaQuery(OpenresultFc3d.class)
-                .ge(OpenresultFc3d::getOpenTime, date)
-                .le(OpenresultFc3d::getOpenResultTime, date)
-        );
-        if (CollUtil.isNotEmpty(list)) {
+    public OpenresultTimeBO getOneDataByTime(Date currentTime, Date lastTime) {
+
+        LambdaQueryWrapper<OpenresultFc3d> wrapper = Wrappers.lambdaQuery(OpenresultFc3d.class)
+                .ge(null != currentTime, OpenresultFc3d::getOpenTime, currentTime)
+                .le(null != currentTime, OpenresultFc3d::getOpenResultTime, currentTime)
+                .ge(null != lastTime, OpenresultFc3d::getOpenResultTime, lastTime)
+                .orderByDesc(OpenresultFc3d::getOpenResultTime);
+
+
+        Page<OpenresultFc3d> page = this.page(new Page<>(1, 1), wrapper);
+        if (CollUtil.isNotEmpty(page.getRecords())) {
             OpenresultTimeBO openresultTimeBO = new OpenresultTimeBO();
-            BeanUtil.copyPropertiesIgnoreNull(list.get(0), openresultTimeBO);
+            BeanUtil.copyPropertiesIgnoreNull(page.getRecords().get(0), openresultTimeBO);
             return openresultTimeBO;
         }
         return null;

@@ -17,5 +17,5 @@ import java.util.Map;
 public interface OpenresultMo6hcService extends IService<OpenresultMo6hc> {
     int batchOpenResult(List<OpenresultMo6hc> list);
     PageUtils queryPage(Map<String,Object> params);
-    OpenresultTimeBO getCurrentQs(Date date);
+    OpenresultTimeBO getOneDataByTime(Date currentTime, Date lastTime);
 }

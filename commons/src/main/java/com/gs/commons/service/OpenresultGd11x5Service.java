@@ -17,5 +17,5 @@ import java.util.Map;
 public interface OpenresultGd11x5Service extends IService<OpenresultGd11x5> {
     int batchOpenResult(List<OpenresultGd11x5> list);
     PageUtils queryPage(Map<String,Object> params);
-    OpenresultTimeBO getCurrentQs(Date date);
+    OpenresultTimeBO getOneDataByTime(Date currentTime, Date lastTime);
 }

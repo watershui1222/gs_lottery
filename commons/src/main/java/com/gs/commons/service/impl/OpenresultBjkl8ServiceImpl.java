@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gs.commons.bo.OpenResultBO;
 import com.gs.commons.bo.OpenresultTimeBO;
@@ -64,14 +65,19 @@ public class OpenresultBjkl8ServiceImpl extends ServiceImpl<OpenresultBjkl8Mappe
     }
 
     @Override
-    public OpenresultTimeBO getCurrentQs(Date date) {
-        List<OpenresultBjkl8> list = this.list(Wrappers.lambdaQuery(OpenresultBjkl8.class)
-                .ge(OpenresultBjkl8::getOpenTime, date)
-                .le(OpenresultBjkl8::getOpenResultTime, date)
-        );
-        if (CollUtil.isNotEmpty(list)) {
+    public OpenresultTimeBO getOneDataByTime(Date currentTime, Date lastTime) {
+
+        LambdaQueryWrapper<OpenresultBjkl8> wrapper = Wrappers.lambdaQuery(OpenresultBjkl8.class)
+                .ge(null != currentTime, OpenresultBjkl8::getOpenTime, currentTime)
+                .le(null != currentTime, OpenresultBjkl8::getOpenResultTime, currentTime)
+                .ge(null != lastTime, OpenresultBjkl8::getOpenResultTime, lastTime)
+                .orderByDesc(OpenresultBjkl8::getOpenResultTime);
+
+
+        Page<OpenresultBjkl8> page = this.page(new Page<>(1, 1), wrapper);
+        if (CollUtil.isNotEmpty(page.getRecords())) {
             OpenresultTimeBO openresultTimeBO = new OpenresultTimeBO();
-            BeanUtil.copyPropertiesIgnoreNull(list.get(0), openresultTimeBO);
+            BeanUtil.copyPropertiesIgnoreNull(page.getRecords().get(0), openresultTimeBO);
             return openresultTimeBO;
         }
         return null;

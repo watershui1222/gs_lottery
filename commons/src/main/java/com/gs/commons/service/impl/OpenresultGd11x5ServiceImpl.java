@@ -6,11 +6,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gs.commons.bo.OpenResultBO;
 import com.gs.commons.bo.OpenresultTimeBO;
 import com.gs.commons.entity.OpenresultGd11x5;
-import com.gs.commons.entity.OpenresultJsk3;
 import com.gs.commons.mapper.OpenresultGd11x5Mapper;
 import com.gs.commons.service.OpenresultGd11x5Service;
 import com.gs.commons.utils.BeanUtil;
@@ -66,14 +66,19 @@ public class OpenresultGd11x5ServiceImpl extends ServiceImpl<OpenresultGd11x5Map
     }
 
     @Override
-    public OpenresultTimeBO getCurrentQs(Date date) {
-        List<OpenresultGd11x5> list = this.list(Wrappers.lambdaQuery(OpenresultGd11x5.class)
-                .ge(OpenresultGd11x5::getOpenTime, date)
-                .le(OpenresultGd11x5::getOpenResultTime, date)
-        );
-        if (CollUtil.isNotEmpty(list)) {
+    public OpenresultTimeBO getOneDataByTime(Date currentTime, Date lastTime) {
+
+        LambdaQueryWrapper<OpenresultGd11x5> wrapper = Wrappers.lambdaQuery(OpenresultGd11x5.class)
+                .ge(null != currentTime, OpenresultGd11x5::getOpenTime, currentTime)
+                .le(null != currentTime, OpenresultGd11x5::getOpenResultTime, currentTime)
+                .ge(null != lastTime, OpenresultGd11x5::getOpenResultTime, lastTime)
+                .orderByDesc(OpenresultGd11x5::getOpenResultTime);
+
+
+        Page<OpenresultGd11x5> page = this.page(new Page<>(1, 1), wrapper);
+        if (CollUtil.isNotEmpty(page.getRecords())) {
             OpenresultTimeBO openresultTimeBO = new OpenresultTimeBO();
-            BeanUtil.copyPropertiesIgnoreNull(list.get(0), openresultTimeBO);
+            BeanUtil.copyPropertiesIgnoreNull(page.getRecords().get(0), openresultTimeBO);
             return openresultTimeBO;
         }
         return null;

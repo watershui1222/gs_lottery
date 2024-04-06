@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gs.commons.bo.OpenResultBO;
 import com.gs.commons.bo.OpenresultTimeBO;
@@ -66,14 +67,19 @@ public class OpenresultCqsscServiceImpl extends ServiceImpl<OpenresultCqsscMappe
     }
 
     @Override
-    public OpenresultTimeBO getCurrentQs(Date date) {
-        List<OpenresultCqssc> list = this.list(Wrappers.lambdaQuery(OpenresultCqssc.class)
-                .ge(OpenresultCqssc::getOpenTime, date)
-                .le(OpenresultCqssc::getOpenResultTime, date)
-        );
-        if (CollUtil.isNotEmpty(list)) {
+    public OpenresultTimeBO getOneDataByTime(Date currentTime, Date lastTime) {
+
+        LambdaQueryWrapper<OpenresultCqssc> wrapper = Wrappers.lambdaQuery(OpenresultCqssc.class)
+                .ge(null != currentTime, OpenresultCqssc::getOpenTime, currentTime)
+                .le(null != currentTime, OpenresultCqssc::getOpenResultTime, currentTime)
+                .ge(null != lastTime, OpenresultCqssc::getOpenResultTime, lastTime)
+                .orderByDesc(OpenresultCqssc::getOpenResultTime);
+
+
+        Page<OpenresultCqssc> page = this.page(new Page<>(1, 1), wrapper);
+        if (CollUtil.isNotEmpty(page.getRecords())) {
             OpenresultTimeBO openresultTimeBO = new OpenresultTimeBO();
-            BeanUtil.copyPropertiesIgnoreNull(list.get(0), openresultTimeBO);
+            BeanUtil.copyPropertiesIgnoreNull(page.getRecords().get(0), openresultTimeBO);
             return openresultTimeBO;
         }
         return null;

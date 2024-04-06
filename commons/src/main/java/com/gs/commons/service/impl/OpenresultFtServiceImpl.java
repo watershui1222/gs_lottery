@@ -6,11 +6,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gs.commons.bo.OpenResultBO;
 import com.gs.commons.bo.OpenresultTimeBO;
 import com.gs.commons.entity.OpenresultFt;
-import com.gs.commons.entity.OpenresultGd11x5;
 import com.gs.commons.mapper.OpenresultFtMapper;
 import com.gs.commons.service.OpenresultFtService;
 import com.gs.commons.utils.BeanUtil;
@@ -64,14 +64,19 @@ public class OpenresultFtServiceImpl extends ServiceImpl<OpenresultFtMapper, Ope
     }
 
     @Override
-    public OpenresultTimeBO getCurrentQs(Date date) {
-        List<OpenresultFt> list = this.list(Wrappers.lambdaQuery(OpenresultFt.class)
-                .ge(OpenresultFt::getOpenTime, date)
-                .le(OpenresultFt::getOpenResultTime, date)
-        );
-        if (CollUtil.isNotEmpty(list)) {
+    public OpenresultTimeBO getOneDataByTime(Date currentTime, Date lastTime) {
+
+        LambdaQueryWrapper<OpenresultFt> wrapper = Wrappers.lambdaQuery(OpenresultFt.class)
+                .ge(null != currentTime, OpenresultFt::getOpenTime, currentTime)
+                .le(null != currentTime, OpenresultFt::getOpenResultTime, currentTime)
+                .ge(null != lastTime, OpenresultFt::getOpenResultTime, lastTime)
+                .orderByDesc(OpenresultFt::getOpenResultTime);
+
+
+        Page<OpenresultFt> page = this.page(new Page<>(1, 1), wrapper);
+        if (CollUtil.isNotEmpty(page.getRecords())) {
             OpenresultTimeBO openresultTimeBO = new OpenresultTimeBO();
-            BeanUtil.copyPropertiesIgnoreNull(list.get(0), openresultTimeBO);
+            BeanUtil.copyPropertiesIgnoreNull(page.getRecords().get(0), openresultTimeBO);
             return openresultTimeBO;
         }
         return null;
