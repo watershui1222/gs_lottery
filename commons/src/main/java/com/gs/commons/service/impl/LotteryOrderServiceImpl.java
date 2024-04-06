@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -51,6 +52,31 @@ public class LotteryOrderServiceImpl extends ServiceImpl<LotteryOrderMapper, Lot
                 wrapper);
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public List<LotteryOrder> queryList(Map<String, Object> params) {
+        LambdaQueryWrapper<LotteryOrder> wrapper = new QueryWrapper<LotteryOrder>().lambda();
+
+        String userName = MapUtil.getStr(params, "userName");
+        wrapper.eq(StringUtils.isNotBlank(userName), LotteryOrder::getUserName, userName);
+
+        String lotteryCode = MapUtil.getStr(params, "lotteryCode");
+        wrapper.eq(StringUtils.isNotBlank(lotteryCode), LotteryOrder::getLotteryCode, lotteryCode);
+
+        Integer orderStatus = MapUtil.getInt(params, "orderStatus");
+        wrapper.eq(null != orderStatus, LotteryOrder::getOrderStatus, orderStatus);
+
+        Date startTime = MapUtil.getDate(params, "startTime");
+        wrapper.ge(startTime != null, LotteryOrder::getBetTime, startTime);
+
+        Date endTime = MapUtil.getDate(params, "endTime");
+        wrapper.le(endTime != null, LotteryOrder::getBetTime, endTime);
+
+        wrapper.orderByDesc(LotteryOrder::getBetTime);
+        List<LotteryOrder> list = this.list(wrapper);
+
+        return list;
     }
 }
 
