@@ -419,14 +419,15 @@ public class UserController {
             Map<Integer, String> businessTypeMap = new HashMap<>();
             businessTypeMap.put(0, "充值");
             businessTypeMap.put(1, "提现");
-            businessTypeMap.put(2, "彩票奖金");
-            businessTypeMap.put(3, "彩票撤单");
-            businessTypeMap.put(4, "额度转入");
-            businessTypeMap.put(5, "额度转出");
-            businessTypeMap.put(6, "返水");
-            businessTypeMap.put(7, "优惠活动");
-            businessTypeMap.put(8, "人工上分");
-            businessTypeMap.put(9, "人工下分");
+            businessTypeMap.put(2, "下注");
+            businessTypeMap.put(3, "彩票奖金");
+            businessTypeMap.put(4, "彩票撤单");
+            businessTypeMap.put(5, "额度转入");
+            businessTypeMap.put(6, "额度转出");
+            businessTypeMap.put(7, "返水");
+            businessTypeMap.put(8, "优惠活动");
+            businessTypeMap.put(9, "人工上分");
+            businessTypeMap.put(10, "人工下分");
             JSONArray arr = new JSONArray();
             for (TransactionRecord temp : list) {
                 JSONObject obj = new JSONObject();
