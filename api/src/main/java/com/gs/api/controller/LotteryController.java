@@ -243,6 +243,23 @@ public class LotteryController {
         params.put("lotteryCode", request.getLotteryCode());
         params.put("orderStatus", request.getOrderStatus());
 
+        //1:今天 2:昨天 3:一周内 4:一月内
+        Date startDate = new Date();
+        if (StringUtils.isNotBlank(request.getDateStr())) {
+            if (StringUtils.equals(request.getDateStr(), "2")) {
+                startDate = DateUtil.offsetDay(startDate, -1);
+            } else if (StringUtils.equals(request.getDateStr(), "3")) {
+                startDate = DateUtil.offsetWeek(startDate, -1);
+            } else if (StringUtils.equals(request.getDateStr(), "4")) {
+                startDate = DateUtil.offsetMonth(startDate, -1);
+            }
+        }
+        Date startTime = DateUtil.beginOfDay(startDate);
+        Date endTime = DateUtil.endOfDay(new Date());
+
+        params.put("startTime", startTime);
+        params.put("endTime", endTime);
+
         PageUtils page = lotteryOrderService.queryPage(params);
         if (CollUtil.isNotEmpty(page.getList())) {
             List<LotteryOrder> pageList = (List<LotteryOrder>) page.getList();

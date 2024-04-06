@@ -33,8 +33,8 @@ public class LotteryOrderServiceImpl extends ServiceImpl<LotteryOrderMapper, Lot
         String userName = MapUtil.getStr(params, "userName");
         wrapper.eq(StringUtils.isNotBlank(userName), LotteryOrder::getUserName, userName);
 
-        String platCode = MapUtil.getStr(params, "lotteryCode");
-        wrapper.eq(StringUtils.isNotBlank(platCode), LotteryOrder::getLotteryCode, platCode);
+        String lotteryCode = MapUtil.getStr(params, "lotteryCode");
+        wrapper.eq(StringUtils.isNotBlank(lotteryCode), LotteryOrder::getLotteryCode, lotteryCode);
 
         Integer orderStatus = MapUtil.getInt(params, "orderStatus");
         wrapper.eq(null != orderStatus, LotteryOrder::getOrderStatus, orderStatus);
