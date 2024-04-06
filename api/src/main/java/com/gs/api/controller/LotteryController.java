@@ -333,8 +333,6 @@ public class LotteryController {
         // 当前期
         JSONObject nowQsJson = new JSONObject();
         String nowQs = (null == currentQsData) ? "" : currentQsData.getQs();
-
-
         long nowCloseSeconds = (null == currentQsData) ? -1L : (currentQsData.getCloseTime().getTime() - now.getTime()) / 1000L;
         long nowOpenSeconds = (null == currentQsData) ? -1L : (currentQsData.getOpenResultTime().getTime() - now.getTime()) / 1000L;
         nowQsJson.put("qs", nowQs);
