@@ -813,6 +813,7 @@ public class UserController {
                 jsonObject.put("time", eduOrder.getCreateTime());
                 jsonObject.put("amount", eduOrder.getAmount());
                 jsonObject.put("status", eduOrder.getStatus());
+                jsonObject.put("type", eduOrder.getEduType());
                 jsonArray.add(jsonObject);
 
             }
