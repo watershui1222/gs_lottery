@@ -66,7 +66,7 @@ public class EduServiceImpl implements EduService {
         eduOrder.setStatus(-1);
         eduOrder.setCreateTime(now);
         eduOrder.setUpdateTime(now);
-        eduOrder.setRemark("平台->" + platCode);
+        eduOrder.setRemark("额度转入至[" + platCode + "]" + amount + "元");
         eduOrderService.save(eduOrder);
         return eduOrder;
     }
