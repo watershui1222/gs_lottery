@@ -57,18 +57,19 @@ public class LyRecordSchedule {
                         .eq(PlatRecordControl::getStatus, 0)
                         .eq(PlatRecordControl::getPlatCode, "ly")
         );
-        log.info("乐游---拉单开始[{}]-[{}]", DateUtil.formatDateTime(ly.getBeginTime()), DateUtil.formatDateTime(ly.getEndTime()));
         if (ly != null) {
+            log.info("乐游---拉单开始[{}]-[{}]", DateUtil.formatDateTime(ly.getBeginTime()), DateUtil.formatDateTime(ly.getEndTime()));
             getRecord(ly.getBeginTime(), ly.getEndTime());
-        }
-        log.info("乐游---拉单完成[{}]-[{}]", DateUtil.formatDateTime(ly.getBeginTime()), DateUtil.formatDateTime(ly.getEndTime()));
-        // 如果当前时间大于结束时间，更新拉取时间范围
-        if (DateUtil.compare(now, ly.getEndTime()) == 1) {
-            platRecordControlService.update(
-                    new LambdaUpdateWrapper<PlatRecordControl>()
-                            .set(PlatRecordControl::getBeginTime, ly.getEndTime())
-                            .set(PlatRecordControl::getEndTime, DateUtil.offsetMinute(ly.getEndTime(), 15))
-            );
+            log.info("乐游---拉单完成[{}]-[{}]", DateUtil.formatDateTime(ly.getBeginTime()), DateUtil.formatDateTime(ly.getEndTime()));
+            // 如果当前时间大于结束时间，更新拉取时间范围
+            if (DateUtil.compare(now, ly.getEndTime()) == 1) {
+                platRecordControlService.update(
+                        new LambdaUpdateWrapper<PlatRecordControl>()
+                                .set(PlatRecordControl::getBeginTime, ly.getEndTime())
+                                .set(PlatRecordControl::getEndTime, DateUtil.offsetMinute(ly.getEndTime(), 15))
+                                .eq(PlatRecordControl::getPlatCode, "ly")
+                );
+            }
         }
     }
 

@@ -339,7 +339,7 @@ public class HuangGuanSport {
 
             Date now = new Date();
             String dateEnd = DateUtil.format(now, "yyyy-MM-dd hh:mm:ss");
-            String dateStart = DateUtil.format(DateUtil.offsetDay(now, -1), "yyyy-MM-dd hh:mm:ss");
+            String dateStart = DateUtil.format(DateUtil.offsetHour(now, -1), "yyyy-MM-dd hh:mm:ss");
             int page = 1;
             int wagerTotalpage = 1;
 
@@ -379,9 +379,9 @@ public class HuangGuanSport {
     }
 
 
-//    public static void main(String[] args){
-//        HuangGuanSport cr = new HuangGuanSport();
-//        System.out.println(cr.agLogin());
-//    }
+    public static void main(String[] args){
+        HuangGuanSport cr = new HuangGuanSport();
+        System.out.println(cr.aLLWager());
+    }
 
 }

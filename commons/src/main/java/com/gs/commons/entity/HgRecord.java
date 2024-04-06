@@ -155,6 +155,12 @@ public class HgRecord implements Serializable {
     private String parlaysub;
 
     /**
+     * 返回的原始数据 一般是json
+     */
+    @TableField(value = "raw_data")
+    private String rawData;
+
+    /**
      * 创建时间
      */
     @TableField(value = "create_time")
