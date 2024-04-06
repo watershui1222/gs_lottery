@@ -28,6 +28,7 @@
             <result property="oddsFormat" column="odds_format" jdbcType="VARCHAR"/>
             <result property="parlaynum" column="parlaynum" jdbcType="INTEGER"/>
             <result property="parlaysub" column="parlaysub" jdbcType="VARCHAR"/>
+            <result property="rawData" column="raw_data" jdbcType="VARCHAR"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
@@ -40,7 +41,31 @@
         effective_bet,all_bet,profit,
         bet_time,settle_time,settle_status,
         result_status,result_score,odds_format,
-        parlaynum,parlaysub,create_time,
+        parlaynum,parlaysub,raw_data,create_time,
         update_time
     </sql>
+
+    <insert id="batchInsertOrUpdate" parameterType="java.util.List">
+        INSERT INTO t_hg_record(
+        user_name,plat_user_name,
+        order_no,game_name,wtype,
+        rtype,tname_home,tname_away,
+        league,strong,ioratio,
+        effective_bet,all_bet,profit,
+        bet_time,settle_time,settle_status,
+        result_status,result_score,odds_format,
+        parlaynum,parlaysub,raw_data,create_time,
+        update_time
+        )
+        values
+        <foreach collection="list" item="i" separator=",">
+            (
+            #{i.userName}, #{i.platUserName}, #{i.orderNo}, #{i.gameName}, #{i.wtype}, #{i.rtype}, #{i.tnameHome}, #{i.tnameAway}, #{i.league}, #{i.strong}, #{i.ioratio},
+            #{i.effectiveBet}, #{i.allBet}, #{i.profit}, #{i.betTime}, #{i.settleTime},#{i.settleStatus},
+            #{i.resultStatus},#{i.resultScore},#{i.oddsFormat}, #{i.parlaynum},#{i.parlaysub},#{i.rawData}, #{i.createTime},#{i.updateTime}
+            )
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        update_time = VALUES(update_time)
+    </insert>
 </mapper>

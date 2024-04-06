@@ -4,7 +4,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gs.commons.entity.HgRecord;
 import com.gs.commons.service.HgRecordService;
 import com.gs.commons.mapper.HgRecordMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
 * @author tommm
@@ -15,6 +18,13 @@ import org.springframework.stereotype.Service;
 public class HgRecordServiceImpl extends ServiceImpl<HgRecordMapper, HgRecord>
     implements HgRecordService{
 
+    @Autowired
+    private HgRecordMapper hgRecordMapper;
+
+    @Override
+    public int batchInsertOrUpdate(List<HgRecord> recordList) {
+        return hgRecordMapper.batchInsertOrUpdate(recordList);
+    }
 }
 
 

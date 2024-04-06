@@ -3,6 +3,8 @@ package com.gs.commons.service;
 import com.gs.commons.entity.HgRecord;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
 * @author tommm
 * @description 针对表【t_hg_record(皇冠体育注单表)】的数据库操作Service
@@ -10,4 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface HgRecordService extends IService<HgRecord> {
 
+    int batchInsertOrUpdate(List<HgRecord> recordList);
 }
