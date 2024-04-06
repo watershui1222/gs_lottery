@@ -831,6 +831,7 @@ public class UserController {
                 jsonObject.put("status", eduOrder.getStatus());
                 jsonObject.put("type", eduOrder.getEduType());
                 jsonObject.put("orderNo", eduOrder.getOrderNo());
+                jsonObject.put("remark", eduOrder.getRemark());
                 jsonArray.add(jsonObject);
 
             }
