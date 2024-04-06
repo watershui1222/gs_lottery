@@ -21,5 +21,5 @@ public interface OpenresultJsk3Service extends IService<OpenresultJsk3> {
     int batchOpenResult(List<OpenresultJsk3> list);
     PageUtils queryPage(Map<String,Object> params);
 
-    OpenresultTimeBO getCurrentQs(Date date);
+    OpenresultTimeBO getOneDataByTime(Date currentTime, Date lastTime);
 }

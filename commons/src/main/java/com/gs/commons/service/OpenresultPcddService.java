@@ -17,5 +17,5 @@ import java.util.Map;
 public interface OpenresultPcddService extends IService<OpenresultPcdd> {
     int batchOpenResult(List<OpenresultPcdd> list);
     PageUtils queryPage(Map<String,Object> params);
-    OpenresultTimeBO getCurrentQs(Date date);
+    OpenresultTimeBO getOneDataByTime(Date currentTime, Date lastTime);
 }

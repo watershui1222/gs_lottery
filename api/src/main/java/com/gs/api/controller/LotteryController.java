@@ -1,18 +1,14 @@
 package com.gs.api.controller;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.gs.api.controller.VO.LotteryHandicapVo;
 import com.gs.api.controller.VO.LotteryPlayVo;
-import com.gs.api.controller.request.EduOrderListRequest;
 import com.gs.api.controller.request.LotteryOrderListRequest;
 import com.gs.api.controller.request.LotteryTimeRequest;
 import com.gs.api.controller.request.OpenResultHistoryRequest;
@@ -30,11 +26,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import sun.nio.cs.ext.SJIS;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -193,9 +189,33 @@ public class LotteryController {
         }
 
         Map<String, Object> params = new HashMap<>();
+        if (null == request.getPage()) {
+
+        }
         params.put(Constant.PAGE, request.getPage());
         params.put(Constant.LIMIT, request.getLimit());
-        params.put("nowTime", DateUtil.date());
+
+        //1:今天 2:昨天 3:一周内 4:一月内
+        Date startDate = new Date();
+        Date endTime = new Date();
+        if (StringUtils.isNotBlank(request.getDateStr())) {
+            if (StringUtils.equals(request.getDateStr(), "2")) {
+                startDate = DateUtil.offsetDay(startDate, -1);
+                endTime = startDate;
+            } else if (StringUtils.equals(request.getDateStr(), "3")) {
+                startDate = DateUtil.offsetWeek(startDate, -1);
+            } else if (StringUtils.equals(request.getDateStr(), "4")) {
+                startDate = DateUtil.offsetMonth(startDate, -1);
+            }
+        }
+        Date begin = DateUtil.beginOfDay(startDate);
+        Date end = DateUtil.endOfDay(endTime);
+
+        params.put("startTime", begin);
+        params.put("nowTime", end);
+
+
+
 
         PageUtils pageUtils;
         if (StringUtils.equals(LotteryCodeEnum.BJKL8.getLotteryCode(), request.getLotteryCode())) {
@@ -236,8 +256,8 @@ public class LotteryController {
 
 
     @ApiOperation(value = "彩票投注记录")
-    @GetMapping("/lotteryrder/list")
-    public R lotteryrderList(LotteryOrderListRequest request, HttpServletRequest httpServletRequest) {
+    @GetMapping("/lotteryOrder/list")
+    public R lotteryOrderList(LotteryOrderListRequest request, HttpServletRequest httpServletRequest) {
         String userName = JwtUtils.getUserName(httpServletRequest);
 
         Map<String, Object> params = new HashMap<>();
@@ -246,6 +266,25 @@ public class LotteryController {
         params.put("userName", userName);
         params.put("lotteryCode", request.getLotteryCode());
         params.put("orderStatus", request.getOrderStatus());
+
+        //1:今天 2:昨天 3:一周内 4:一月内
+        Date startDate = new Date();
+        Date endTime = new Date();
+        if (StringUtils.isNotBlank(request.getDateStr())) {
+            if (StringUtils.equals(request.getDateStr(), "2")) {
+                startDate = DateUtil.offsetDay(startDate, -1);
+                endTime = startDate;
+            } else if (StringUtils.equals(request.getDateStr(), "3")) {
+                startDate = DateUtil.offsetWeek(startDate, -1);
+            } else if (StringUtils.equals(request.getDateStr(), "4")) {
+                startDate = DateUtil.offsetMonth(startDate, -1);
+            }
+        }
+        Date begin = DateUtil.beginOfDay(startDate);
+        Date end = DateUtil.endOfDay(endTime);
+
+        params.put("startTime", begin);
+        params.put("endTime", end);
 
         PageUtils page = lotteryOrderService.queryPage(params);
         if (CollUtil.isNotEmpty(page.getList())) {
@@ -261,6 +300,7 @@ public class LotteryController {
                 jsonObject.put("betTime", lotteryOrder.getBetTime());
                 jsonObject.put("bonusAmount", lotteryOrder.getBonusAmount());
                 jsonObject.put("openResult", lotteryOrder.getOpenResult());
+                jsonObject.put("betContent", lotteryOrder.getBetContent());
                 jsonObject.put("orderStatus", lotteryOrder.getOrderStatus());
                 jsonArray.add(jsonObject);
 
@@ -272,41 +312,68 @@ public class LotteryController {
     }
 
 
-    @ApiOperation(value = "彩票倒计时")
-    @GetMapping("/time")
-    public R lotteryTime(LotteryTimeRequest request, HttpServletRequest httpServletRequest) {
+    @ApiOperation(value = "获取当前期和上期开奖")
+    @GetMapping("/lotteryQsTime")
+    public R lotteryTime(@Validated LotteryTimeRequest request, HttpServletRequest httpServletRequest) {
         String userName = JwtUtils.getUserName(httpServletRequest);
         Date now = new Date();
-        OpenresultTimeBO currentQs = null;
+        OpenresultTimeBO currentQsData;
+        OpenresultTimeBO lastQsData;
         if (StringUtils.equals(LotteryCodeEnum.BJKL8.getLotteryCode(), request.getLotteryCode())) {
+            currentQsData = openresultBjkl8Service.getOneDataByTime(now, null);
+            lastQsData = openresultBjkl8Service.getOneDataByTime(null, now);
 
-            currentQs = openresultBjkl8Service.getCurrentQs(now);
         } else if (StringUtils.equals(LotteryCodeEnum.BJPK10.getLotteryCode(), request.getLotteryCode())) {
-            currentQs = openresultBjpk10Service.getCurrentQs(now);
+            currentQsData = openresultBjpk10Service.getOneDataByTime(now, null);
+            lastQsData = openresultBjpk10Service.getOneDataByTime(null, now);
+
         } else if (StringUtils.equals(LotteryCodeEnum.CQSSC.getLotteryCode(), request.getLotteryCode())) {
-            currentQs = openresultCqsscService.getCurrentQs(now);
+            currentQsData = openresultCqsscService.getOneDataByTime(now, null);
+            lastQsData = openresultCqsscService.getOneDataByTime(null, now);
+
         } else if (StringUtils.equals(LotteryCodeEnum.FC3D.getLotteryCode(), request.getLotteryCode())) {
-            currentQs = openresultFc3dService.getCurrentQs(now);
+            currentQsData = openresultFc3dService.getOneDataByTime(now, null);
+            lastQsData = openresultFc3dService.getOneDataByTime(null, now);
+
         } else if (StringUtils.equals(LotteryCodeEnum.FT.getLotteryCode(), request.getLotteryCode())) {
-            currentQs = openresultFtService.getCurrentQs(now);
+            currentQsData = openresultFtService.getOneDataByTime(now, null);
+            lastQsData = openresultFtService.getOneDataByTime(null, now);
+
         } else if (StringUtils.equals(LotteryCodeEnum.GD11X5.getLotteryCode(), request.getLotteryCode())) {
-            currentQs = openresultGd11x5Service.getCurrentQs(now);
+            currentQsData = openresultGd11x5Service.getOneDataByTime(now, null);
+            lastQsData = openresultGd11x5Service.getOneDataByTime(null, now);
+
         } else if (StringUtils.equals(LotteryCodeEnum.JSK3.getLotteryCode(), request.getLotteryCode())) {
-            currentQs = openresultJsk3Service.getCurrentQs(now);
+            currentQsData = openresultJsk3Service.getOneDataByTime(now, null);
+            lastQsData = openresultJsk3Service.getOneDataByTime(null, now);
+
         } else if (StringUtils.equals(LotteryCodeEnum.MO6HC.getLotteryCode(), request.getLotteryCode())) {
-            currentQs = openresultMo6hcService.getCurrentQs(now);
+            currentQsData = openresultMo6hcService.getOneDataByTime(now, null);
+            lastQsData = openresultMo6hcService.getOneDataByTime(null, now);
+
         }else if (StringUtils.equals(LotteryCodeEnum.PCDD.getLotteryCode(), request.getLotteryCode())) {
-            currentQs = openresultPcddService.getCurrentQs(now);
+            currentQsData = openresultPcddService.getOneDataByTime(now, null);
+            lastQsData = openresultPcddService.getOneDataByTime(null, now);
         } else {
             return R.error("未查询到该彩种");
         }
+        // 当前期
+        JSONObject nowQsJson = new JSONObject();
+        String nowQs = (null == currentQsData) ? "" : currentQsData.getQs();
+        long nowCloseSeconds = (null == currentQsData) ? -1L : (currentQsData.getCloseTime().getTime() - now.getTime()) / 1000L;
+        long nowOpenSeconds = (null == currentQsData) ? -1L : (currentQsData.getOpenResultTime().getTime() - now.getTime()) / 1000L;
+        nowQsJson.put("qs", nowQs);
+        nowQsJson.put("closeSeconds", nowCloseSeconds);
+        nowQsJson.put("openSeconds", nowOpenSeconds);
 
-        String qs = (null == currentQs) ? "" : currentQs.getQs();
-        long closeTime = (null == currentQs) ? -1L : DateUtil.between(currentQs.getCloseTime(), now, DateUnit.SECOND);
-        long openTime = (null == currentQs) ? -1L : DateUtil.between(currentQs.getOpenResultTime(), now, DateUnit.SECOND);
+        // 上一期
+        JSONObject lastQsJson = new JSONObject();
+        String lastQs = (null == lastQsData) ? "" : lastQsData.getQs();
+        String openResult = (null == lastQsData) ? "" : StringUtils.defaultString(lastQsData.getOpenResult());
+        lastQsJson.put("qs", lastQs);
+        lastQsJson.put("openResult", openResult);
 
-        return R.ok().put("qs", qs).put("closeTime", closeTime).put("openTime", openTime);
+        return R.ok().put("nowQs", nowQsJson).put("lastQs", lastQsJson);
     }
-
 
 }

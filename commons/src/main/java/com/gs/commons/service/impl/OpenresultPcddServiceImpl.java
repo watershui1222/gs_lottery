@@ -6,9 +6,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gs.commons.bo.OpenResultBO;
 import com.gs.commons.bo.OpenresultTimeBO;
+import com.gs.commons.entity.OpenresultMo6hc;
 import com.gs.commons.entity.OpenresultPcdd;
 import com.gs.commons.mapper.OpenresultPcddMapper;
 import com.gs.commons.service.OpenresultPcddService;
@@ -43,6 +45,8 @@ public class OpenresultPcddServiceImpl extends ServiceImpl<OpenresultPcddMapper,
     public PageUtils queryPage(Map<String, Object> params) {
         LambdaQueryWrapper<OpenresultPcdd> wrapper = new QueryWrapper<OpenresultPcdd>().lambda();
         Date nowTime = MapUtil.getDate(params, "nowTime");
+        Date startTime = MapUtil.getDate(params, "startTime");
+        wrapper.ge(null != startTime, OpenresultPcdd::getOpenResultTime, startTime);
         wrapper.le(null != nowTime, OpenresultPcdd::getOpenResultTime, nowTime);
         wrapper.orderByDesc(OpenresultPcdd::getOpenResultTime);
         IPage<OpenresultPcdd> page = this.page(
@@ -57,6 +61,7 @@ public class OpenresultPcddServiceImpl extends ServiceImpl<OpenresultPcddMapper,
                 openResultBO.setOpenResult(record.getOpenResult());
                 openResultBO.setOpenStatus(record.getOpenStatus());
                 openResultBO.setOpenResultTime(record.getOpenResultTime());
+                openResultBO.setCurrCount(record.getCurrCount());
                 openResultBOList.add(openResultBO);
             }
         }
@@ -64,14 +69,19 @@ public class OpenresultPcddServiceImpl extends ServiceImpl<OpenresultPcddMapper,
     }
 
     @Override
-    public OpenresultTimeBO getCurrentQs(Date date) {
-        List<OpenresultPcdd> list = this.list(Wrappers.lambdaQuery(OpenresultPcdd.class)
-                .ge(OpenresultPcdd::getOpenTime, date)
-                .le(OpenresultPcdd::getOpenResultTime, date)
-        );
-        if (CollUtil.isNotEmpty(list)) {
+    public OpenresultTimeBO getOneDataByTime(Date currentTime, Date lastTime) {
+
+        LambdaQueryWrapper<OpenresultPcdd> wrapper = Wrappers.lambdaQuery(OpenresultPcdd.class)
+                .le(null != currentTime, OpenresultPcdd::getOpenTime, currentTime)
+                .ge(null != currentTime, OpenresultPcdd::getOpenResultTime, currentTime)
+                .le(null != lastTime, OpenresultPcdd::getOpenResultTime, lastTime)
+                .orderByDesc(OpenresultPcdd::getOpenResultTime);
+
+
+        Page<OpenresultPcdd> page = this.page(new Page<>(1, 1), wrapper);
+        if (CollUtil.isNotEmpty(page.getRecords())) {
             OpenresultTimeBO openresultTimeBO = new OpenresultTimeBO();
-            BeanUtil.copyPropertiesIgnoreNull(list.get(0), openresultTimeBO);
+            BeanUtil.copyPropertiesIgnoreNull(page.getRecords().get(0), openresultTimeBO);
             return openresultTimeBO;
         }
         return null;

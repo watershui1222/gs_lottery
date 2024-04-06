@@ -17,5 +17,5 @@ import java.util.Map;
 public interface OpenresultFc3dService extends IService<OpenresultFc3d> {
     int batchOpenResult(List<OpenresultFc3d> list);
     PageUtils queryPage(Map<String,Object> params);
-    OpenresultTimeBO getCurrentQs(Date date);
+    OpenresultTimeBO getOneDataByTime(Date currentTime, Date lastTime);
 }

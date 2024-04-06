@@ -10,6 +10,7 @@
         <module name="api" />
         <module name="task" />
         <module name="game-record" />
+        <module name="business" />
         <module name="commons" />
       </profile>
     </annotationProcessing>
@@ -17,6 +18,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="api" options="-parameters" />
+      <module name="business" options="-parameters" />
       <module name="commons" options="-parameters" />
       <module name="game-record" options="-parameters" />
       <module name="task" options="-parameters" />

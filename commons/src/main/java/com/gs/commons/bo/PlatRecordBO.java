@@ -37,12 +37,7 @@ public class PlatRecordBO {
 
 
 
-    private Date gameStartTime;
-
 
     private Date gameEndTime;
 
-    private Date createTime;
-
-    private Date updateTime;
 }

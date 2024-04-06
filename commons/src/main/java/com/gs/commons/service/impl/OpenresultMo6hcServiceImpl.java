@@ -6,10 +6,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gs.commons.bo.OpenResultBO;
 import com.gs.commons.bo.OpenresultTimeBO;
+import com.gs.commons.entity.OpenresultJsk3;
 import com.gs.commons.entity.OpenresultMo6hc;
+import com.gs.commons.entity.OpenresultPcdd;
 import com.gs.commons.mapper.OpenresultMo6hcMapper;
 import com.gs.commons.service.OpenresultMo6hcService;
 import com.gs.commons.utils.BeanUtil;
@@ -43,6 +46,8 @@ public class OpenresultMo6hcServiceImpl extends ServiceImpl<OpenresultMo6hcMappe
     public PageUtils queryPage(Map<String, Object> params) {
         LambdaQueryWrapper<OpenresultMo6hc> wrapper = new QueryWrapper<OpenresultMo6hc>().lambda();
         Date nowTime = MapUtil.getDate(params, "nowTime");
+        Date startTime = MapUtil.getDate(params, "startTime");
+        wrapper.ge(null != startTime, OpenresultMo6hc::getOpenResultTime, startTime);
         wrapper.le(null != nowTime, OpenresultMo6hc::getOpenResultTime, nowTime);
         wrapper.orderByDesc(OpenresultMo6hc::getOpenResultTime);
         IPage<OpenresultMo6hc> page = this.page(
@@ -57,6 +62,7 @@ public class OpenresultMo6hcServiceImpl extends ServiceImpl<OpenresultMo6hcMappe
                 openResultBO.setOpenResult(record.getOpenResult());
                 openResultBO.setOpenStatus(record.getOpenStatus());
                 openResultBO.setOpenResultTime(record.getOpenResultTime());
+                openResultBO.setCurrCount(record.getCurrCount());
                 openResultBOList.add(openResultBO);
             }
         }
@@ -64,14 +70,19 @@ public class OpenresultMo6hcServiceImpl extends ServiceImpl<OpenresultMo6hcMappe
     }
 
     @Override
-    public OpenresultTimeBO getCurrentQs(Date date) {
-        List<OpenresultMo6hc> list = this.list(Wrappers.lambdaQuery(OpenresultMo6hc.class)
-                .ge(OpenresultMo6hc::getOpenTime, date)
-                .le(OpenresultMo6hc::getOpenResultTime, date)
-        );
-        if (CollUtil.isNotEmpty(list)) {
+    public OpenresultTimeBO getOneDataByTime(Date currentTime, Date lastTime) {
+
+        LambdaQueryWrapper<OpenresultMo6hc> wrapper = Wrappers.lambdaQuery(OpenresultMo6hc.class)
+                .le(null != currentTime, OpenresultMo6hc::getOpenTime, currentTime)
+                .ge(null != currentTime, OpenresultMo6hc::getOpenResultTime, currentTime)
+                .le(null != lastTime, OpenresultMo6hc::getOpenResultTime, lastTime)
+                .orderByDesc(OpenresultMo6hc::getOpenResultTime);
+
+
+        Page<OpenresultMo6hc> page = this.page(new Page<>(1, 1), wrapper);
+        if (CollUtil.isNotEmpty(page.getRecords())) {
             OpenresultTimeBO openresultTimeBO = new OpenresultTimeBO();
-            BeanUtil.copyPropertiesIgnoreNull(list.get(0), openresultTimeBO);
+            BeanUtil.copyPropertiesIgnoreNull(page.getRecords().get(0), openresultTimeBO);
             return openresultTimeBO;
         }
         return null;

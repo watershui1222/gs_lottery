@@ -19,5 +19,5 @@ public interface OpenresultBjkl8Service extends IService<OpenresultBjkl8> {
     int batchOpenResult(List<OpenresultBjkl8> list);
 
     PageUtils queryPage(Map<String,Object> params);
-    OpenresultTimeBO getCurrentQs(Date date);
+    OpenresultTimeBO getOneDataByTime(Date currentTime, Date lastTime);
 }

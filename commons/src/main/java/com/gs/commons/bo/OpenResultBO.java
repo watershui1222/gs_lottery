@@ -32,4 +32,5 @@ public class OpenResultBO {
      */
     private Date openResultTime;
 
+    private Integer currCount;
 }

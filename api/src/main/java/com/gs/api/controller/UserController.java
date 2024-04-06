@@ -18,6 +18,7 @@ import com.gs.api.controller.request.*;
 import com.gs.api.utils.JwtUtils;
 import com.gs.commons.constants.Constant;
 import com.gs.commons.entity.*;
+import com.gs.commons.enums.LotteryCodeEnum;
 import com.gs.commons.enums.PlatSubEnum;
 import com.gs.commons.service.*;
 import com.gs.commons.utils.*;
@@ -394,9 +395,9 @@ public class UserController {
             if (StringUtils.equals(request.getDateStr(), "2")) {
                 date = DateUtil.offsetDay(date, -1);
             } else if (StringUtils.equals(request.getDateStr(), "3")) {
-                date = DateUtil.offsetWeek(date, 1);
+                date = DateUtil.offsetWeek(date, -1);
             } else if (StringUtils.equals(request.getDateStr(), "4")) {
-                date = DateUtil.offsetMonth(date, 1);
+                date = DateUtil.offsetMonth(date, -1);
             }
             Date startTime = DateUtil.beginOfDay(date);
             Date endTime = DateUtil.endOfDay(date);
@@ -742,21 +743,23 @@ public class UserController {
         params.put(Constant.LIMIT, request.getLimit());
         params.put("userName", userName);
         //1:今天 2:昨天 3:一周内 4:一月内
+        Date startDate = new Date();
+        Date endTime = new Date();
         if (StringUtils.isNotBlank(request.getDateStr())) {
-            Date date = new Date();
             if (StringUtils.equals(request.getDateStr(), "2")) {
-                date = DateUtil.offsetDay(date, -1);
+                startDate = DateUtil.offsetDay(startDate, -1);
+                endTime = startDate;
             } else if (StringUtils.equals(request.getDateStr(), "3")) {
-                date = DateUtil.offsetWeek(date, 1);
+                startDate = DateUtil.offsetWeek(startDate, -1);
             } else if (StringUtils.equals(request.getDateStr(), "4")) {
-                date = DateUtil.offsetMonth(date, 1);
+                startDate = DateUtil.offsetMonth(startDate, -1);
             }
-            Date startTime = DateUtil.beginOfDay(date);
-            Date endTime = DateUtil.endOfDay(date);
-
-            params.put("startTime", startTime);
-            params.put("endTime", endTime);
         }
+        Date begin = DateUtil.beginOfDay(startDate);
+        Date end = DateUtil.endOfDay(endTime);
+
+        params.put("startTime", begin);
+        params.put("endTime", end);
 
         PageUtils pageUtils;
         if (StringUtils.equals(PlatSubEnum.KY.getPlatSubCode(), request.getSubPlatCode())) {
@@ -767,7 +770,9 @@ public class UserController {
             return R.error("未查到对应游戏厅方");
         }
 
-        return R.ok().put("page", pageUtils);
+        PlatSubEnum platSubEnum = PlatSubEnum.getByCode(request.getSubPlatCode());
+        String platName = (null == platSubEnum) ? "" : platSubEnum.getPlatName();
+        return R.ok().put("page", pageUtils).put("platSubName", platName);
     }
 
 
@@ -783,21 +788,23 @@ public class UserController {
         params.put("userName", userName);
         params.put("platCode", request.getPlatCode());
         //1:今天 2:昨天 3:一周内 4:一月内
+        Date startDate = new Date();
+        Date endTime = new Date();
         if (StringUtils.isNotBlank(request.getDateStr())) {
-            Date date = new Date();
             if (StringUtils.equals(request.getDateStr(), "2")) {
-                date = DateUtil.offsetDay(date, -1);
+                startDate = DateUtil.offsetDay(startDate, -1);
+                endTime = startDate;
             } else if (StringUtils.equals(request.getDateStr(), "3")) {
-                date = DateUtil.offsetWeek(date, 1);
+                startDate = DateUtil.offsetWeek(startDate, -1);
             } else if (StringUtils.equals(request.getDateStr(), "4")) {
-                date = DateUtil.offsetMonth(date, 1);
+                startDate = DateUtil.offsetMonth(startDate, -1);
             }
-            Date startTime = DateUtil.beginOfDay(date);
-            Date endTime = DateUtil.endOfDay(date);
-
-            params.put("startTime", startTime);
-            params.put("endTime", endTime);
         }
+        Date begin = DateUtil.beginOfDay(startDate);
+        Date end = DateUtil.endOfDay(endTime);
+
+        params.put("startTime", begin);
+        params.put("endTime", end);
 
         PageUtils page = eduOrderService.queryPage(params);
         if (CollUtil.isNotEmpty(page.getList())) {
@@ -813,6 +820,8 @@ public class UserController {
                 jsonObject.put("time", eduOrder.getCreateTime());
                 jsonObject.put("amount", eduOrder.getAmount());
                 jsonObject.put("status", eduOrder.getStatus());
+                jsonObject.put("type", eduOrder.getEduType());
+                jsonObject.put("orderNo", eduOrder.getOrderNo());
                 jsonArray.add(jsonObject);
 
             }

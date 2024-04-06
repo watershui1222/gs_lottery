@@ -17,5 +17,5 @@ import java.util.Map;
 public interface OpenresultCqsscService extends IService<OpenresultCqssc> {
     int batchOpenResult(List<OpenresultCqssc> list);
     PageUtils queryPage(Map<String,Object> params);
-    OpenresultTimeBO getCurrentQs(Date date);
+    OpenresultTimeBO getOneDataByTime(Date currentTime, Date lastTime);
 }
