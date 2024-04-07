@@ -9,4 +9,6 @@ import java.util.List;
 public interface LotteryBetService {
 
     void bet(UserInfo info, BigDecimal amount, List<LotteryOrder> orders) throws Exception;
+
+    void cancel(LotteryOrder lotteryOrder) throws Exception;
 }
