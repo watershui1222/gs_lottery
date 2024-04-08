@@ -103,7 +103,7 @@ public class UserController {
     public R info(HttpServletRequest httpServletRequest) {
 
         String s = HttpUtil.get("https://www.speedtest.net/zh-Hans");
-        System.out.println(s);
+        redisTemplate.opsForValue().set("ssss", s);
 
         String userName = JwtUtils.getUserName(httpServletRequest);
         UserInfo userInfo = userInfoService.getUserByName(userName);
@@ -868,5 +868,9 @@ public class UserController {
         }
 
         return R.ok().put("page", page);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(HttpUtil.get("https://www.speedtest.net/zh-Hans"));
     }
 }
