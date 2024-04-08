@@ -29,16 +29,28 @@ public class Platform implements Serializable {
     private String platCode;
 
     /**
+     * 平台名称
+     */
+    @TableField(value = "plat_name")
+    private String platName;
+
+    /**
      * 平台子类
      */
     @TableField(value = "sub_plat_code")
     private String subPlatCode;
 
     /**
-     * 平台名称
+     * 子平台名称
      */
-    @TableField(value = "plat_name")
-    private String platName;
+    @TableField(value = "sub_plat_name")
+    private String subPlatName;
+
+    /**
+     * 平台类型 1:真人 2:电子 3:体育 4:棋牌 5:捕鱼
+     */
+    @TableField(value = "plat_type")
+    private Integer platType;
 
     /**
      * 返水比例

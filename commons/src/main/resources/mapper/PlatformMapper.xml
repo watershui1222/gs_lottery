@@ -7,8 +7,10 @@
     <resultMap id="BaseResultMap" type="com.gs.commons.entity.Platform">
             <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="platCode" column="plat_code" jdbcType="VARCHAR"/>
-            <result property="subPlatCode" column="sub_plat_code" jdbcType="VARCHAR"/>
             <result property="platName" column="plat_name" jdbcType="VARCHAR"/>
+            <result property="subPlatCode" column="sub_plat_code" jdbcType="VARCHAR"/>
+            <result property="subPlatName" column="sub_plat_name" jdbcType="VARCHAR"/>
+            <result property="platType" column="plat_type" jdbcType="INTEGER"/>
             <result property="ratio" column="ratio" jdbcType="DECIMAL"/>
             <result property="status" column="status" jdbcType="INTEGER"/>
             <result property="maintenanceStatus" column="maintenance_status" jdbcType="INTEGER"/>
@@ -21,10 +23,10 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,plat_code,sub_plat_code,
-        plat_name,ratio,status,
-        maintenance_status,maintenance_msg,img1,
-        create_time,update_time,remark,
-        pxh
+        id,plat_code,plat_name,
+        sub_plat_code,sub_plat_name,plat_type,
+        ratio,status,maintenance_status,
+        maintenance_msg,img1,create_time,
+        update_time,remark,pxh
     </sql>
 </mapper>

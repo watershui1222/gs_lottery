@@ -1,6 +1,9 @@
 package com.gs.api.controller;
 
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.gs.api.controller.request.PlatDepositRequest;
 import com.gs.api.controller.request.PlatWithdrawRequest;
@@ -8,9 +11,11 @@ import com.gs.api.utils.JwtUtils;
 import com.gs.business.client.PlatClient;
 import com.gs.business.service.EduService;
 import com.gs.commons.entity.EduOrder;
+import com.gs.commons.entity.Platform;
 import com.gs.commons.entity.UserInfo;
 import com.gs.commons.entity.UserPlat;
 import com.gs.commons.service.EduOrderService;
+import com.gs.commons.service.PlatformService;
 import com.gs.commons.service.UserInfoService;
 import com.gs.commons.service.UserPlatService;
 import com.gs.commons.utils.IdUtils;
@@ -26,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @Api(value = "三方平台相关", tags = "三方平台相关")
@@ -47,7 +53,50 @@ public class PlatController {
     @Autowired
     private UserPlatService userPlatService;
 
+    @Autowired
+    private PlatformService platformService;
 
+
+    @ApiOperation(value = "获取额度转换平台列表")
+    @GetMapping("/getPlatList")
+    public R getPlatList(HttpServletRequest httpServletRequest) {
+        List<Platform> platforms = platformService.list(
+                new QueryWrapper<Platform>()
+                        .select("plat_code,plat_name")
+                        .eq("status", 0)
+                        .groupBy("plat_code")
+                        .orderByDesc("pxh")
+        );
+        JSONArray array = new JSONArray();
+        for (Platform platform : platforms) {
+            JSONObject object = new JSONObject();
+            object.put("platCode", platform.getPlatCode());
+            object.put("platName", platform.getPlatName());
+            array.add(object);
+        }
+        return R.ok().put("list", array);
+    }
+
+    @ApiOperation(value = "根据分类获取平台列表")
+    @GetMapping("/getPlatByType/{type}")
+    public R getPlatByType(HttpServletRequest httpServletRequest, @PathVariable("type") String type) {
+        List<Platform> platforms = platformService.list(
+                new LambdaQueryWrapper<Platform>()
+                        .eq(Platform::getStatus, 0)
+                        .eq(Platform::getPlatType, type)
+                        .orderByDesc(Platform::getPxh)
+        );
+        JSONArray array = new JSONArray();
+        for (Platform platform : platforms) {
+            JSONObject object = new JSONObject();
+            object.put("platCode", platform.getPlatCode());
+            object.put("platName", platform.getPlatName());
+            object.put("subPlatCode", platform.getSubPlatCode());
+            object.put("subPlatName", platform.getSubPlatName());
+            array.add(object);
+        }
+        return R.ok().put("list", array);
+    }
 
     @ApiOperation(value = "获取三方平台余额")
     @GetMapping("/getBalancec/{platCode}")
