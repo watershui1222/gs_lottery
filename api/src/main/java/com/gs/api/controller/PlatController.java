@@ -1,5 +1,6 @@
 package com.gs.api.controller;
 
+import cn.hutool.core.io.FileUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
@@ -27,7 +28,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -157,6 +160,17 @@ public class PlatController {
     @GetMapping("/login")
     public R login(@Validated PlatLoginUrlRequest request, HttpServletRequest httpServletRequest) throws Exception {
         String userName = JwtUtils.getUserName(httpServletRequest);
+        // 查询平台信息
+        Platform platform = platformService.getOne(
+                new LambdaQueryWrapper<Platform>()
+                        .eq(Platform::getStatus, 0)
+                        .eq(Platform::getSubPlatCode, request.getPlatSubCode())
+                        .eq(Platform::getPlatCode, request.getPlatCode())
+        );
+        if (platform == null || platform.getMaintenanceStatus().intValue() == 1) {
+            String msg = StringUtils.isNotBlank(platform.getMaintenanceMsg()) ? platform.getMaintenanceMsg() : "平台维护中";
+            return R.error(msg);
+        }
         // 注册
         UserPlat userPlat = platClient.register(request.getPlatCode(), userName);
         if (userPlat == null) {
@@ -263,5 +277,129 @@ public class PlatController {
             // 调用失败,联系客服处理
         }
         return R.error("额度转入失败,请联系客服处理");
+    }
+
+
+    @ApiOperation(value = "一键转出所有平台")
+    @PostMapping("/withdrawAll")
+    public R withdrawAll(HttpServletRequest httpServletRequest) throws Exception {
+        String userName = JwtUtils.getUserName(httpServletRequest);
+        String redisKey = "user:withdrawall:" + userName;
+        if (redisTemplate.hasKey(redisKey)) {
+            return R.error("请勿频繁操作");
+        }
+        redisTemplate.opsForValue().set(redisKey, "true", 1, TimeUnit.MINUTES);
+        // 查询用户已注册的所有平台
+        List<UserPlat> userPlats = userPlatService.list(
+                new LambdaQueryWrapper<UserPlat>()
+                        .eq(UserPlat::getUserName, userName)
+        );
+        for (UserPlat userPlat : userPlats) {
+            try {
+                // 查询第三方余额
+                BigDecimal amount = platClient.queryBalance(userPlat);
+                if (amount.doubleValue() < 1) {
+                    continue;
+                }
+                amount = BigDecimal.valueOf(amount.intValue());
+                // 生产三方订单号
+                String withdrawOrderNo = platClient.getWithdrawOrderNo(userPlat.getPlatCode(), amount, userPlat);
+                // 添加额度转换记录
+                Date now = new Date();
+                String orderNo = IdUtils.getPlatOutOrderNo();
+                EduOrder eduOrder = new EduOrder();
+                eduOrder.setUserName(userName);
+                eduOrder.setOrderNo(orderNo);
+                eduOrder.setPlatOrderNo(withdrawOrderNo);
+                eduOrder.setAmount(amount);
+                eduOrder.setEduType(1);
+                eduOrder.setPlatCode(userPlat.getPlatCode());
+                eduOrder.setStatus(-1);
+                eduOrder.setCreateTime(now);
+                eduOrder.setUpdateTime(now);
+                eduOrder.setRemark("[" + userPlat.getPlatCode() + "]额度转出至平台:" + amount + "元");
+                eduOrderService.save(eduOrder);
+                // 调用三方充值
+                boolean success = platClient.withdraw(userPlat, amount, eduOrder);
+                if (success) {
+                    // 调用三方成功,给用户加钱
+                    eduService.AddMoneyAndTranscationRecord(userName, amount, userPlat.getPlatCode(), withdrawOrderNo, eduOrder.getOrderNo());
+                } else {
+                    // 调用失败,联系客服处理
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return R.ok();
+    }
+
+    @ApiOperation(value = "插入游戏")
+    @GetMapping("/insertGame")
+    public R insertGame(HttpServletRequest httpServletRequest) throws Exception {
+        List<EleGame> list = new ArrayList<>();
+        String path = "C:\\Users\\69000\\Desktop\\elegame\\bbin";
+        File[] ls = FileUtil.ls(path);
+        for (File l : ls) {
+
+            EleGame eleGame = new EleGame();
+            System.out.println(l.getName());
+            String[] s = l.getName().split("_");
+            eleGame.setPlatCode("BBIN");
+            eleGame.setGameCode(s[0]);
+            eleGame.setGameName(s[1]);
+            eleGame.setImg("/gs/platform/elegame/bbin/" + l.getName());
+            eleGame.setStatus(0);
+            eleGame.setCreateTime(new Date());
+            eleGame.setUpdateTime(new Date());
+            eleGame.setPxh(0);
+
+            list.add(eleGame);
+        }
+        eleGameService.saveBatch(list);
+
+        list.clear();
+
+        ls = FileUtil.ls("C:\\Users\\69000\\Desktop\\elegame\\ly");
+
+        for (File l : ls) {
+            EleGame eleGame = new EleGame();
+            System.out.println(l.getName());
+            String[] s = l.getName().split("_");
+            eleGame.setPlatCode("LY");
+            eleGame.setGameCode(s[0]);
+            eleGame.setGameName(s[1].replace(".png", ""));
+            eleGame.setImg("/gs/platform/elegame/ly/" + l.getName());
+            eleGame.setStatus(0);
+            eleGame.setCreateTime(new Date());
+            eleGame.setUpdateTime(new Date());
+            eleGame.setPxh(0);
+
+            list.add(eleGame);
+        }
+        System.out.println(JSON.toJSONString(list));
+        eleGameService.saveBatch(list);
+        return R.ok();
+    }
+
+    public static void main(String[] args) {
+        List<EleGame> list = new ArrayList<>();
+        File[] ls = FileUtil.ls("C:\\Users\\69000\\Downloads\\Telegram Desktop\\BB Casino-180x180-cn\\BB Casino-180x180-cn");
+        for (File l : ls) {
+            EleGame eleGame = new EleGame();
+            System.out.println(l.getName());
+            String[] s = l.getName().split("_");
+            eleGame.setPlatCode("BBIN");
+            eleGame.setGameCode(s[0]);
+            eleGame.setGameName(s[1]);
+            eleGame.setImg("/gs/platform/elegame/bbin/" + l.getName());
+            eleGame.setStatus(0);
+            eleGame.setCreateTime(new Date());
+            eleGame.setUpdateTime(new Date());
+            eleGame.setPxh(0);
+
+            list.add(eleGame);
+        }
+        System.out.println(JSON.toJSONString(list));
     }
 }
