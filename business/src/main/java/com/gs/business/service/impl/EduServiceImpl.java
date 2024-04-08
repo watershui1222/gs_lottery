@@ -71,6 +71,7 @@ public class EduServiceImpl implements EduService {
         return eduOrder;
     }
 
+    @Transactional
     @Override
     public void AddMoneyAndTranscationRecord(String userName, BigDecimal amount, String platCode, String platOrderNo, String eduOrderNo) throws Exception {
         // 查询用户信息

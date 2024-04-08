@@ -1,5 +1,6 @@
 package com.gs.api.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.gs.api.controller.request.PlatDepositRequest;
 import com.gs.api.controller.request.PlatWithdrawRequest;
@@ -11,6 +12,7 @@ import com.gs.commons.entity.UserInfo;
 import com.gs.commons.entity.UserPlat;
 import com.gs.commons.service.EduOrderService;
 import com.gs.commons.service.UserInfoService;
+import com.gs.commons.service.UserPlatService;
 import com.gs.commons.utils.IdUtils;
 import com.gs.commons.utils.R;
 import io.swagger.annotations.Api;
@@ -42,15 +44,22 @@ public class PlatController {
     @Autowired
     private EduOrderService eduOrderService;
 
+    @Autowired
+    private UserPlatService userPlatService;
+
+
 
     @ApiOperation(value = "获取三方平台余额")
     @GetMapping("/getBalancec/{platCode}")
     public R getBalancec(@PathVariable("platCode") String platCode, HttpServletRequest httpServletRequest) throws Exception {
         String userName = JwtUtils.getUserName(httpServletRequest);
-        // 注册
-        UserPlat userPlat = platClient.register(platCode, userName);
+        UserPlat userPlat = userPlatService.getOne(
+                new LambdaQueryWrapper<UserPlat>()
+                        .eq(UserPlat::getUserName, userName)
+                        .eq(UserPlat::getPlatCode, platCode)
+        );
         if (userPlat == null) {
-            throw new Exception("平台:" + userPlat.getPlatCode() + "注册失败");
+            return R.ok().put("balance", 0);
         }
         // 查余额
         BigDecimal amount = platClient.queryBalance(userPlat);
@@ -115,9 +124,13 @@ public class PlatController {
     public R withdraw(@Validated PlatWithdrawRequest request, HttpServletRequest httpServletRequest) throws Exception {
         String userName = JwtUtils.getUserName(httpServletRequest);
         // 注册
-        UserPlat userPlat = platClient.register(request.getPlatCode(), userName);
+        UserPlat userPlat = userPlatService.getOne(
+                new LambdaQueryWrapper<UserPlat>()
+                        .eq(UserPlat::getUserName, userName)
+                        .eq(UserPlat::getPlatCode, request.getPlatCode())
+        );
         if (userPlat == null) {
-            throw new Exception("平台:" + userPlat.getPlatCode() + "注册失败");
+            throw new Exception("额度转出失败");
         }
         // 金额
         BigDecimal amount = new BigDecimal(request.getAmount());
