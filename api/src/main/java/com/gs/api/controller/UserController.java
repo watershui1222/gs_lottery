@@ -11,6 +11,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.http.HtmlUtil;
+import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
@@ -100,6 +101,10 @@ public class UserController {
     @ApiOperation(value = "用户信息")
     @GetMapping("/info")
     public R info(HttpServletRequest httpServletRequest) {
+
+        String s = HttpUtil.get("https://www.speedtest.net/zh-Hans");
+        System.out.println(s);
+
         String userName = JwtUtils.getUserName(httpServletRequest);
         UserInfo userInfo = userInfoService.getUserByName(userName);
         JSONObject userObj = new JSONObject();
