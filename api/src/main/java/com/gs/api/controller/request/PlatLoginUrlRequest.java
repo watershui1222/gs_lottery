@@ -15,10 +15,10 @@ public class PlatLoginUrlRequest {
     private String platCode;
 
     @NotNull(message = "system.param.err")
-    @ApiModelProperty(value = "子平台代码", example = "AG", required = true)
+    @ApiModelProperty(value = "子平台代码", example = "AGELE", required = true)
     private String platSubCode;
 
-    @ApiModelProperty(value = "子平台代码", example = "5903")
+    @ApiModelProperty(value = "游戏代码", example = "5903")
     private String gameCode;
 
 }

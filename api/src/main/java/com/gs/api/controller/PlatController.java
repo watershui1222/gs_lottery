@@ -139,6 +139,16 @@ public class PlatController {
     @ApiOperation(value = "获取三方平台余额")
     @GetMapping("/getBalancec/{platCode}")
     public R getBalancec(@PathVariable("platCode") String platCode, HttpServletRequest httpServletRequest) throws Exception {
+        // 查询平台信息
+        Platform platform = platformService.getOne(
+                new LambdaQueryWrapper<Platform>()
+                        .eq(Platform::getStatus, 0)
+                        .eq(Platform::getPlatCode, platCode)
+        );
+        if (platform == null || platform.getMaintenanceStatus().intValue() == 1) {
+            String msg = StringUtils.isNotBlank(platform.getMaintenanceMsg()) ? platform.getMaintenanceMsg() : "平台维护中";
+            return R.error(msg);
+        }
         String userName = JwtUtils.getUserName(httpServletRequest);
         UserPlat userPlat = userPlatService.getOne(
                 new LambdaQueryWrapper<UserPlat>()
@@ -157,6 +167,16 @@ public class PlatController {
     @GetMapping("/login")
     public R login(@Validated PlatLoginUrlRequest request, HttpServletRequest httpServletRequest) throws Exception {
         String userName = JwtUtils.getUserName(httpServletRequest);
+        // 查询平台信息
+        Platform platform = platformService.getOne(
+                new LambdaQueryWrapper<Platform>()
+                        .eq(Platform::getStatus, 0)
+                        .eq(Platform::getPlatCode, request.getPlatCode())
+        );
+        if (platform == null || platform.getMaintenanceStatus().intValue() == 1) {
+            String msg = StringUtils.isNotBlank(platform.getMaintenanceMsg()) ? platform.getMaintenanceMsg() : "平台维护中";
+            return R.error(msg);
+        }
         // 注册
         UserPlat userPlat = platClient.register(request.getPlatCode(), userName);
         if (userPlat == null) {
@@ -177,6 +197,16 @@ public class PlatController {
     @ApiOperation(value = "额度转入")
     @PostMapping("/deposit")
     public R deposit(@Validated PlatDepositRequest request, HttpServletRequest httpServletRequest) throws Exception {
+        // 查询平台信息
+        Platform platform = platformService.getOne(
+                new LambdaQueryWrapper<Platform>()
+                        .eq(Platform::getStatus, 0)
+                        .eq(Platform::getPlatCode, request.getPlatCode())
+        );
+        if (platform == null || platform.getMaintenanceStatus().intValue() == 1) {
+            String msg = StringUtils.isNotBlank(platform.getMaintenanceMsg()) ? platform.getMaintenanceMsg() : "平台维护中";
+            return R.error(msg);
+        }
         String userName = JwtUtils.getUserName(httpServletRequest);
         // 校验余额是否充足
         UserInfo userInfo = userInfoService.getUserByName(userName);
@@ -216,6 +246,16 @@ public class PlatController {
     @ApiOperation(value = "额度转出")
     @PostMapping("/withdraw")
     public R withdraw(@Validated PlatWithdrawRequest request, HttpServletRequest httpServletRequest) throws Exception {
+        // 查询平台信息
+        Platform platform = platformService.getOne(
+                new LambdaQueryWrapper<Platform>()
+                        .eq(Platform::getStatus, 0)
+                        .eq(Platform::getPlatCode, request.getPlatCode())
+        );
+        if (platform == null || platform.getMaintenanceStatus().intValue() == 1) {
+            String msg = StringUtils.isNotBlank(platform.getMaintenanceMsg()) ? platform.getMaintenanceMsg() : "平台维护中";
+            return R.error(msg);
+        }
         String userName = JwtUtils.getUserName(httpServletRequest);
         // 注册
         UserPlat userPlat = userPlatService.getOne(
@@ -263,5 +303,61 @@ public class PlatController {
             // 调用失败,联系客服处理
         }
         return R.error("额度转入失败,请联系客服处理");
+    }
+
+
+    @ApiOperation(value = "一键转出所有平台")
+    @PostMapping("/withdrawAll")
+    public R withdraw(HttpServletRequest httpServletRequest) throws Exception {
+        String userName = JwtUtils.getUserName(httpServletRequest);
+        String redisKey = "user:withdrawall:" + userName;
+        if (redisTemplate.hasKey(redisKey)) {
+            return R.error("请勿频繁操作");
+        }
+        redisTemplate.opsForValue().set(redisKey, "true", 1, TimeUnit.MINUTES);
+        // 查询用户已注册的所有平台
+        List<UserPlat> userPlats = userPlatService.list(
+                new LambdaQueryWrapper<UserPlat>()
+                        .eq(UserPlat::getUserName, userName)
+        );
+        for (UserPlat userPlat : userPlats) {
+            try {
+                // 查询第三方余额
+                BigDecimal amount = platClient.queryBalance(userPlat);
+                if (amount.doubleValue() < 1) {
+                    continue;
+                }
+                amount = BigDecimal.valueOf(amount.intValue());
+                // 生产三方订单号
+                String withdrawOrderNo = platClient.getWithdrawOrderNo(userPlat.getPlatCode(), amount, userPlat);
+                // 添加额度转换记录
+                Date now = new Date();
+                String orderNo = IdUtils.getPlatOutOrderNo();
+                EduOrder eduOrder = new EduOrder();
+                eduOrder.setUserName(userName);
+                eduOrder.setOrderNo(orderNo);
+                eduOrder.setPlatOrderNo(withdrawOrderNo);
+                eduOrder.setAmount(amount);
+                eduOrder.setEduType(1);
+                eduOrder.setPlatCode(userPlat.getPlatCode());
+                eduOrder.setStatus(-1);
+                eduOrder.setCreateTime(now);
+                eduOrder.setUpdateTime(now);
+                eduOrder.setRemark("[" + userPlat.getPlatCode() + "]额度转出至平台:" + amount + "元");
+                eduOrderService.save(eduOrder);
+                // 调用三方充值
+                boolean success = platClient.withdraw(userPlat, amount, eduOrder);
+                if (success) {
+                    // 调用三方成功,给用户加钱
+                    eduService.AddMoneyAndTranscationRecord(userName, amount, userPlat.getPlatCode(), withdrawOrderNo, eduOrder.getOrderNo());
+                    return R.ok();
+                } else {
+                    // 调用失败,联系客服处理
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return R.ok();
     }
 }

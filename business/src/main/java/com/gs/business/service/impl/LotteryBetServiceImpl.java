@@ -31,7 +31,7 @@ public class LotteryBetServiceImpl implements LotteryBetService {
     @Autowired
     private LotteryOrderService lotteryOrderService;
 
-    @Transactional(rollbackFor = RuntimeException.class)
+    @Transactional
     @Override
     public void bet(UserInfo info, BigDecimal amount, List<LotteryOrder> orders) throws BusinessException {
         // 扣除用户金额
@@ -60,7 +60,7 @@ public class LotteryBetServiceImpl implements LotteryBetService {
         lotteryOrderService.saveBatch(orders);
     }
 
-    @Transactional(rollbackFor = RuntimeException.class)
+    @Transactional
     @Override
     public void cancel(LotteryOrder lotteryOrder) throws BusinessException {
         Date now = new Date();

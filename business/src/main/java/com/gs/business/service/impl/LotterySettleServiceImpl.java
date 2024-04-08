@@ -28,7 +28,7 @@ public class LotterySettleServiceImpl implements LotterySettleService {
     @Autowired
     private UserInfoService userInfoService;
 
-    @Transactional(rollbackFor = RuntimeException.class)
+    @Transactional
     @Override
     public void settle(LotteryOrder order) throws BusinessException {
         Date now = new Date();
