@@ -101,10 +101,6 @@ public class UserController {
     @ApiOperation(value = "用户信息")
     @GetMapping("/info")
     public R info(HttpServletRequest httpServletRequest) {
-
-        String s = HttpUtil.get("https://www.speedtest.net/zh-Hans");
-        redisTemplate.opsForValue().set("ssss", s);
-
         String userName = JwtUtils.getUserName(httpServletRequest);
         UserInfo userInfo = userInfoService.getUserByName(userName);
         JSONObject userObj = new JSONObject();
@@ -123,7 +119,7 @@ public class UserController {
         userObj.put("levelUrl", level == null ? "" : resourceDomain + level.getLevelImg());
         userObj.put("levelName", level == null ? "" : level.getLevelName());
 
-        return R.ok().put("user", userObj).put("s", s);
+        return R.ok().put("user", userObj);
     }
 
     @ApiOperation(value = "用户余额")
