@@ -2,6 +2,7 @@ package com.gs.commons.service;
 
 import com.gs.commons.entity.UserInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.gs.commons.excption.UpdateAmountException;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
@@ -21,5 +22,5 @@ public interface UserInfoService extends IService<UserInfo> {
      * @param balance 金额,扣除传负数
      * @return
      */
-    void updateUserBalance(@Param("userName") String userName, @Param("balance") BigDecimal balance) throws Exception;
+    void updateUserBalance(@Param("userName") String userName, @Param("balance") BigDecimal balance) throws UpdateAmountException;
 }

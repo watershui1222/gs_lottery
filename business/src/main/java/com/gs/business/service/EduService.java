@@ -1,6 +1,7 @@
 package com.gs.business.service;
 
 import com.gs.commons.entity.EduOrder;
+import com.gs.commons.excption.BusinessException;
 
 import java.math.BigDecimal;
 
@@ -13,7 +14,7 @@ public interface EduService {
      *
      * @throws Exception
      */
-    EduOrder saveOrderAndSubAmount(String userName, BigDecimal amount, String platCode, String platOrderId) throws Exception;
+    EduOrder saveOrderAndSubAmount(String userName, BigDecimal amount, String platCode, String platOrderId) throws BusinessException;
 
-    void AddMoneyAndTranscationRecord(String userName, BigDecimal amount, String platCode, String platOrderNo, String eduOrderNo) throws Exception;
+    void AddMoneyAndTranscationRecord(String userName, BigDecimal amount, String platCode, String platOrderNo, String eduOrderNo) throws BusinessException;
 }

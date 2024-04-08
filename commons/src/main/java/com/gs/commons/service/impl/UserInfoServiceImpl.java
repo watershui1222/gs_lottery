@@ -3,6 +3,7 @@ package com.gs.commons.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gs.commons.entity.UserInfo;
+import com.gs.commons.excption.UpdateAmountException;
 import com.gs.commons.service.UserInfoService;
 import com.gs.commons.mapper.UserInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +29,10 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
     }
 
     @Override
-    public void updateUserBalance(String userName, BigDecimal balance) throws Exception {
+    public void updateUserBalance(String userName, BigDecimal balance) throws UpdateAmountException {
         int updateUserBalance = userInfoMapper.updateUserBalance(userName, balance);
         if (updateUserBalance <= 0) {
-            throw new Exception("修改用户余额失败.");
+            throw new UpdateAmountException("修改用户余额失败.");
         }
     }
 

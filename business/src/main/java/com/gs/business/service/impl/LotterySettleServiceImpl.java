@@ -6,6 +6,7 @@ import com.gs.business.service.LotterySettleService;
 import com.gs.commons.entity.LotteryOrder;
 import com.gs.commons.entity.TransactionRecord;
 import com.gs.commons.entity.UserInfo;
+import com.gs.commons.excption.BusinessException;
 import com.gs.commons.service.LotteryOrderService;
 import com.gs.commons.service.TransactionRecordService;
 import com.gs.commons.service.UserInfoService;
@@ -27,9 +28,9 @@ public class LotterySettleServiceImpl implements LotterySettleService {
     @Autowired
     private UserInfoService userInfoService;
 
-    @Transactional
+    @Transactional(rollbackFor = RuntimeException.class)
     @Override
-    public void settle(LotteryOrder order) throws Exception {
+    public void settle(LotteryOrder order) throws BusinessException {
         Date now = new Date();
         if (order.getOrderStatus().intValue() == 1) {
             // 中奖

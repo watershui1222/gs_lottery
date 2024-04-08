@@ -7,6 +7,7 @@ import com.gs.business.service.LotteryBetService;
 import com.gs.commons.entity.LotteryOrder;
 import com.gs.commons.entity.TransactionRecord;
 import com.gs.commons.entity.UserInfo;
+import com.gs.commons.excption.BusinessException;
 import com.gs.commons.service.LotteryOrderService;
 import com.gs.commons.service.TransactionRecordService;
 import com.gs.commons.service.UserInfoService;
@@ -30,9 +31,9 @@ public class LotteryBetServiceImpl implements LotteryBetService {
     @Autowired
     private LotteryOrderService lotteryOrderService;
 
-    @Transactional
+    @Transactional(rollbackFor = RuntimeException.class)
     @Override
-    public void bet(UserInfo info, BigDecimal amount, List<LotteryOrder> orders) throws Exception {
+    public void bet(UserInfo info, BigDecimal amount, List<LotteryOrder> orders) throws BusinessException {
         // 扣除用户金额
         userInfoService.updateUserBalance(info.getUserName(), amount.negate());
         Date now = new Date();
@@ -59,9 +60,9 @@ public class LotteryBetServiceImpl implements LotteryBetService {
         lotteryOrderService.saveBatch(orders);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = RuntimeException.class)
     @Override
-    public void cancel(LotteryOrder lotteryOrder) throws Exception {
+    public void cancel(LotteryOrder lotteryOrder) throws BusinessException {
         Date now = new Date();
         // 查询用户信息
         UserInfo user = userInfoService.getUserByName(lotteryOrder.getUserName());

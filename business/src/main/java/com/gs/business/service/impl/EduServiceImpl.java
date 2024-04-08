@@ -6,6 +6,7 @@ import com.gs.business.service.EduService;
 import com.gs.commons.entity.EduOrder;
 import com.gs.commons.entity.TransactionRecord;
 import com.gs.commons.entity.UserInfo;
+import com.gs.commons.excption.BusinessException;
 import com.gs.commons.service.EduOrderService;
 import com.gs.commons.service.TransactionRecordService;
 import com.gs.commons.service.UserInfoService;
@@ -31,7 +32,7 @@ public class EduServiceImpl implements EduService {
 
     @Transactional
     @Override
-    public EduOrder saveOrderAndSubAmount(String userName, BigDecimal amount, String platCode, String platOrderId) throws Exception {
+    public EduOrder saveOrderAndSubAmount(String userName, BigDecimal amount, String platCode, String platOrderId) throws BusinessException {
         // 查询用户信息
         UserInfo userInfo = userInfoService.getUserByName(userName);
         // 扣除用户金额
@@ -73,7 +74,7 @@ public class EduServiceImpl implements EduService {
 
     @Transactional
     @Override
-    public void AddMoneyAndTranscationRecord(String userName, BigDecimal amount, String platCode, String platOrderNo, String eduOrderNo) throws Exception {
+    public void AddMoneyAndTranscationRecord(String userName, BigDecimal amount, String platCode, String platOrderNo, String eduOrderNo) throws BusinessException {
         // 查询用户信息
         UserInfo userInfo = userInfoService.getUserByName(userName);
         // 给用户加钱
