@@ -93,6 +93,10 @@ public class UserController {
     @Autowired
     private LyRecordService lyRecordService;
 
+
+    @Autowired
+    private BbinRecordService bbinRecordService;
+
     @ApiOperation(value = "用户信息")
     @GetMapping("/info")
     public R info(HttpServletRequest httpServletRequest) {
@@ -776,7 +780,25 @@ public class UserController {
             pageUtils = kyRecordService.queryPage(params);
         } else if (StringUtils.equals(PlatSubEnum.LY.getPlatSubCode(), request.getSubPlatCode())) {
             pageUtils = lyRecordService.queryPage(params);
-        } else {
+        } else if (StringUtils.equals(PlatSubEnum.BBINFISH.getPlatSubCode(), request.getSubPlatCode())) {
+            params.put("gameType", PlatSubEnum.BBINFISH.getGameType());
+            pageUtils = bbinRecordService.queryPage(params);
+        } else if (StringUtils.equals(PlatSubEnum.BBINELE.getPlatSubCode(), request.getSubPlatCode())) {
+            params.put("gameType", PlatSubEnum.BBINELE.getGameType());
+            pageUtils = lyRecordService.queryPage(params);
+        } else if (StringUtils.equals(PlatSubEnum.BBINLIVE.getPlatSubCode(), request.getSubPlatCode())) {
+            params.put("gameType", PlatSubEnum.BBINLIVE.getGameType());
+            pageUtils = lyRecordService.queryPage(params);
+        } else if (StringUtils.equals(PlatSubEnum.AGFISH.getPlatSubCode(), request.getSubPlatCode())) {
+            params.put("gameType", PlatSubEnum.AGFISH.getGameType());
+            pageUtils = bbinRecordService.queryPage(params);
+        } else if (StringUtils.equals(PlatSubEnum.AGELE.getPlatSubCode(), request.getSubPlatCode())) {
+            params.put("gameType", PlatSubEnum.AGELE.getGameType());
+            pageUtils = lyRecordService.queryPage(params);
+        } else if (StringUtils.equals(PlatSubEnum.AGLIVE.getPlatSubCode(), request.getSubPlatCode())) {
+            params.put("gameType", PlatSubEnum.AGLIVE.getGameType());
+            pageUtils = lyRecordService.queryPage(params);
+        }else {
             return R.error("未查到对应游戏厅方");
         }
 
