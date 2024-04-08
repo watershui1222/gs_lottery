@@ -113,6 +113,7 @@ public class LotteryController {
             object.put("lotteryName", lottery.getLotteryName());
             object.put("remark", lottery.getRemark());
             object.put("img", allParamByMap.get("resource_domain") + lottery.getImg());
+            object.put("lotteryType", lottery.getLotteryType());
             array.add(object);
         }
         return R.ok().put("list", array);
