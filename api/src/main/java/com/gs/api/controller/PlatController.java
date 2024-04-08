@@ -86,10 +86,10 @@ public class PlatController {
     @GetMapping("/getElegame/{platCode}")
     public R getElegame(HttpServletRequest httpServletRequest,@PathVariable("platCode") String platCode) {
         String redisKey = "plat:elegame:" + platCode;
-        String redisValue = redisTemplate.opsForValue().get(redisKey);
-        if (StringUtils.isNotBlank(redisValue)) {
-            return R.ok().put("list", JSON.parseArray(redisValue));
-        }
+//        String redisValue = redisTemplate.opsForValue().get(redisKey);
+//        if (StringUtils.isNotBlank(redisValue)) {
+//            return R.ok().put("list", JSON.parseArray(redisValue));
+//        }
         List<EleGame> list = eleGameService.list(
                 new LambdaQueryWrapper<EleGame>()
                         .eq(EleGame::getStatus, 0)
