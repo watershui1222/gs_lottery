@@ -7,6 +7,7 @@
     <resultMap id="BaseResultMap" type="com.gs.commons.entity.EleGame">
             <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="platCode" column="plat_code" jdbcType="VARCHAR"/>
+            <result property="platSubCode" column="plat_sub_code" jdbcType="VARCHAR"/>
             <result property="gameCode" column="game_code" jdbcType="VARCHAR"/>
             <result property="gameName" column="game_name" jdbcType="VARCHAR"/>
             <result property="img" column="img" jdbcType="VARCHAR"/>
@@ -17,8 +18,9 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,plat_code,game_code,
-        game_name,img,status,
-        create_time,update_time,pxh
+        id,plat_code,plat_sub_code,
+        game_code,game_name,img,
+        status,create_time,update_time,
+        pxh
     </sql>
 </mapper>

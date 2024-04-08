@@ -28,6 +28,12 @@ public class EleGame implements Serializable {
     private String platCode;
 
     /**
+     * 子平台代码
+     */
+    @TableField(value = "plat_sub_code")
+    private String platSubCode;
+
+    /**
      * 游戏代码
      */
     @TableField(value = "game_code")

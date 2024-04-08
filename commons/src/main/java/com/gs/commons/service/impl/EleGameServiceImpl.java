@@ -7,9 +7,9 @@ import com.gs.commons.mapper.EleGameMapper;
 import org.springframework.stereotype.Service;
 
 /**
-* @author 69000
+* @author richard
 * @description 针对表【t_ele_game】的数据库操作Service实现
-* @createDate 2024-04-08 17:53:42
+* @createDate 2024-04-08 22:02:36
 */
 @Service
 public class EleGameServiceImpl extends ServiceImpl<EleGameMapper, EleGame>
