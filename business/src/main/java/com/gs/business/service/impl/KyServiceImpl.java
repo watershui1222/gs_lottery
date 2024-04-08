@@ -44,7 +44,7 @@ public class KyServiceImpl implements PlatService {
         UserPlat userPlat = userPlatService.getOne(
                 new LambdaQueryWrapper<UserPlat>()
                         .eq(UserPlat::getUserName, userName)
-                        .eq(UserPlat::getPlatCode, "ky")
+                        .eq(UserPlat::getPlatCode, "KY")
         );
         if (userPlat != null) {
             return userPlat;

@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class LotteryCurrQsBO {
+public class LotteryOpenResultBO {
 
     /**
      * 期号

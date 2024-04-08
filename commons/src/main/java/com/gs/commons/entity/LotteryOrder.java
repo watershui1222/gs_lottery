@@ -142,6 +142,12 @@ public class LotteryOrder implements Serializable {
     @TableField(value = "settle_group")
     private Integer settleGroup;
 
+    /**
+     * 最后修改时间
+     */
+    @TableField(value = "update_time")
+    private Date updateTime;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

@@ -2,6 +2,7 @@ package com.gs.gamerecord.schedule;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSONArray;
@@ -42,6 +43,8 @@ public class LyRecordSchedule {
     public String md5Key;
     @Value("${platform.LeYou.betRecordDomain}")
     public String betRecordDomain;
+    @Value("${platform.owner}")
+    public String owner;
 
     @Autowired
     private PlatRecordControlService platRecordControlService;
@@ -110,7 +113,14 @@ public class LyRecordSchedule {
             for (int i = 0; i < count; i++) {
                 String account = accounts.getString(i);
                 LyRecord lyRecord = new LyRecord();
-                lyRecord.setUserName(account.split("_")[1]);
+                String ownerUsername = account.split("_")[1];//还需去掉字符串前两位
+                //判断是不是本平台用户
+                String subOwnerStr = ownerUsername.substring(0, 2);
+                if(!StrUtil.equals(subOwnerStr, this.owner)){
+                    continue;
+                }
+                String username = ownerUsername.substring(2);
+                lyRecord.setUserName(username);
                 lyRecord.setPlatUserName(account);
                 lyRecord.setOrderNo(gameIds.getString(i));
                 lyRecord.setGameId(kindID.getString(i));

@@ -19,11 +19,15 @@ import com.gs.gamerecord.utils.HgConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 皇冠定时任务
@@ -34,22 +38,27 @@ import java.util.List;
 @Component
 public class HgRecordSchedule {
 
-    @Value("${platform.ShaBa.agId}")
+    @Value("${platform.HuangGuan.agId}")
     public String agId;
-    @Value("${platform.ShaBa.agPassword}")
+    @Value("${platform.HuangGuan.agPassword}")
     public String agPassword;
-    @Value("${platform.ShaBa.agName}")
+    @Value("${platform.HuangGuan.agName}")
     public String agName;
-    @Value("${platform.ShaBa.secretKey}")
+    @Value("${platform.HuangGuan.secretKey}")
     public String secretKey;
-    @Value("${platform.ShaBa.apiUrl}")
+    @Value("${platform.HuangGuan.apiUrl}")
     public String apiUrl;
+    @Value("${platform.owner}")
+    public String owner;
 
     @Autowired
     private PlatRecordControlService platRecordControlService;
 
     @Autowired
     private HgRecordService hgRecordService;
+
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     @Scheduled(cron = "0 0/2 * * * ?")
     public void hgRecord() throws Exception {
@@ -118,6 +127,14 @@ public class HgRecordSchedule {
                         for (Object obj:wagerDateArr) {
                             JSONObject wager = (JSONObject) obj;
                             HgRecord hgRecord = new HgRecord();
+                            //判断是不是本平台用户
+                            String ownerUsername = wager.getString("username");
+                            String subOwnerStr = ownerUsername.substring(0, 2);
+                            if(!StrUtil.equals(subOwnerStr, this.owner)){
+                                continue;
+                            }
+                            String username = ownerUsername.substring(2);
+                            hgRecord.setUserName(username);
                             hgRecord.setCreateTime(DateUtil.date());
                             hgRecord.setUpdateTime(DateUtil.date());
                             hgRecord.setGameName(HgConstants.GAME_NAME.getOrDefault(wager.getString("gtype"), wager.getString("gtype")));
@@ -134,7 +151,6 @@ public class HgRecordSchedule {
                             hgRecord.setRtype(wager.getString("rtype"));
                             hgRecord.setOddsFormat(wager.getString("oddsFormat"));
                             hgRecord.setWtype(wager.getString("wtype"));
-                            hgRecord.setUserName(wager.getString("username"));
                             hgRecord.setTnameAway(wager.getString("tname_away"));
                             hgRecord.setTnameHome(wager.getString("tname_home"));
                             hgRecord.setPlatUserName(wager.getString("username"));
@@ -157,6 +173,10 @@ public class HgRecordSchedule {
     }
 
     public String agLogin() {
+        String tokenKey = "HGtokenkey";
+        if(redisTemplate.hasKey(tokenKey)){
+            return redisTemplate.opsForValue().get(tokenKey);
+        }
         String token = "";
         JSONObject param = new JSONObject();
         JSONObject request = new JSONObject();
@@ -173,7 +193,9 @@ public class HgRecordSchedule {
         log.info("皇冠 aglogin接口 param= " + param + " result = " + result);
         JSONObject resultJS = JSONObject.parseObject(result);
         if(StrUtil.equals(resultJS.getString("respcode"), "0000")){
-            return resultJS.getString("token");
+            token = resultJS.getString("token");
+            redisTemplate.opsForValue().set(tokenKey, token, 36, TimeUnit.HOURS);
+            return token;
         }
         return token;
     }

@@ -36,6 +36,11 @@ public class LotteryClient {
     @Autowired
     private OpenresultPcddService openresultPcddService;
 
+    /**
+     * 根据彩种代码获取当前期
+     * @param lotteryCode
+     * @return
+     */
     public LotteryCurrQsBO getCurrQs(String lotteryCode) {
         Date now = new Date();
         if (StringUtils.equals(lotteryCode, LotteryCodeEnum.JSK3.getLotteryCode())) {
@@ -131,6 +136,98 @@ public class LotteryClient {
                     .le(OpenresultPcdd::getOpenTime, now)
                     .ge(OpenresultPcdd::getOpenResultTime, now)
                     .orderByDesc(OpenresultPcdd::getOpenResultTime);
+            List<OpenresultPcdd> list = openresultPcddService.list(wrapper);
+            if (CollUtil.isNotEmpty(list)) {
+                LotteryCurrQsBO lotteryCurrQsBO = new LotteryCurrQsBO();
+                BeanUtil.copyPropertiesIgnoreNull(list.get(0), lotteryCurrQsBO);
+                return lotteryCurrQsBO;
+            }
+        }
+        return null;
+    }
+
+
+    /**
+     * 获取指定彩种某一期开奖信息
+     * @param lotteryCode
+     * @return
+     */
+    public LotteryCurrQsBO getQsInfo(String lotteryCode, String qs) {
+        if (StringUtils.equals(lotteryCode, LotteryCodeEnum.JSK3.getLotteryCode())) {
+            LambdaQueryWrapper<OpenresultJsk3> wrapper = new LambdaQueryWrapper<OpenresultJsk3>()
+                    .eq(OpenresultJsk3::getQs, qs);
+            List<OpenresultJsk3> list = openresultJsk3Service.list(wrapper);
+            if (CollUtil.isNotEmpty(list)) {
+                LotteryCurrQsBO lotteryCurrQsBO = new LotteryCurrQsBO();
+                BeanUtil.copyPropertiesIgnoreNull(list.get(0), lotteryCurrQsBO);
+                return lotteryCurrQsBO;
+            }
+        }else if (StringUtils.equals(lotteryCode, LotteryCodeEnum.BJPK10.getLotteryCode())) {
+            LambdaQueryWrapper<OpenresultBjpk10> wrapper = new LambdaQueryWrapper<OpenresultBjpk10>()
+                    .eq(OpenresultBjpk10::getQs, qs);
+            List<OpenresultBjpk10> list = openresultBjpk10Service.list(wrapper);
+            if (CollUtil.isNotEmpty(list)) {
+                LotteryCurrQsBO lotteryCurrQsBO = new LotteryCurrQsBO();
+                BeanUtil.copyPropertiesIgnoreNull(list.get(0), lotteryCurrQsBO);
+                return lotteryCurrQsBO;
+            }
+        } else if (StringUtils.equals(lotteryCode, LotteryCodeEnum.CQSSC.getLotteryCode())) {
+            LambdaQueryWrapper<OpenresultCqssc> wrapper = new LambdaQueryWrapper<OpenresultCqssc>()
+                    .eq(OpenresultCqssc::getQs, qs);
+            List<OpenresultCqssc> list = openresultCqsscService.list(wrapper);
+            if (CollUtil.isNotEmpty(list)) {
+                LotteryCurrQsBO lotteryCurrQsBO = new LotteryCurrQsBO();
+                BeanUtil.copyPropertiesIgnoreNull(list.get(0), lotteryCurrQsBO);
+                return lotteryCurrQsBO;
+            }
+        } else if (StringUtils.equals(lotteryCode, LotteryCodeEnum.FC3D.getLotteryCode())) {
+            LambdaQueryWrapper<OpenresultFc3d> wrapper = new LambdaQueryWrapper<OpenresultFc3d>()
+                    .eq(OpenresultFc3d::getQs, qs);
+            List<OpenresultFc3d> list = openresultFc3dService.list(wrapper);
+            if (CollUtil.isNotEmpty(list)) {
+                LotteryCurrQsBO lotteryCurrQsBO = new LotteryCurrQsBO();
+                BeanUtil.copyPropertiesIgnoreNull(list.get(0), lotteryCurrQsBO);
+                return lotteryCurrQsBO;
+            }
+        } else if (StringUtils.equals(lotteryCode, LotteryCodeEnum.FT.getLotteryCode())) {
+            LambdaQueryWrapper<OpenresultFt> wrapper = new LambdaQueryWrapper<OpenresultFt>()
+                    .eq(OpenresultFt::getQs, qs);
+            List<OpenresultFt> list = openresultFtService.list(wrapper);
+            if (CollUtil.isNotEmpty(list)) {
+                LotteryCurrQsBO lotteryCurrQsBO = new LotteryCurrQsBO();
+                BeanUtil.copyPropertiesIgnoreNull(list.get(0), lotteryCurrQsBO);
+                return lotteryCurrQsBO;
+            }
+        } else if (StringUtils.equals(lotteryCode, LotteryCodeEnum.GD11X5.getLotteryCode())) {
+            LambdaQueryWrapper<OpenresultGd11x5> wrapper = new LambdaQueryWrapper<OpenresultGd11x5>()
+                    .eq(OpenresultGd11x5::getQs, qs);
+            List<OpenresultGd11x5> list = openresultGd11x5Service.list(wrapper);
+            if (CollUtil.isNotEmpty(list)) {
+                LotteryCurrQsBO lotteryCurrQsBO = new LotteryCurrQsBO();
+                BeanUtil.copyPropertiesIgnoreNull(list.get(0), lotteryCurrQsBO);
+                return lotteryCurrQsBO;
+            }
+        } else if (StringUtils.equals(lotteryCode, LotteryCodeEnum.MO6HC.getLotteryCode())) {
+            LambdaQueryWrapper<OpenresultMo6hc> wrapper = new LambdaQueryWrapper<OpenresultMo6hc>()
+                    .eq(OpenresultMo6hc::getQs, qs);
+            List<OpenresultMo6hc> list = openresultMo6hcService.list(wrapper);
+            if (CollUtil.isNotEmpty(list)) {
+                LotteryCurrQsBO lotteryCurrQsBO = new LotteryCurrQsBO();
+                BeanUtil.copyPropertiesIgnoreNull(list.get(0), lotteryCurrQsBO);
+                return lotteryCurrQsBO;
+            }
+        } else if (StringUtils.equals(lotteryCode, LotteryCodeEnum.BJKL8.getLotteryCode())) {
+            LambdaQueryWrapper<OpenresultBjkl8> wrapper = new LambdaQueryWrapper<OpenresultBjkl8>()
+                    .eq(OpenresultBjkl8::getQs, qs);
+            List<OpenresultBjkl8> list = openresultBjkl8Service.list(wrapper);
+            if (CollUtil.isNotEmpty(list)) {
+                LotteryCurrQsBO lotteryCurrQsBO = new LotteryCurrQsBO();
+                BeanUtil.copyPropertiesIgnoreNull(list.get(0), lotteryCurrQsBO);
+                return lotteryCurrQsBO;
+            }
+        } else if (StringUtils.equals(lotteryCode, LotteryCodeEnum.PCDD.getLotteryCode())) {
+            LambdaQueryWrapper<OpenresultPcdd> wrapper = new LambdaQueryWrapper<OpenresultPcdd>()
+                    .eq(OpenresultPcdd::getQs, qs);
             List<OpenresultPcdd> list = openresultPcddService.list(wrapper);
             if (CollUtil.isNotEmpty(list)) {
                 LotteryCurrQsBO lotteryCurrQsBO = new LotteryCurrQsBO();

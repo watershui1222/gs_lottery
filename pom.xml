@@ -21,6 +21,7 @@
         <module>task</module>
         <module>game-record</module>
         <module>business</module>
+        <module>lottery-settle</module>
     </modules>
 
     <properties>

@@ -2,6 +2,7 @@ package com.gs.business.service.impl;
 import java.util.Date;
 
 import cn.hutool.core.util.NumberUtil;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.gs.business.service.LotteryBetService;
 import com.gs.commons.entity.LotteryOrder;
 import com.gs.commons.entity.TransactionRecord;
@@ -56,5 +57,41 @@ public class LotteryBetServiceImpl implements LotteryBetService {
         transactionRecordService.save(transactionRecord);
         // 添加投注记录
         lotteryOrderService.saveBatch(orders);
+    }
+
+    @Transactional
+    @Override
+    public void cancel(LotteryOrder lotteryOrder) throws Exception {
+        Date now = new Date();
+        // 查询用户信息
+        UserInfo user = userInfoService.getUserByName(lotteryOrder.getUserName());
+        // 修改订单状态
+        lotteryOrderService.update(
+                new LambdaUpdateWrapper<LotteryOrder>()
+                        .set(LotteryOrder::getSettleTime, now)
+                        .set(LotteryOrder::getSettleStatus, 3)
+                        .set(LotteryOrder::getOrderStatus, 3)
+                        .set(LotteryOrder::getUpdateTime, now)
+                        .eq(LotteryOrder::getUserName, lotteryOrder.getUserName())
+                        .eq(LotteryOrder::getOrderNo, lotteryOrder.getOrderNo())
+                        .eq(LotteryOrder::getSettleStatus, 0)
+                        .eq(LotteryOrder::getOrderStatus, 0)
+        );
+        // 给用户加钱
+        userInfoService.updateUserBalance(user.getUserName(), lotteryOrder.getBetAmount());
+        // 添加流水记录
+        TransactionRecord record = new TransactionRecord();
+        record.setUserName(lotteryOrder.getUserName());
+        record.setTrxId(IdUtils.getTransactionOrderNo());
+        record.setAmount(lotteryOrder.getBetAmount());
+        record.setBeforeAmount(user.getBalance());
+        record.setAfterAmount(NumberUtil.add(user.getBalance(), lotteryOrder.getBetAmount()));
+        record.setPayType(0);
+        record.setBusinessType(4);
+        record.setBusinessOrder(lotteryOrder.getOrderNo());
+        record.setCreateTime(now);
+        record.setRemark("彩票撤单,订单号[" + lotteryOrder.getOrderNo() +"]");
+        record.setOperName(null);
+        transactionRecordService.save(record);
     }
 }

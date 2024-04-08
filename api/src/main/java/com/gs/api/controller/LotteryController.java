@@ -523,4 +523,28 @@ public class LotteryController {
     private void checkPlayRules(JSONArray betContentArr) {
 
     }
+
+
+    @ApiOperation(value = "取消订单")
+    @GetMapping("/cancel/{orderNo}")
+    public R lotteryTime(HttpServletRequest httpServletRequest, @PathVariable("orderNo") String orderNo) throws Exception {
+        String userName = JwtUtils.getUserName(httpServletRequest);
+        // 查询订单信息
+        LotteryOrder lotteryOrder = lotteryOrderService.getOne(
+                new LambdaQueryWrapper<LotteryOrder>()
+                        .eq(LotteryOrder::getOrderNo, orderNo)
+                        .eq(LotteryOrder::getUserName, userName)
+        );
+        if (lotteryOrder == null || lotteryOrder.getOrderStatus().intValue() != 0) {
+            throw new Exception("未获取到订单["+ orderNo +"]信息或该订单已完成!");
+        }
+        // 查询当前期
+        LotteryCurrQsBO currQs = lotteryClient.getCurrQs(lotteryOrder.getLotteryCode());
+        if (!StringUtils.equals(lotteryOrder.getQs(), currQs.getQs())) {
+            return R.error("已封盘,无法撤销订单");
+        }
+        // 修改订单
+        lotteryBetService.cancel(lotteryOrder);
+        return R.ok();
+    }
 }
