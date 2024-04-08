@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.gs.business.pojo.PlatLoginUrlBO;
 import com.gs.business.service.PlatService;
 import com.gs.commons.entity.UserPlat;
 import com.gs.commons.service.UserPlatService;
@@ -23,17 +24,17 @@ public class LyServiceImpl implements PlatService {
      * 平台标识
      */
     @Value("${platform.owner}")
-    public String owner = "gs";
+    public String owner;
     @Value("${platform.LeYou.apiDomain}")
-    public String apiDomain = "https://wc1-api.kewmn686.com/channelHandle";
+    public String apiDomain;
     @Value("${platform.LeYou.agent}")
-    public String agent = "201373";
+    public String agent;
     @Value("${platform.LeYou.aesKey}")
-    public String aesKey = "4686951BAA2E5234";
+    public String aesKey;
     @Value("${platform.LeYou.md5Key}")
-    public String md5Key = "D08C49D1629ECF26";
+    public String md5Key;
     @Value("${platform.LeYou.betRecordDomain}")
-    public String betRecordDomain = "https://wc1-record.kewmn686.com/getRecordHandle";
+    public String betRecordDomain;
 
     @Autowired
     private UserPlatService userPlatService;
@@ -114,14 +115,14 @@ public class LyServiceImpl implements PlatService {
     }
 
     @Override
-    public String getLoginUrl(UserPlat userPlat) throws Exception {
+    public String getLoginUrl(PlatLoginUrlBO userPlat) throws Exception {
         // 注册三方
         String agent = this.agent;
         String timestamp = String.valueOf(DateUtil.current());
         String account = userPlat.getPlatUserName();
         String orderid = agent + DateUtil.format(new Date(), "yyyyMMddHHmmssSSS") + account;
         String lineCode = "GS";
-        String kindId = "0";
+        String kindId = userPlat.getGameCode();
         String aesKey = this.aesKey;
         StringBuilder paramSb = new StringBuilder();
         paramSb.append("s=0&")

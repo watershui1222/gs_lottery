@@ -68,8 +68,8 @@
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="LotteryOrder" />
-                  <option name="tableName" value="t_lottery_order" />
+                  <option name="className" value="SbRecord" />
+                  <option name="tableName" value="t_sb_record" />
                 </TableUIInfo>
               </list>
             </option>

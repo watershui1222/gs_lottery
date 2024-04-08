@@ -6,9 +6,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.gs.api.controller.request.PlatDepositRequest;
+import com.gs.api.controller.request.PlatLoginUrlRequest;
 import com.gs.api.controller.request.PlatWithdrawRequest;
 import com.gs.api.utils.JwtUtils;
 import com.gs.business.client.PlatClient;
+import com.gs.business.pojo.PlatLoginUrlBO;
 import com.gs.business.service.EduService;
 import com.gs.commons.entity.EduOrder;
 import com.gs.commons.entity.Platform;
@@ -116,16 +118,23 @@ public class PlatController {
     }
 
     @ApiOperation(value = "获取三方平台登录URL")
-    @GetMapping("/login/{platCode}")
-    public R login(@PathVariable("platCode") String platCode, HttpServletRequest httpServletRequest) throws Exception {
+    @GetMapping("/login")
+    public R login(@Validated PlatLoginUrlRequest request, HttpServletRequest httpServletRequest) throws Exception {
         String userName = JwtUtils.getUserName(httpServletRequest);
         // 注册
-        UserPlat userPlat = platClient.register(platCode, userName);
+        UserPlat userPlat = platClient.register(request.getPlatCode(), userName);
         if (userPlat == null) {
             throw new Exception("平台:" + userPlat.getPlatCode() + "注册失败");
         }
         // 获取登录链接
-        String loginUrl = platClient.getLoginUrl(userPlat);
+        PlatLoginUrlBO bo = new PlatLoginUrlBO();
+        bo.setPlatSubCode(request.getPlatSubCode());
+        bo.setGameCode(request.getGameCode());
+        bo.setPlatCode(request.getPlatCode());
+        bo.setPlatUserName(userPlat.getPlatUserName());
+        bo.setUserName(userPlat.getUserName());
+        bo.setPlatUserPassword(userPlat.getPlatUserPassword());
+        String loginUrl = platClient.getLoginUrl(bo);
         return R.ok().put("loginUrl", loginUrl);
     }
 

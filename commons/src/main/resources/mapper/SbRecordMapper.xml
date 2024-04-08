@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gs.commons.mapper.SbRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.gs.commons.entity.SbRecord">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+            <result property="platUserName" column="plat_user_name" jdbcType="VARCHAR"/>
+            <result property="orderNo" column="order_no" jdbcType="VARCHAR"/>
+            <result property="gameName" column="game_name" jdbcType="VARCHAR"/>
+            <result property="wtype" column="wtype" jdbcType="VARCHAR"/>
+            <result property="rtype" column="rtype" jdbcType="VARCHAR"/>
+            <result property="tnameHome" column="tname_home" jdbcType="VARCHAR"/>
+            <result property="tnameAway" column="tname_away" jdbcType="VARCHAR"/>
+            <result property="league" column="league" jdbcType="VARCHAR"/>
+            <result property="strong" column="strong" jdbcType="VARCHAR"/>
+            <result property="ioratio" column="ioratio" jdbcType="DECIMAL"/>
+            <result property="effectiveBet" column="effective_bet" jdbcType="DECIMAL"/>
+            <result property="allBet" column="all_bet" jdbcType="DECIMAL"/>
+            <result property="profit" column="profit" jdbcType="DECIMAL"/>
+            <result property="betTime" column="bet_time" jdbcType="TIMESTAMP"/>
+            <result property="settleTime" column="settle_time" jdbcType="TIMESTAMP"/>
+            <result property="settleStatus" column="settle_status" jdbcType="INTEGER"/>
+            <result property="resultStatus" column="result_status" jdbcType="VARCHAR"/>
+            <result property="resultScore" column="result_score" jdbcType="VARCHAR"/>
+            <result property="oddsFormat" column="odds_format" jdbcType="VARCHAR"/>
+            <result property="parlaynum" column="parlaynum" jdbcType="INTEGER"/>
+            <result property="parlaysub" column="parlaysub" jdbcType="VARCHAR"/>
+            <result property="rawData" column="raw_data" jdbcType="VARCHAR"/>
+            <result property="resettlementinfo" column="resettlementinfo" jdbcType="VARCHAR"/>
+            <result property="actionDate" column="action_date" jdbcType="TIMESTAMP"/>
+            <result property="matchDatetime" column="match_datetime" jdbcType="TIMESTAMP"/>
+            <result property="isLive" column="is_live" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_name,plat_user_name,
+        order_no,game_name,wtype,
+        rtype,tname_home,tname_away,
+        league,strong,ioratio,
+        effective_bet,all_bet,profit,
+        bet_time,settle_time,settle_status,
+        result_status,result_score,odds_format,
+        parlaynum,parlaysub,raw_data,
+        resettlementinfo,action_date,match_datetime,
+        is_live,create_time,update_time
+    </sql>
+</mapper>

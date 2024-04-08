@@ -71,7 +71,7 @@ public class HgRecordSchedule {
 
         if (hg != null) {
             log.info("皇冠---拉单开始[{}]-[{}]", DateUtil.formatDateTime(hg.getBeginTime()), DateUtil.formatDateTime(hg.getEndTime()));
-            aLLWager(hg.getBeginTime(), hg.getEndTime());
+            getRecord(hg.getBeginTime(), hg.getEndTime());
             log.info("皇冠---拉单完成[{}]-[{}]", DateUtil.formatDateTime(hg.getBeginTime()), DateUtil.formatDateTime(hg.getEndTime()));
             // 如果当前时间大于结束时间，更新拉取时间范围
             if (DateUtil.compare(now, hg.getEndTime()) == 1) {
@@ -90,7 +90,7 @@ public class HgRecordSchedule {
      * @return
      * @throws Exception
      */
-    public void aLLWager(Date startTime, Date endTime){
+    public void getRecord(Date startTime, Date endTime){
         String token = agLogin();
         List<HgRecord> recordList = new ArrayList<>();
         if(StrUtil.isNotBlank(token)){

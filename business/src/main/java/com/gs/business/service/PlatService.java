@@ -1,5 +1,6 @@
 package com.gs.business.service;
 
+import com.gs.business.pojo.PlatLoginUrlBO;
 import com.gs.commons.entity.UserPlat;
 
 import java.math.BigDecimal;
@@ -24,10 +25,10 @@ public interface PlatService {
 
     /**
      * 登录指定平台
-     * @param userPlat
+     * @param
      * @return
      */
-    String getLoginUrl(UserPlat userPlat) throws Exception;
+    String getLoginUrl(PlatLoginUrlBO bo) throws Exception;
 
     /**
      * 指定平台额度转入

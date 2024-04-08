@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.gs.business.pojo.PlatLoginUrlBO;
 import com.gs.business.service.PlatService;
 import com.gs.commons.entity.UserPlat;
 import com.gs.commons.service.UserPlatService;
@@ -23,17 +24,17 @@ public class KyServiceImpl implements PlatService {
      * 平台标识
      */
     @Value("${platform.owner}")
-    public String owner = "gs";
+    public String owner;
     @Value("${platform.KaiYuan.prefixURL}")
-    public String prefixURL = "https://wc1-api.uaphl791.com/channelHandle";//接口地址
+    public String prefixURL;//接口地址
     @Value("${platform.KaiYuan.recordURL}")
-    public String recordURL = "https://wc1-record.uaphl791.com/getRecordHandle";//拉单接口
+    public String recordURL;//拉单接口
     @Value("${platform.KaiYuan.agent}")
-    public String agent = "73419";
+    public String agent;
     @Value("${platform.KaiYuan.aesKey}")
-    public String aesKey = "77C3273B538BB6F9";
+    public String aesKey;
     @Value("${platform.KaiYuan.md5Key}")
-    public String md5Key = "08A455C3E66DDF22";
+    public String md5Key;
 
     @Autowired
     private UserPlatService userPlatService;
@@ -115,13 +116,13 @@ public class KyServiceImpl implements PlatService {
     }
 
     @Override
-    public String getLoginUrl(UserPlat userPlat) throws Exception {
+    public String getLoginUrl(PlatLoginUrlBO userPlat) throws Exception {
         // 注册三方
         String timestamp = String.valueOf(DateUtil.current());
         String account = userPlat.getPlatUserName();
         String orderid = this.agent + DateUtil.format(new Date(), "yyyyMMddHHmmssSSS") + account;
         String lineCode = "GS";
-        String kindId = "0";
+        String kindId = userPlat.getGameCode();
         String aesKey = this.aesKey;
         StringBuilder paramSb = new StringBuilder();
         paramSb.append("s=0&")

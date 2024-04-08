@@ -1,5 +1,6 @@
 package com.gs.business.client;
 
+import com.gs.business.pojo.PlatLoginUrlBO;
 import com.gs.business.service.PlatService;
 import com.gs.commons.entity.EduOrder;
 import com.gs.commons.entity.UserPlat;
@@ -90,28 +91,28 @@ public class PlatClient {
 
     /**
      * 获取登录游戏URL
-     * @param userPlat
+     * @param
      * @return
      * @throws Exception
      */
-    public String getLoginUrl(UserPlat userPlat) throws Exception {
-        if (StringUtils.equals(userPlat.getPlatCode(), "KY")) {
-            return kyService.getLoginUrl(userPlat);
+    public String getLoginUrl(PlatLoginUrlBO request) throws Exception {
+        if (StringUtils.equals(request.getPlatCode(), "KY")) {
+            return kyService.getLoginUrl(request);
         }
-        if (StringUtils.equals(userPlat.getPlatCode(), "LY")) {
-            return lyService.getLoginUrl(userPlat);
+        if (StringUtils.equals(request.getPlatCode(), "LY")) {
+            return lyService.getLoginUrl(request);
         }
-        if (StringUtils.equals(userPlat.getPlatCode(), "HG")) {
-            return hgService.getLoginUrl(userPlat);
+        if (StringUtils.equals(request.getPlatCode(), "HG")) {
+            return hgService.getLoginUrl(request);
         }
-        if (StringUtils.equals(userPlat.getPlatCode(), "BBIN")) {
-            return bbinService.getLoginUrl(userPlat);
+        if (StringUtils.equals(request.getPlatCode(), "BBIN")) {
+            return bbinService.getLoginUrl(request);
         }
-        if (StringUtils.equals(userPlat.getPlatCode(), "AG")) {
-            return agService.getLoginUrl(userPlat);
+        if (StringUtils.equals(request.getPlatCode(), "AG")) {
+            return agService.getLoginUrl(request);
         }
-        if (StringUtils.equals(userPlat.getPlatCode(), "SB")) {
-            return sbService.getLoginUrl(userPlat);
+        if (StringUtils.equals(request.getPlatCode(), "SB")) {
+            return sbService.getLoginUrl(request);
         }
         return null;
     }

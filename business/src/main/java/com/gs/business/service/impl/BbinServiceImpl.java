@@ -1,16 +1,27 @@
 package com.gs.business.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpUtil;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.gs.business.pojo.PlatLoginUrlBO;
 import com.gs.business.service.PlatService;
 import com.gs.commons.entity.UserPlat;
 import com.gs.commons.service.UserPlatService;
+import com.gs.commons.utils.AesUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.TimeZone;
 
 @Slf4j
 @Service
@@ -19,13 +30,13 @@ public class BbinServiceImpl implements PlatService {
      * 平台标识
      */
     @Value("${platform.owner}")
-    public String owner = "gs";
+    public String owner;
     @Value("${platform.BBIN.website}")
-    public String website = "overspeed";
+    public String website;
     @Value("${platform.BBIN.uppername}")
-    public String uppername = "dzf946cny";
+    public String uppername;
     @Value("${platform.BBIN.apiDomain}")
-    public String apiDomain = "http://linkapi.kniddk22.com/app/WebService/JSON/display.php";
+    public String apiDomain;
 
     @Autowired
     private UserPlatService userPlatService;
@@ -43,149 +54,209 @@ public class BbinServiceImpl implements PlatService {
         }
 
         // 注册三方
-//        String timestamp = String.valueOf(DateUtil.current());
-//        String account = this.owner + userName;;
-//        String orderid = this.agent + DateUtil.format(new Date(), "yyyyMMddHHmmssSSS") + account;
-//        String lineCode = "GS";
-//        String kindId = "0";
-//        String aesKey = this.aesKey;
-//        StringBuilder paramSb = new StringBuilder();
-//        paramSb.append("s=0&")
-//                .append("account=").append(account)
-//                .append("&money=0")
-//                .append("&orderid=").append(orderid)
-//                .append("&ip=127.0.0.1")
-//                .append("&lineCode=").append(lineCode)
-//                .append("&KindID=").append(kindId);
-//        String param = AesUtils.AESEncrypt(paramSb.toString(), aesKey,true);
-//        String key = AesUtils.MD5(this.agent + timestamp + this.md5Key);
-//        StringBuilder urlSB = new StringBuilder();
-//        urlSB.append(this.apiDomain).append("?").append("agent=").append(this.agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
-//        String result = HttpUtil.get(urlSB.toString());
-//        log.info("乐游登录返回:{}", result);
-//        JSONObject resJSON = JSONObject.parseObject(result);
-//        JSONObject d = resJSON.getJSONObject("d");
-//        if (d.getIntValue("code") != 0) {
-//            log.error("乐游 获取游戏URL失败 param= " + param + " result = " + result);
-//            throw new Exception("乐游注册失败");
-//        }
-
+        String session = createSession(userName);
+        if(StrUtil.isBlank(session)){
+            throw new Exception("BBIN注册失败");
+        }
         // 执行注册逻辑
         UserPlat save = new UserPlat();
-//        save.setUserName(userName);
-//        save.setPlatCode("LY");
-//        save.setPlatUserName(account);
-//        save.setPlatUserPassword(null);
-//        save.setStatus(0);
-//        save.setCreateTime(new Date());
-//        userPlatService.save(save);
+        save.setUserName(userName);
+        save.setPlatCode("BBIN");
+        save.setPlatUserName(this.owner + userName);
+        save.setPlatUserPassword(null);
+        save.setStatus(0);
+        save.setCreateTime(new Date());
+        userPlatService.save(save);
         return save;
     }
 
-    @Override
-    public BigDecimal queryBalance(UserPlat userPlat) {
-//        String agent = this.agent;
-//        String timestamp = String.valueOf(DateUtil.current());
-//        String account = userPlat.getPlatUserName();
-//        String aesKey = this.aesKey;
-//        StringBuilder paramSb = new StringBuilder();
-//        paramSb.append("s=7&").append("account=").append(account);
-//        String param = AesUtils.AESEncrypt(paramSb.toString(), aesKey,true);
-//        String key = AesUtils.MD5(agent + timestamp + this.md5Key);
-//        StringBuilder urlSB = new StringBuilder();
-//        urlSB.append(this.apiDomain).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
-//        String result = HttpUtil.get(urlSB.toString());
-//        log.info("乐游查询余额返回:{}", result);
-//        JSONObject jsonResult = JSONObject.parseObject(result);
-//        JSONObject d = jsonResult.getJSONObject("d");
-//        if (d != null && d.getIntValue("code") == 0) {
-//            return d.getBigDecimal("freeMoney") == null ? BigDecimal.ZERO : d.getBigDecimal("freeMoney");
-//        }
-//        log.error("乐游 获取用户余额失败 param= " + param + " result = " + result);
-        return BigDecimal.ZERO;
-    }
-
-    @Override
-    public String getLoginUrl(UserPlat userPlat) throws Exception {
-        // 注册三方
-//        String agent = this.agent;
-//        String timestamp = String.valueOf(DateUtil.current());
-//        String account = userPlat.getPlatUserName();
-//        String orderid = agent + DateUtil.format(new Date(), "yyyyMMddHHmmssSSS") + account;
-//        String lineCode = "GS";
-//        String kindId = "0";
-//        String aesKey = this.aesKey;
-//        StringBuilder paramSb = new StringBuilder();
-//        paramSb.append("s=0&")
-//                .append("account=").append(account)
-//                .append("&money=0")
-//                .append("&orderid=").append(orderid)
-//                .append("&ip=127.0.0.1")
-//                .append("&lineCode=").append(lineCode)
-//                .append("&KindID=").append(kindId);
-//        String param = AesUtils.AESEncrypt(paramSb.toString(), aesKey,true);
-//        String key = AesUtils.MD5(agent + timestamp + this.md5Key);
-//        StringBuilder urlSB = new StringBuilder();
-//        urlSB.append(this.apiDomain).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
-//        String result = HttpUtil.get(urlSB.toString());
-//        log.info("乐游登录返回:{}", result);
-//        JSONObject resJSON = JSONObject.parseObject(result);
-//        JSONObject d = resJSON.getJSONObject("d");
-//        if (d.getIntValue("code") != 0) {
-//            log.error("乐游 获取游戏URL失败 param= " + param + " result = " + result);
-//            throw new Exception("乐游登录失败");
-//        }
-//        return d.getString("url");
+    /**
+     *
+     * @param userName 我方平台的username
+     * @return
+     */
+    private String createSession(String userName){
+        //获得URL前需使用此接口获取用户session
+        String apiUrl = this.apiDomain + "/CreateSession";
+        String username = this.owner + userName;
+        String website = this.website;
+        String uppername = this.uppername;
+        String lang = "zh-cn";
+        String keyB = "sE3jbKtn";
+        String strA = RandomUtil.randomString(4);
+        DateTime mdTime = DateUtil.offsetHour(DateUtil.date(), -12);
+        String strB = AesUtils.MD5(website + username + keyB + DateUtil.format(mdTime, "yyyyMMdd"));
+        String strC = RandomUtil.randomString(3);
+        String key = strA + strB + strC;
+        JSONObject param = new JSONObject();
+        param.put("website", website);
+        param.put("username", username);
+        param.put("uppername", uppername);
+        param.put("lang", lang);
+        param.put("key", key.toLowerCase());
+        String result = HttpUtil.post(apiUrl, param);
+        JSONObject resJson = JSONObject.parseObject(result);
+        JSONObject data = resJson.getJSONObject("data");
+        if(data != null || StrUtil.isNotBlank(data.getString("sessionid"))){
+            return data.getString("sessionid");
+        }
+        log.error("BBIN createSession失败 " + param + " result = " + result);
         return "";
     }
 
     @Override
+    public BigDecimal queryBalance(UserPlat userPlat) {
+        String apiUrl = this.apiDomain + "/CheckUsrBalance";
+        String website = this.website;
+        String username = userPlat.getPlatUserName();
+        String uppername = this.uppername;
+        String keyB = "bHqo11";
+        String strA = RandomUtil.randomString(7);
+        DateTime mdTime = DateUtil.offsetHour(DateUtil.date(), -12);
+        String strB = AesUtils.MD5(website + username + keyB + DateUtil.format(mdTime, "yyyyMMdd"));
+        String strC = RandomUtil.randomString(3);
+        String key = strA + strB + strC;
+        JSONObject param = new JSONObject();
+        param.put("website", website);
+        param.put("username", username);
+        param.put("uppername", uppername);
+        param.put("key", key.toLowerCase());
+        String result = HttpUtil.post(apiUrl, param);
+        JSONObject resJson = JSONObject.parseObject(result);
+        JSONArray data = resJson.getJSONArray("data");
+        if(CollUtil.isNotEmpty(data)){
+            JSONObject bobj = (JSONObject) data.get(0);
+            BigDecimal balance = bobj.getBigDecimal("Balance");
+            return balance == null ? BigDecimal.ZERO : balance;
+        }
+        log.error("BBIN 查询用户余额失败 param= " + param + " result = " + result);
+        return BigDecimal.ZERO;
+    }
+
+    @Override
+    public String getLoginUrl(PlatLoginUrlBO userPlat) throws Exception {
+        //获得URL前需使用此接口获取用户session
+        String website = this.website;
+        String sessionid = createSession(userPlat.getUserName());
+        if(StrUtil.isBlank(sessionid)){
+            return "获取sessionid失败";
+        }
+        String lang = "zh-cn";
+        String tag = "global";
+        String keyB = "2dQX6z";
+        String strA = RandomUtil.randomString(5);
+        DateTime mdTime = DateUtil.offsetHour(DateUtil.date(), -12);
+        String strB = AesUtils.MD5(website + keyB + DateUtil.format(mdTime, "yyyyMMdd"));
+        String strC = RandomUtil.randomString(6);
+        String key = strA + strB + strC;
+        JSONObject param = new JSONObject();
+        param.put("website", website);
+        param.put("lang", lang);
+        param.put("sessionid", sessionid);
+
+        param.put("key", key.toLowerCase());
+        String apiUrl = "";
+        if(StrUtil.equals(userPlat.getPlatSubCode(), "BBINLIVE")){
+            apiUrl = this.apiDomain + "/GameUrlBy3";
+            param.put("tag", tag);
+        }else if(StrUtil.equals(userPlat.getPlatSubCode(), "BBINELE")){
+            apiUrl = this.apiDomain + "/GameUrlBy5";
+            String gametype = userPlat.getGameCode();//游戏ID
+            String exit_option = "1";
+            param.put("gametype", gametype);
+            param.put("exit_option", exit_option);
+        }else if (StrUtil.equals(userPlat.getPlatSubCode(), "BBINFISH")){
+            String gametype = userPlat.getGameCode();//38001-捕鱼大师    38002-富贵渔场
+            String exit_option = "1";
+            apiUrl = this.apiDomain + "/GameUrlBy38";
+            param.put("gametype", gametype);
+            param.put("exit_option", exit_option);
+        }
+        String result = HttpUtil.post(apiUrl, param);
+        JSONObject resJson = JSONObject.parseObject(result);
+        JSONArray data = resJson.getJSONArray("data");
+        if(CollUtil.isEmpty(data)){
+            log.error("BBIN getLoginUrl失败 param= " + param + " result = " + result);
+            throw new Exception("BBIN登录失败");
+        }
+        JSONObject urlObj = (JSONObject) data.get(0);
+        String url = "";
+        if(StrUtil.equals(userPlat.getPlatSubCode(), "BBINLIVE")){
+            url = urlObj.getString("rwd");
+        }else {
+            url = urlObj.getString("html5");
+        }
+        return url;
+    }
+
+    @Override
     public boolean deposit(BigDecimal money, UserPlat userPlat, String platOrderNo) throws Exception {
-//        String agent = this.agent;
-//        String timestamp = String.valueOf(DateUtil.current());
-//        String account = userPlat.getPlatUserName();
-//        String orderid = platOrderNo;
-//        String aesKey = this.aesKey;
-//        StringBuilder paramSb = new StringBuilder();
-//        paramSb.append("s=2&")
-//                .append("account=").append(account)
-//                .append("&money=").append(money)
-//                .append("&orderid=").append(orderid);
-//        String param = AesUtils.AESEncrypt(paramSb.toString(), aesKey,true);
-//        String key = AesUtils.MD5(agent + timestamp + this.md5Key);
-//        StringBuilder urlSB = new StringBuilder();
-//        urlSB.append(this.apiDomain).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
-//        String result = HttpUtil.get(urlSB.toString());
-//        log.info("乐游[{}]额度转入返回:{}", platOrderNo, result);
-//        JSONObject res = JSONObject.parseObject(result);
-//        JSONObject d = res.getJSONObject("d");
-//        return d.getIntValue("code") == 0;
-        return true;
+        //获得URL前需使用此接口获取用户session
+        String apiUrl = this.apiDomain + "/Transfer";
+        String website = this.website;
+        String username = userPlat.getPlatUserName();
+        String uppername = this.uppername;
+        String remitno = RandomUtil.randomNumbers(11);
+        String action = "IN";
+        BigDecimal remit = money;
+        String keyB = "upVqp41";
+        String strA = RandomUtil.randomString(6);
+        DateTime mdTime = DateUtil.offsetHour(DateUtil.date(), -12);
+        String strB = AesUtils.MD5(website + username + remitno + keyB + DateUtil.format(mdTime, "yyyyMMdd"));
+        String strC = RandomUtil.randomString(7);
+        String key = strA + strB + strC;
+        JSONObject param = new JSONObject();
+        param.put("website", website);
+        param.put("username", username);
+        param.put("uppername", uppername);
+        param.put("remitno", remitno);
+        param.put("action", action);
+        param.put("remit", remit);
+        param.put("key", key.toLowerCase());
+        String result = HttpUtil.post(apiUrl, param);
+        log.info("BBIN transferIn param= " + param + " result = " + result);
+        JSONObject resJson = JSONObject.parseObject(result);
+        JSONObject data = resJson.getJSONObject("data");
+        if(data != null && StrUtil.equals(data.getString("Code"), "11100")){
+            //转账成功
+            return true;
+        }
+        return false;
     }
 
     @Override
     public boolean withdraw(BigDecimal amount, UserPlat userPlat, String platOrderNo) throws Exception {
-//        String agent = this.agent;
-//        String timestamp = String.valueOf(DateUtil.current());
-//        String account = userPlat.getPlatUserName();
-//        BigDecimal money = amount;
-//        String orderid = agent + DateUtil.format(new Date(), "yyyyMMddHHmmssSSS") + account;
-//        String aesKey = this.aesKey;
-//        StringBuilder paramSb = new StringBuilder();
-//        paramSb.append("s=3&")
-//                .append("account=").append(account)
-//                .append("&money=").append(money)
-//                .append("&orderid=").append(orderid);
-//        String param = AesUtils.AESEncrypt(paramSb.toString(), aesKey,true);
-//        String key = AesUtils.MD5(agent+timestamp+this.md5Key);
-//        StringBuilder urlSB = new StringBuilder();
-//        urlSB.append(this.apiDomain).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
-//        String result = HttpUtil.get(urlSB.toString());
-//        log.info("乐游额度转出返回:{}", result);
-//        JSONObject res = JSONObject.parseObject(result);
-//        JSONObject d = res.getJSONObject("d");
-//        return d.getIntValue("code") == 0;
-        return true;
+        //获得URL前需使用此接口获取用户session
+        String apiUrl = this.apiDomain + "/Transfer";
+        String website = this.website;
+        String username = userPlat.getPlatUserName();
+        String uppername = this.uppername;
+        String remitno = RandomUtil.randomNumbers(11);
+        String action = "OUT";
+        BigDecimal remit = amount;
+        String keyB = "upVqp41";
+        String strA = RandomUtil.randomString(6);
+        DateTime mdTime = DateUtil.offsetHour(DateUtil.date(), -12);
+        String strB = AesUtils.MD5(website + username + remitno + keyB + DateUtil.format(mdTime, "yyyyMMdd"));
+        String strC = RandomUtil.randomString(7);
+        String key = strA + strB + strC;
+        JSONObject param = new JSONObject();
+        param.put("website", website);
+        param.put("username", username);
+        param.put("uppername", uppername);
+        param.put("remitno", remitno);
+        param.put("action", action);
+        param.put("remit", remit);
+        param.put("key", key.toLowerCase());
+        String result = HttpUtil.post(apiUrl, param);
+        log.info("BBIN transferOut param= " + param + " result = " + result);
+        JSONObject resJson = JSONObject.parseObject(result);
+        JSONObject data = resJson.getJSONObject("data");
+        if(data != null && StrUtil.equals(data.getString("Code"), "11100")){
+            //转账成功
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -202,17 +273,26 @@ public class BbinServiceImpl implements PlatService {
 
     @Override
     public boolean logout(UserPlat userPlat) {
-//        String agent = this.agent;
-//        String timestamp = String.valueOf(DateUtil.current());
-//        String account = userPlat.getPlatUserName();
-//        String aesKey = this.aesKey;
-//        StringBuilder paramSb = new StringBuilder();
-//        paramSb.append("s=8&").append("account=").append(account);
-//        String param = AesUtils.AESEncrypt(paramSb.toString(), aesKey,true);
-//        String key = AesUtils.MD5(agent+timestamp+this.md5Key);
-//        StringBuilder urlSB = new StringBuilder();
-//        urlSB.append(this.apiDomain).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
-//        HttpUtil.get(urlSB.toString());
-        return true;
+        String apiUrl = this.apiDomain + "/Logout";
+        String website = this.website;
+        String username = userPlat.getPlatUserName();
+        String strA = RandomUtil.randomString(7);
+        DateTime mdTime = DateUtil.offsetHour(DateUtil.date(), -12);
+        String keyB = "dhoOr";
+        String strB = AesUtils.MD5(website + username + keyB + DateUtil.format(mdTime, "yyyyMMdd"));
+        String strC = RandomUtil.randomString(4);
+        String key = strA + strB + strC;
+        JSONObject param = new JSONObject();
+        param.put("website", website);
+        param.put("username", username);
+        param.put("key", key.toLowerCase());
+        String result = HttpUtil.post(apiUrl, param);
+        log.info("BBIN logout param= " + param + " result = " + result);
+        JSONObject resJson = JSONObject.parseObject(result);
+        JSONObject data = resJson.getJSONObject("data");
+        if(data != null && StrUtil.equals(data.getString("Code"), "22001")){
+            return true;
+        }
+        return false;
     }
 }

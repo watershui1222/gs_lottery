@@ -2,6 +2,7 @@ package com.gs.business.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.gs.business.pojo.PlatLoginUrlBO;
 import com.gs.business.service.PlatService;
 import com.gs.commons.entity.UserPlat;
 import com.gs.commons.service.UserPlatService;
@@ -19,7 +20,7 @@ public class AgServiceImpl implements PlatService {
      * 平台标识
      */
     @Value("${platform.owner}")
-    public String owner = "gs";
+    public String owner;
 
     @Autowired
     private UserPlatService userPlatService;
@@ -100,7 +101,7 @@ public class AgServiceImpl implements PlatService {
     }
 
     @Override
-    public String getLoginUrl(UserPlat userPlat) throws Exception {
+    public String getLoginUrl(PlatLoginUrlBO userPlat) throws Exception {
         // 注册三方
 //        String agent = this.agent;
 //        String timestamp = String.valueOf(DateUtil.current());

@@ -8,6 +8,7 @@ import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.gs.business.pojo.PlatLoginUrlBO;
 import com.gs.business.service.PlatService;
 import com.gs.commons.entity.UserPlat;
 import com.gs.commons.service.UserPlatService;
@@ -28,17 +29,17 @@ public class HgServiceImpl implements PlatService {
      * 平台标识
      */
     @Value("${platform.owner}")
-    public String owner = "gs";
+    public String owner;
     @Value("${platform.HuangGuan.agId}")
-    public String agId = "2829";
+    public String agId;
     @Value("${platform.HuangGuan.agPassword}")
-    public String agPassword = "aaa123";
+    public String agPassword;
     @Value("${platform.HuangGuan.agName}")
-    public String agName = "ZF946test";
+    public String agName;
     @Value("${platform.HuangGuan.secretKey}")
-    public String secretKey = "9Sceij7Eka7331lR";
+    public String secretKey;
     @Value("${platform.HuangGuan.apiUrl}")
-    public String apiUrl = "https://api.orb-6789.com/app/control_API/agents/api_doaction.php";
+    public String apiUrl;
 
     @Autowired
     private UserPlatService userPlatService;
@@ -154,7 +155,8 @@ public class HgServiceImpl implements PlatService {
                 JSONObject resultJson = JSONObject.parseObject(result);
                 String respcode = resultJson.getString("respcode");
                 if(StrUtil.equals(respcode, "0000")){
-                    return new BigDecimal(resultJson.getString("balance"));
+                    BigDecimal balance = resultJson.getBigDecimal("balance");
+                    return balance == null ? BigDecimal.ZERO : balance;
                 }
             }
         }
@@ -162,7 +164,7 @@ public class HgServiceImpl implements PlatService {
     }
 
     @Override
-    public String getLoginUrl(UserPlat userPlat) throws Exception {
+    public String getLoginUrl(PlatLoginUrlBO userPlat) throws Exception {
         String token = agLogin();
         if(StrUtil.isNotBlank(token)){
             //代理登录成功
@@ -175,7 +177,8 @@ public class HgServiceImpl implements PlatService {
             request.put("currency", "CNY");
             request.put("method", "LaunchGame");
             request.put("token", token);
-            request.put("machine", "MOBILE");
+            String machine = userPlat.getDevice() == 1 ? "PC" : "MOBILE";
+            request.put("machine", machine);
             request.put("langx", "zh-cn");
             request.put("remoteip", "127.0.0.1");
             request.put("timestamp", DateUtil.current());
@@ -264,7 +267,6 @@ public class HgServiceImpl implements PlatService {
             log.info("皇冠 withdraw接口 result = " + resStr);
             if(!JSONUtil.isTypeJSON(resStr)){
                 String result = AesUtils.AESDecrypt(resStr, this.secretKey);
-                System.out.println(result);
                 JSONObject resultJson = JSONObject.parseObject(result);
                 String respcode = resultJson.getString("respcode");
                 if(StrUtil.equals(respcode, "0000")){
