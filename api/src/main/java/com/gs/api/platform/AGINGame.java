@@ -2,18 +2,12 @@ package com.gs.api.platform;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.XmlUtil;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
-import com.gs.commons.utils.AesUtils;
 import com.gs.commons.utils.DesUtils;
-import org.omg.CORBA.INTERNAL;
 import org.springframework.beans.factory.annotation.Value;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import java.util.Date;
-import java.util.List;
 
 public class AGINGame {
 
