@@ -1,5 +1,6 @@
 package com.gs.api.controller;
 
+import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -10,19 +11,14 @@ import com.gs.api.controller.request.PlatWithdrawRequest;
 import com.gs.api.utils.JwtUtils;
 import com.gs.business.client.PlatClient;
 import com.gs.business.service.EduService;
-import com.gs.commons.entity.EduOrder;
-import com.gs.commons.entity.Platform;
-import com.gs.commons.entity.UserInfo;
-import com.gs.commons.entity.UserPlat;
-import com.gs.commons.service.EduOrderService;
-import com.gs.commons.service.PlatformService;
-import com.gs.commons.service.UserInfoService;
-import com.gs.commons.service.UserPlatService;
+import com.gs.commons.entity.*;
+import com.gs.commons.service.*;
 import com.gs.commons.utils.IdUtils;
 import com.gs.commons.utils.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.validation.annotation.Validated;
@@ -32,6 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Api(value = "三方平台相关", tags = "三方平台相关")
@@ -56,6 +54,12 @@ public class PlatController {
     @Autowired
     private PlatformService platformService;
 
+    @Autowired
+    private SysParamService sysParamService;
+
+    @Autowired
+    private EleGameService eleGameService;
+
 
     @ApiOperation(value = "获取额度转换平台列表")
     @GetMapping("/getPlatList")
@@ -72,20 +76,50 @@ public class PlatController {
             JSONObject object = new JSONObject();
             object.put("platCode", platform.getPlatCode());
             object.put("platName", platform.getPlatName());
+            object.put("balance", new BigDecimal(0));
             array.add(object);
         }
         return R.ok().put("list", array);
     }
 
+    @ApiOperation(value = "获取指定平台游戏列表")
+    @GetMapping("/getElegame/{platCode}")
+    public R getElegame(HttpServletRequest httpServletRequest,@PathVariable("platCode") String platCode) {
+        String redisKey = "plat:elegame:" + platCode;
+        String redisValue = redisTemplate.opsForValue().get(redisKey);
+        if (StringUtils.isNotBlank(redisValue)) {
+            return R.ok().put("list", JSON.parseArray(redisValue));
+        }
+        List<EleGame> list = eleGameService.list(
+                new LambdaQueryWrapper<EleGame>()
+                        .eq(EleGame::getStatus, 0)
+                        .eq(EleGame::getPlatCode, platCode)
+                        .orderByDesc(EleGame::getPlatCode)
+        );
+        Map<String, String> allParamByMap = sysParamService.getAllParamByMap();
+        JSONArray array = new JSONArray();
+        for (EleGame eleGame : list) {
+            JSONObject object = new JSONObject();
+            object.put("gameCode", eleGame.getGameCode());
+            object.put("gameName", eleGame.getGameName());
+            object.put("img", allParamByMap.get("resource_domain") + eleGame.getImg());
+            array.add(object);
+        }
+        redisTemplate.opsForValue().set(redisKey, JSON.toJSONString(array), 1, TimeUnit.HOURS);
+        return R.ok().put("list", array);
+    }
+
     @ApiOperation(value = "根据分类获取平台列表")
-    @GetMapping("/getPlatByType/{type}")
-    public R getPlatByType(HttpServletRequest httpServletRequest, @PathVariable("type") String type) {
+    @GetMapping("/getAllPlat")
+    public R getPlatByType(HttpServletRequest httpServletRequest) {
         List<Platform> platforms = platformService.list(
                 new LambdaQueryWrapper<Platform>()
                         .eq(Platform::getStatus, 0)
-                        .eq(Platform::getPlatType, type)
                         .orderByDesc(Platform::getPxh)
         );
+
+        Map<String, String> allParamByMap = sysParamService.getAllParamByMap();
+
         JSONArray array = new JSONArray();
         for (Platform platform : platforms) {
             JSONObject object = new JSONObject();
@@ -93,6 +127,8 @@ public class PlatController {
             object.put("platName", platform.getPlatName());
             object.put("subPlatCode", platform.getSubPlatCode());
             object.put("subPlatName", platform.getSubPlatName());
+            object.put("type", platform.getPlatType());
+            object.put("img", allParamByMap.get("resource_domain") + platform.getImg1());
             array.add(object);
         }
         return R.ok().put("list", array);
