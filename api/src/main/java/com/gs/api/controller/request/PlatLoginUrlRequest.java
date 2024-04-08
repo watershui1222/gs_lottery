@@ -18,7 +18,7 @@ public class PlatLoginUrlRequest {
     @ApiModelProperty(value = "子平台代码", example = "AG", required = true)
     private String platSubCode;
 
-    @ApiModelProperty(value = "子平台代码", example = "5903")
+    @ApiModelProperty(value = "平台游戏代码", example = "5903")
     private String gameCode;
 
 }

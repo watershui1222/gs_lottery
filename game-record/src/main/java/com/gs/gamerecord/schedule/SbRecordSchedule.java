@@ -58,7 +58,7 @@ public class SbRecordSchedule {
     private SbRecordService sbRecordService;
 
 
-    @Scheduled(cron = "0 0/3 * * * ?")
+    @Scheduled(cron = "0 0/1 * * * ?")
     public void sbRecord() throws Exception {
         Date now = new Date();
         PlatRecordControl sb = platRecordControlService.getOne(
@@ -151,6 +151,8 @@ public class SbRecordSchedule {
                     record.setLeague(leaguenameCN);
                     record.setIoratio(recordJSON.getBigDecimal("odds"));
                     record.setEffectiveBet(recordJSON.getBigDecimal("stake"));
+                    record.setAllBet(record.getEffectiveBet());
+                    record.setProfit(recordJSON.getBigDecimal("winlost_amount"));
                     Date transaction_time = DateUtil.parse(recordJSON.getString("transaction_time"), "yyyy-MM-dd'T'HH:mm:ss.SSS");
                     record.setBetTime(DateUtil.offsetHour(transaction_time, 12));
                     record.setSettleStatus(0);//默认未结算
@@ -159,6 +161,8 @@ public class SbRecordSchedule {
                         Date settlement_time = DateUtil.parse(settle, "yyyy-MM-dd'T'HH:mm:ss.SSS");
                         record.setSettleTime(DateUtil.offsetHour(settlement_time, 12));
                         record.setSettleStatus(1);
+                    }else{
+                        continue;
                     }
                     String home_score = recordJSON.getString("home_score");
                     String away_score = recordJSON.getString("away_score");
@@ -166,7 +170,13 @@ public class SbRecordSchedule {
                     record.setParlaysub(recordJSON.getString("ParlayData"));
                     record.setRawData(recordJSON.toJSONString());
                     record.setResettlementinfo(recordJSON.getString("resettlementinfo"));
-
+                    record.setIsLive(recordJSON.getInteger("islive"));
+                    record.setCreateTime(new Date());
+                    record.setUpdateTime(new Date());
+                    list.add(record);
+                }
+                if(CollUtil.isNotEmpty(list)){
+                    sbRecordService.batchInsertOrUpdate(list);
                 }
             }
         }

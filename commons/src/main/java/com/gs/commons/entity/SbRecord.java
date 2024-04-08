@@ -53,12 +53,6 @@ public class SbRecord implements Serializable {
     private String wtype;
 
     /**
-     * 玩法
-     */
-    @TableField(value = "rtype")
-    private String rtype;
-
-    /**
      * 主队名称hometeamname
      */
     @TableField(value = "tname_home")
@@ -75,12 +69,6 @@ public class SbRecord implements Serializable {
      */
     @TableField(value = "league")
     private String league;
-
-    /**
-     * H:主队为强队 C:客队为强队 ''无
-     */
-    @TableField(value = "strong")
-    private String strong;
 
     /**
      * 赔率 odds
@@ -165,18 +153,6 @@ public class SbRecord implements Serializable {
      */
     @TableField(value = "resettlementinfo")
     private String resettlementinfo;
-
-    /**
-     * 重新结算时间ActionDate
-     */
-    @TableField(value = "action_date")
-    private Date actionDate;
-
-    /**
-     * 赛事开球时间
-     */
-    @TableField(value = "match_datetime")
-    private Date matchDatetime;
 
     /**
      * 滚球  0:否 1:是
