@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 /**
 * @author richard
 * @description 针对表【t_sb_record(沙巴体育注单表)】的数据库操作Service实现
-* @createDate 2024-04-08 16:14:04
+* @createDate 2024-04-08 18:19:05
 */
 @Service
 public class SbRecordServiceImpl extends ServiceImpl<SbRecordMapper, SbRecord>

@@ -165,36 +165,10 @@ public class SbRecordSchedule {
                     record.setResultScore(home_score + ":" + away_score);
                     record.setParlaysub(recordJSON.getString("ParlayData"));
                     record.setRawData(recordJSON.toJSONString());
-//                    record.setResettlementinfo();
+                    record.setResettlementinfo(recordJSON.getString("resettlementinfo"));
 
                 }
             }
-//                    "transaction_time": "2024-04-07T23:55:53.747",
-//                    "ticket_status": "running",
-//                    "winlost_amount": -2,
-//                    "after_amount": 998,
-//                    "currency": 20,
-//                    "winlost_datetime": "2024-04-08T00:00:00",
-//                    "odds_type": 2,
-//                    "bet_team": "h",
-//                    "home_hdp": 1,
-//                    "away_hdp": 0,
-//                    "hdp": -1,
-//                    "betfrom": "W002",
-//                    "islive": "1",
-//                    "home_score": 0,
-//                    "away_score": 0,
-//                    "settlement_time": null,
-//                    "customInfo1": "",
-//                    "customInfo2": "",
-//                    "customInfo3": "",
-//                    "customInfo4": "",
-//                    "customInfo5": "",
-//                    "ba_status": "0",
-//                    "version_key": 34001,
-//                    "ParlayData": null,
-//                    "risklevelname": "New",
-//                    "risklevelnamecs": "新玩家"
         }
     }
 }
