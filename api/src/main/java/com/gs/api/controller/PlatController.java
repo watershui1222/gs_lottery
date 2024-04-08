@@ -1,5 +1,6 @@
 package com.gs.api.controller;
 
+import cn.hutool.core.io.FileUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
@@ -27,7 +28,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -321,7 +324,6 @@ public class PlatController {
                 if (success) {
                     // 调用三方成功,给用户加钱
                     eduService.AddMoneyAndTranscationRecord(userName, amount, userPlat.getPlatCode(), withdrawOrderNo, eduOrder.getOrderNo());
-                    return R.ok();
                 } else {
                     // 调用失败,联系客服处理
                 }
@@ -330,5 +332,74 @@ public class PlatController {
             }
         }
         return R.ok();
+    }
+
+    @ApiOperation(value = "插入游戏")
+    @GetMapping("/insertGame")
+    public R insertGame(HttpServletRequest httpServletRequest) throws Exception {
+        List<EleGame> list = new ArrayList<>();
+        String path = "C:\\Users\\69000\\Desktop\\elegame\\bbin";
+        File[] ls = FileUtil.ls(path);
+        for (File l : ls) {
+
+            EleGame eleGame = new EleGame();
+            System.out.println(l.getName());
+            String[] s = l.getName().split("_");
+            eleGame.setPlatCode("BBIN");
+            eleGame.setGameCode(s[0]);
+            eleGame.setGameName(s[1]);
+            eleGame.setImg("/gs/platform/elegame/bbin/" + l.getName());
+            eleGame.setStatus(0);
+            eleGame.setCreateTime(new Date());
+            eleGame.setUpdateTime(new Date());
+            eleGame.setPxh(0);
+
+            list.add(eleGame);
+        }
+        eleGameService.saveBatch(list);
+
+        list.clear();
+
+        ls = FileUtil.ls("C:\\Users\\69000\\Desktop\\elegame\\ly");
+
+        for (File l : ls) {
+            EleGame eleGame = new EleGame();
+            System.out.println(l.getName());
+            String[] s = l.getName().split("_");
+            eleGame.setPlatCode("LY");
+            eleGame.setGameCode(s[0]);
+            eleGame.setGameName(s[1].replace(".png", ""));
+            eleGame.setImg("/gs/platform/elegame/ly/" + l.getName());
+            eleGame.setStatus(0);
+            eleGame.setCreateTime(new Date());
+            eleGame.setUpdateTime(new Date());
+            eleGame.setPxh(0);
+
+            list.add(eleGame);
+        }
+        System.out.println(JSON.toJSONString(list));
+        eleGameService.saveBatch(list);
+        return R.ok();
+    }
+
+    public static void main(String[] args) {
+        List<EleGame> list = new ArrayList<>();
+        File[] ls = FileUtil.ls("C:\\Users\\69000\\Downloads\\Telegram Desktop\\BB Casino-180x180-cn\\BB Casino-180x180-cn");
+        for (File l : ls) {
+            EleGame eleGame = new EleGame();
+            System.out.println(l.getName());
+            String[] s = l.getName().split("_");
+            eleGame.setPlatCode("BBIN");
+            eleGame.setGameCode(s[0]);
+            eleGame.setGameName(s[1]);
+            eleGame.setImg("/gs/platform/elegame/bbin/" + l.getName());
+            eleGame.setStatus(0);
+            eleGame.setCreateTime(new Date());
+            eleGame.setUpdateTime(new Date());
+            eleGame.setPxh(0);
+
+            list.add(eleGame);
+        }
+        System.out.println(JSON.toJSONString(list));
     }
 }
