@@ -175,7 +175,7 @@ public class BbinServiceImpl implements PlatService {
         String result = HttpUtil.post(apiUrl, param);
         JSONObject resJson = JSONObject.parseObject(result);
         JSONArray data = resJson.getJSONArray("data");
-        if(CollUtil.isEmpty(data)){
+        if(!resJson.getBoolean("result") || CollUtil.isEmpty(data)){
             log.error("BBIN getLoginUrl失败 param= " + param + " result = " + result);
             throw new Exception("BBIN登录失败");
         }
