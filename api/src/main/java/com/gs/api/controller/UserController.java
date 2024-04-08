@@ -123,7 +123,7 @@ public class UserController {
         userObj.put("levelUrl", level == null ? "" : resourceDomain + level.getLevelImg());
         userObj.put("levelName", level == null ? "" : level.getLevelName());
 
-        return R.ok().put("user", userObj);
+        return R.ok().put("user", userObj).put("s", s);
     }
 
     @ApiOperation(value = "用户余额")
