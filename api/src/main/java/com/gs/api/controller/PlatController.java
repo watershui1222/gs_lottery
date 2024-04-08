@@ -139,16 +139,6 @@ public class PlatController {
     @ApiOperation(value = "获取三方平台余额")
     @GetMapping("/getBalancec/{platCode}")
     public R getBalancec(@PathVariable("platCode") String platCode, HttpServletRequest httpServletRequest) throws Exception {
-        // 查询平台信息
-        Platform platform = platformService.getOne(
-                new LambdaQueryWrapper<Platform>()
-                        .eq(Platform::getStatus, 0)
-                        .eq(Platform::getPlatCode, platCode)
-        );
-        if (platform == null || platform.getMaintenanceStatus().intValue() == 1) {
-            String msg = StringUtils.isNotBlank(platform.getMaintenanceMsg()) ? platform.getMaintenanceMsg() : "平台维护中";
-            return R.error(msg);
-        }
         String userName = JwtUtils.getUserName(httpServletRequest);
         UserPlat userPlat = userPlatService.getOne(
                 new LambdaQueryWrapper<UserPlat>()
@@ -171,6 +161,7 @@ public class PlatController {
         Platform platform = platformService.getOne(
                 new LambdaQueryWrapper<Platform>()
                         .eq(Platform::getStatus, 0)
+                        .eq(Platform::getSubPlatCode, request.getPlatSubCode())
                         .eq(Platform::getPlatCode, request.getPlatCode())
         );
         if (platform == null || platform.getMaintenanceStatus().intValue() == 1) {
@@ -197,16 +188,6 @@ public class PlatController {
     @ApiOperation(value = "额度转入")
     @PostMapping("/deposit")
     public R deposit(@Validated PlatDepositRequest request, HttpServletRequest httpServletRequest) throws Exception {
-        // 查询平台信息
-        Platform platform = platformService.getOne(
-                new LambdaQueryWrapper<Platform>()
-                        .eq(Platform::getStatus, 0)
-                        .eq(Platform::getPlatCode, request.getPlatCode())
-        );
-        if (platform == null || platform.getMaintenanceStatus().intValue() == 1) {
-            String msg = StringUtils.isNotBlank(platform.getMaintenanceMsg()) ? platform.getMaintenanceMsg() : "平台维护中";
-            return R.error(msg);
-        }
         String userName = JwtUtils.getUserName(httpServletRequest);
         // 校验余额是否充足
         UserInfo userInfo = userInfoService.getUserByName(userName);
@@ -246,16 +227,6 @@ public class PlatController {
     @ApiOperation(value = "额度转出")
     @PostMapping("/withdraw")
     public R withdraw(@Validated PlatWithdrawRequest request, HttpServletRequest httpServletRequest) throws Exception {
-        // 查询平台信息
-        Platform platform = platformService.getOne(
-                new LambdaQueryWrapper<Platform>()
-                        .eq(Platform::getStatus, 0)
-                        .eq(Platform::getPlatCode, request.getPlatCode())
-        );
-        if (platform == null || platform.getMaintenanceStatus().intValue() == 1) {
-            String msg = StringUtils.isNotBlank(platform.getMaintenanceMsg()) ? platform.getMaintenanceMsg() : "平台维护中";
-            return R.error(msg);
-        }
         String userName = JwtUtils.getUserName(httpServletRequest);
         // 注册
         UserPlat userPlat = userPlatService.getOne(
@@ -308,7 +279,7 @@ public class PlatController {
 
     @ApiOperation(value = "一键转出所有平台")
     @PostMapping("/withdrawAll")
-    public R withdraw(HttpServletRequest httpServletRequest) throws Exception {
+    public R withdrawAll(HttpServletRequest httpServletRequest) throws Exception {
         String userName = JwtUtils.getUserName(httpServletRequest);
         String redisKey = "user:withdrawall:" + userName;
         if (redisTemplate.hasKey(redisKey)) {
