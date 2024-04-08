@@ -97,6 +97,26 @@ public class LotteryController {
     private UserInfoService userInfoService;
 
 
+    @ApiOperation(value = "获取所有彩种")
+    @GetMapping("/getAllLottery")
+    public R getAllLottery() {
+        List<Lottery> list = lotteryService.list(
+                new LambdaQueryWrapper<Lottery>()
+                        .eq(Lottery::getStatus, 0)
+                        .orderByDesc(Lottery::getPxh)
+        );
+        JSONArray array = new JSONArray();
+        Map<String, String> allParamByMap = sysParamService.getAllParamByMap();
+        for (Lottery lottery : list) {
+            JSONObject object = new JSONObject();
+            object.put("lotteryCode", lottery.getLotteryCode());
+            object.put("lotteryName", lottery.getLotteryName());
+            object.put("remark", lottery.getRemark());
+            object.put("img", allParamByMap.get("resource_domain") + lottery.getImg());
+            array.add(object);
+        }
+        return R.ok().put("list", array);
+    }
 
     @ApiOperation(value = "获取指定彩种下的所有盘口以及玩法")
     @GetMapping("/getAllPlay/{lotteryCode}")
