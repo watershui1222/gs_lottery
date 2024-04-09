@@ -1,5 +1,7 @@
 package com.gs.api.utils;
 
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 import com.alibaba.fastjson2.JSON;
 import org.apache.commons.lang3.StringUtils;
 
@@ -17,7 +19,7 @@ public class ObPayUtil {
     public static void main(String[] args) throws Exception {
         Map<String, Object> treeMap = new TreeMap<>();
         treeMap.put("merchantNo", 16212792);
-        treeMap.put("outTradeNo", "898138131237");
+        treeMap.put("outTradeNo", "898138131237345");
         treeMap.put("amount", 10000);
         treeMap.put("currency", "OB");
         treeMap.put("notifyUrl", "localhost:8080/notifyUrl");
@@ -26,8 +28,14 @@ public class ObPayUtil {
         String stringSignTemp = StringUtils.join(sortData, "&", Secret);
         String sign = md5Sign(stringSignTemp).toUpperCase();
         treeMap.put("sign", sign);
-        String postJSON = HttpUtil.postJSON(url, JSON.toJSONString(treeMap), "UTF-8");
-        System.out.println(postJSON);
+//        String postJSON = HttpUtil.postJSON(url, JSON.toJSONString(treeMap), "UTF-8");
+
+        HttpRequest request = cn.hutool.http.HttpUtil.createPost(url);
+        request.header("Content-Type", "application/json; charset=utf-8");
+        request.body(JSON.toJSONString(treeMap));
+        HttpResponse response = request.execute();
+
+        System.out.println(response.body());
 
 
     }
