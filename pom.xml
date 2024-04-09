@@ -22,6 +22,7 @@
         <module>game-record</module>
         <module>business</module>
         <module>lottery-settle</module>
+        <module>pay-callback</module>
     </modules>
 
     <properties>

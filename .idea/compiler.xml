@@ -7,10 +7,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="api" />
+        <module name="pay-callback" />
         <module name="task" />
-        <module name="game-record" />
         <module name="business" />
+        <module name="settle" />
+        <module name="api" />
+        <module name="game-record" />
         <module name="commons" />
       </profile>
     </annotationProcessing>
@@ -21,6 +23,8 @@
       <module name="business" options="-parameters" />
       <module name="commons" options="-parameters" />
       <module name="game-record" options="-parameters" />
+      <module name="pay-callback" options="-parameters" />
+      <module name="settle" options="-parameters" />
       <module name="task" options="-parameters" />
     </option>
   </component>
