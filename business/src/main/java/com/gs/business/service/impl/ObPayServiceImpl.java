@@ -41,11 +41,12 @@ public class ObPayServiceImpl implements PayService {
         String stringSignTemp = StringUtils.join(sortData, "&", key);
         String sign = SecureUtil.md5(stringSignTemp).toUpperCase();
         treeMap.put("sign", sign);
+        log.info("参数加密:{}", JSON.toJSONString(treeMap));
         HttpRequest request = HttpUtil.createPost(merchant.getPayUrl() + "/api/payment/create");
         request.header("Content-Type", "application/json; charset=utf-8");
         request.body(JSON.toJSONString(treeMap));
         HttpResponse response = request.execute();
-        log.info("OB充值响应:{}", response);
+        log.info("OB充值响应:{}", response.body());
         JSONObject responseObj = JSON.parseObject(response.body());
         if (0 == responseObj.getIntValue("code")) {
             return responseObj.getJSONObject("data").getString("payUrl");
