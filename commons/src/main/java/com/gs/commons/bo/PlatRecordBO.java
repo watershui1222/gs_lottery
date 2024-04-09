@@ -38,6 +38,6 @@ public class PlatRecordBO {
 
 
 
-    private Date gameEndTime;
+    private Date settleTime;
 
 }

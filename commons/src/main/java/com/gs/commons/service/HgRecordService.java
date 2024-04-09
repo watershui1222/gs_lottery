@@ -2,8 +2,10 @@ package com.gs.commons.service;
 
 import com.gs.commons.entity.HgRecord;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.gs.commons.utils.PageUtils;
 
 import java.util.List;
+import java.util.Map;
 
 /**
 * @author tommm
@@ -13,4 +15,6 @@ import java.util.List;
 public interface HgRecordService extends IService<HgRecord> {
 
     int batchInsertOrUpdate(List<HgRecord> recordList);
+
+    PageUtils queryPage(Map<String, Object> params);
 }

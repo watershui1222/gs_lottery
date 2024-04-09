@@ -134,6 +134,7 @@ public class KyRecordSchedule {
                 kyRecord.setProfit(profit.getBigDecimal(i));
                 kyRecord.setGameStartTime(gameStartTime.getDate(i));
                 kyRecord.setGameEndTime(gameEndTime.getDate(i));
+                kyRecord.setSettleTime(gameEndTime.getDate(i));
                 kyRecord.setCreateTime(new Date());
                 kyRecord.setUpdateTime(new Date());
                 kyRecords.add(kyRecord);

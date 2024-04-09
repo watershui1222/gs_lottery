@@ -16,6 +16,7 @@
             <result property="profit" column="profit" jdbcType="DECIMAL"/>
             <result property="gameStartTime" column="game_start_time" jdbcType="TIMESTAMP"/>
             <result property="gameEndTime" column="game_end_time" jdbcType="TIMESTAMP"/>
+            <result property="settleTime" column="settle_time" jdbcType="TIMESTAMP"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
@@ -24,7 +25,7 @@
         id,user_name,plat_user_name,
         order_no,game_id,game_name,
         effective_bet,all_bet,profit,
-        game_start_time,game_end_time,create_time,
+        game_start_time,game_end_time,settle_time,create_time,
         update_time
     </sql>
 
@@ -33,14 +34,14 @@
         user_name,plat_user_name,
         order_no,game_id,game_name,
         effective_bet,all_bet,profit,
-        game_start_time,game_end_time,create_time,
+        game_start_time,game_end_time,settle_time,create_time,
         update_time
         )
         values
         <foreach collection="list" item="i" separator=",">
             (
             #{i.userName}, #{i.platUserName}, #{i.orderNo}, #{i.gameId}, #{i.gameName},
-            #{i.effectiveBet}, #{i.allBet}, #{i.profit}, #{i.gameStartTime}, #{i.gameEndTime}, #{i.createTime},
+            #{i.effectiveBet}, #{i.allBet}, #{i.profit}, #{i.gameStartTime}, #{i.gameEndTime}, #{i.settleTime}, #{i.createTime},
             #{i.updateTime}
             )
         </foreach>

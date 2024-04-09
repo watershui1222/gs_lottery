@@ -2,8 +2,10 @@ package com.gs.commons.service;
 
 import com.gs.commons.entity.SbRecord;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.gs.commons.utils.PageUtils;
 
 import java.util.List;
+import java.util.Map;
 
 /**
 * @author richard
@@ -13,4 +15,6 @@ import java.util.List;
 public interface SbRecordService extends IService<SbRecord> {
 
     int batchInsertOrUpdate(List<SbRecord> list);
+
+    PageUtils queryPage(Map<String, Object> params);
 }

@@ -47,12 +47,12 @@ public class KyRecordServiceImpl extends ServiceImpl<KyRecordMapper, KyRecord>
         wrapper.eq(StringUtils.isNotBlank(userName), KyRecord::getUserName, userName);
 
         Date startTime = MapUtil.getDate(params, "startTime");
-        wrapper.ge(startTime != null, KyRecord::getCreateTime, startTime);
+        wrapper.ge(startTime != null, KyRecord::getSettleTime, startTime);
 
         Date endTime = MapUtil.getDate(params, "endTime");
-        wrapper.le(endTime != null, KyRecord::getCreateTime, endTime);
+        wrapper.le(endTime != null, KyRecord::getSettleTime, endTime);
 
-        wrapper.orderByDesc(KyRecord::getCreateTime);
+        wrapper.orderByDesc(KyRecord::getSettleTime);
         IPage<KyRecord> page = this.page(
                 new Query<KyRecord>().getPage(params),
                 wrapper);

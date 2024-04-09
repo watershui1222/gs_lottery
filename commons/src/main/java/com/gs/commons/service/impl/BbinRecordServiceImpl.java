@@ -50,14 +50,14 @@ public class BbinRecordServiceImpl extends ServiceImpl<BbinRecordMapper, BbinRec
         wrapper.eq(null != gameType, BbinRecord::getGameType, gameType);
 
         Date startTime = MapUtil.getDate(params, "startTime");
-        wrapper.ge(startTime != null, BbinRecord::getCreateTime, startTime);
+        wrapper.ge(startTime != null, BbinRecord::getSettleTime, startTime);
 
         Date endTime = MapUtil.getDate(params, "endTime");
-        wrapper.le(endTime != null, BbinRecord::getCreateTime, endTime);
+        wrapper.le(endTime != null, BbinRecord::getSettleTime, endTime);
 
 
 
-        wrapper.orderByDesc(BbinRecord::getCreateTime);
+        wrapper.orderByDesc(BbinRecord::getSettleTime);
         IPage<BbinRecord> page = this.page(
                 new Query<BbinRecord>().getPage(params),
                 wrapper);
