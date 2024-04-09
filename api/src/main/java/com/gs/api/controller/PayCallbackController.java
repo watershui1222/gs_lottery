@@ -91,9 +91,113 @@ public class PayCallbackController {
         String sortData = ObUtil.sortData(treeMap, "&");
         String stringSignTemp = StringUtils.join(sortData, "&", key);
         String checkSign = SecureUtil.md5(stringSignTemp).toUpperCase();
-        log.info("签名data:{}", JSON.toJSONString(treeMap));
-        log.info("签名字符串:{}", stringSignTemp);
-        log.info("签名:{}  ---  验签:{}", sign, checkSign);
+        log.info("ob签名data:{}", JSON.toJSONString(treeMap));
+        log.info("ob签名字符串:{}", stringSignTemp);
+        log.info("ob签名:{}  ---  验签:{}", sign, checkSign);
+
+        if (!StringUtils.equals(sign, checkSign)) {
+            return "check sign error";
+        }
+
+
+
+        // 给用户加钱
+        payDepositService.deposit(payOrder);
+        return "success";
+    }
+
+
+
+
+    @ApiOperation(value = "OK回调")
+    @PostMapping("/ok")
+    public String ok(HttpServletRequest httpServletRequest) throws Exception {
+        String body = ServletUtil.getBody(httpServletRequest);
+        JSONObject bodyObj = JSONObject.parseObject(body);
+        String outTradeNo = bodyObj.getString("orderid");
+        String sign = bodyObj.getString("sign");
+        String retsign = bodyObj.getString("retsign");
+        String status = bodyObj.getString("state");
+
+        if (!StringUtils.equals(status, "4")) {
+            return "error";
+        }
+
+
+        PayOrder payOrder = payOrderService.getOne(
+                new LambdaQueryWrapper<PayOrder>()
+                        .eq(PayOrder::getOrderNo, outTradeNo)
+                        .eq(PayOrder::getStatus, 0)
+        );
+        if (null == payOrder) {
+            return "error";
+        }
+
+
+        // 查询商户
+        PayMerchant payMerchant = payMerchantService.getOne(new LambdaQueryWrapper<PayMerchant>().eq(PayMerchant::getMerchantCode, payOrder.getMerchantCode()));
+        String merchantDetail = payMerchant.getMerchantDetail();
+        JSONObject object = JSON.parseObject(merchantDetail);
+        String key = object.getString("key");
+        Long merchantId = object.getLong("merchantId");
+
+        // 校验加密规则
+        String stringSignTemp = StringUtils.join(sign, key);
+        String checkSign = SecureUtil.md5(stringSignTemp);
+        log.info("ok签名data:{}", JSON.toJSONString(bodyObj));
+        log.info("ok签名字符串:{}", stringSignTemp);
+        log.info("ok签名:{}  ---  验签:{}", sign, checkSign);
+
+        if (!StringUtils.equals(sign, checkSign)) {
+            return "check sign error";
+        }
+
+
+
+        // 给用户加钱
+        payDepositService.deposit(payOrder);
+        return "success";
+    }
+
+
+    @ApiOperation(value = "TO回调")
+    @PostMapping("/to")
+    public String to(HttpServletRequest httpServletRequest) throws Exception {
+        String body = ServletUtil.getBody(httpServletRequest);
+        JSONObject bodyObj = JSONObject.parseObject(body);
+        String outTradeNo = bodyObj.getString("orderid");
+        String sign = bodyObj.getString("sign");
+        String retsign = bodyObj.getString("retsign");
+        String status = bodyObj.getString("state");
+
+        if (!StringUtils.equals(status, "4")) {
+            return "error";
+        }
+
+
+        PayOrder payOrder = payOrderService.getOne(
+                new LambdaQueryWrapper<PayOrder>()
+                        .eq(PayOrder::getOrderNo, outTradeNo)
+                        .eq(PayOrder::getStatus, 0)
+        );
+        if (null == payOrder) {
+            return "error";
+        }
+
+
+        // 查询商户
+        PayMerchant payMerchant = payMerchantService.getOne(new LambdaQueryWrapper<PayMerchant>().eq(PayMerchant::getMerchantCode, payOrder.getMerchantCode()));
+        String merchantDetail = payMerchant.getMerchantDetail();
+        JSONObject object = JSON.parseObject(merchantDetail);
+        String key = object.getString("key");
+        Long merchantId = object.getLong("merchantId");
+
+        // 校验加密规则
+        String stringSignTemp = StringUtils.join(sign, key);
+        String checkSign = SecureUtil.md5(stringSignTemp);
+        log.info("to签名data:{}", JSON.toJSONString(bodyObj));
+        log.info("to签名字符串:{}", stringSignTemp);
+        log.info("to签名:{}  ---  验签:{}", sign, checkSign);
 
         if (!StringUtils.equals(sign, checkSign)) {
             return "check sign error";
