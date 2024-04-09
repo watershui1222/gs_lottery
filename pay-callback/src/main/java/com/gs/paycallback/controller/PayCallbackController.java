@@ -250,8 +250,6 @@ public class PayCallbackController {
                 , "&", status, "&", key);
         String checkSign = SecureUtil.md5(stringSignTemp).toUpperCase();
 
-
-
         log.info("CB签名data:{}", JSON.toJSONString(body));
         log.info("CB签名字符串:{}", stringSignTemp);
         log.info("CB签名:{}  ---  验签:{}", sign, checkSign);
