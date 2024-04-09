@@ -87,26 +87,25 @@ public class PayController {
             return R.error(StrUtil.format("通道支持金额:{}-{}", payChannel.getMinAmount(), payChannel.getMaxAmount()));
         }
 
-        // 生成三方单号
-        String payOrderNo = payClient.genOrderNo(payMerchant);
+        // 组装订单信息
+        Date now = new Date();
+        PayOrder payOrder = new PayOrder();
+        payOrder.setOrderNo(IdUtils.getPayOrderNo());
+        payOrder.setAmount(amount);
+        payOrder.setUserName(userName);
+        payOrder.setOrderNo(IdUtils.getPayOrderNo());
+        payOrder.setCreateTime(now);
+        payOrder.setUpdateTime(now);
+        payOrder.setStatus(0);
+        payOrder.setRemark(null);
+        payOrder.setErrorMsg(null);
+        payOrder.setMerchantCode(payMerchant.getMerchantCode());
+        payOrder.setChannelCode(payChannel.getChannelCode());
+        payOrder.setMerchantName(payMerchant.getMerchantName());
+        payOrder.setChannelName(payChannel.getChannelName());
         // 调用获取URL接口
-        String url = payClient.getUrl(payOrderNo, amount, payMerchant, payChannel);
+        String url = payClient.getUrl(payMerchant, payOrder);
         if (StringUtils.isNotBlank(url)) {
-            Date now = new Date();
-            PayOrder payOrder = new PayOrder();
-            payOrder.setUserName(userName);
-            payOrder.setOrderNo(IdUtils.getPayOrderNo());
-            payOrder.setPayOrderNo(payOrderNo);
-            payOrder.setAmount(amount);
-            payOrder.setCreateTime(now);
-            payOrder.setUpdateTime(now);
-            payOrder.setStatus(0);
-            payOrder.setRemark(null);
-            payOrder.setErrorMsg(null);
-            payOrder.setMerchantCode(payMerchant.getMerchantCode());
-            payOrder.setChannelCode(payChannel.getChannelCode());
-            payOrder.setMerchantName(payMerchant.getMerchantName());
-            payOrder.setChannelName(payChannel.getChannelName());
             payOrderService.save(payOrder);
             return R.ok().put("url", url);
         }

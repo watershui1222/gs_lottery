@@ -1,13 +1,11 @@
 package com.gs.business.client;
 
 import com.gs.business.service.PayService;
-import com.gs.commons.entity.PayChannel;
 import com.gs.commons.entity.PayMerchant;
+import com.gs.commons.entity.PayOrder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.math.BigDecimal;
 
 @Component
 public class PayClient {
@@ -16,15 +14,14 @@ public class PayClient {
 
     /**
      * 获取支付URL
-     * @param orderNo
      * @param merchant
-     * @param channel
+     * @param order
      * @return
      * @throws Exception
      */
-    public String getUrl(String orderNo, BigDecimal amount, PayMerchant merchant, PayChannel channel) throws Exception {
+    public String getUrl(PayMerchant merchant, PayOrder order) throws Exception {
         if (StringUtils.equals(merchant.getMerchantCode(), "OB")) {
-            return obPayService.getPayUrl(orderNo, amount, merchant, channel);
+            return obPayService.getPayUrl(merchant, order);
         }
         return null;
     }

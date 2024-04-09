@@ -8,14 +8,13 @@ import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.gs.business.service.PayService;
-import com.gs.commons.entity.PayChannel;
 import com.gs.commons.entity.PayMerchant;
+import com.gs.commons.entity.PayOrder;
 import com.gs.commons.utils.IdUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -24,7 +23,7 @@ import java.util.TreeMap;
 @Service("obPayService")
 public class ObPayServiceImpl implements PayService {
     @Override
-    public String getPayUrl(String orderNo, BigDecimal amount, PayMerchant merchant, PayChannel channel) {
+    public String getPayUrl(PayMerchant merchant, PayOrder order) {
         String merchantDetail = merchant.getMerchantDetail();
         JSONObject object = JSON.parseObject(merchantDetail);
         String key = object.getString("key");
@@ -32,8 +31,8 @@ public class ObPayServiceImpl implements PayService {
 
         Map<String, Object> treeMap = new TreeMap<>();
         treeMap.put("merchantNo", merchantId);
-        treeMap.put("outTradeNo", orderNo);
-        treeMap.put("amount", NumberUtil.mul(amount, 100).intValue());
+        treeMap.put("outTradeNo", order.getOrderNo());
+        treeMap.put("amount", NumberUtil.mul(order.getAmount(), 100).intValue());
         treeMap.put("currency", "OB");
         treeMap.put("notifyUrl", merchant.getCallbackUrl());
 
@@ -49,6 +48,9 @@ public class ObPayServiceImpl implements PayService {
         log.info("OB充值响应:{}", response.body());
         JSONObject responseObj = JSON.parseObject(response.body());
         if (0 == responseObj.getIntValue("code")) {
+            // 设置三方订单号
+            String tradeNo = responseObj.getJSONObject("data").getString("tradeNo");
+            order.setPayOrderNo(tradeNo);
             return responseObj.getJSONObject("data").getString("payUrl");
         }
         return null;
