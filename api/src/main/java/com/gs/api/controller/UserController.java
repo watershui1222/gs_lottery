@@ -395,23 +395,6 @@ public class UserController {
         params.put(Constant.PAGE, request.getPage());
         params.put(Constant.LIMIT, request.getLimit());
         params.put("userName", userName);
-        params.put("type", request.getType());
-        //1:今天 2:昨天 3:一周内 4:一月内
-        if (StringUtils.isNotBlank(request.getDateStr())) {
-            Date date = new Date();
-            if (StringUtils.equals(request.getDateStr(), "2")) {
-                date = DateUtil.offsetDay(date, -1);
-            } else if (StringUtils.equals(request.getDateStr(), "3")) {
-                date = DateUtil.offsetWeek(date, -1);
-            } else if (StringUtils.equals(request.getDateStr(), "4")) {
-                date = DateUtil.offsetMonth(date, -1);
-            }
-            Date startTime = DateUtil.beginOfDay(date);
-            Date endTime = DateUtil.endOfDay(date);
-
-            params.put("startTime", startTime);
-            params.put("endTime", endTime);
-        }
         PageUtils page = transactionRecordService.queryPage(params);
         List<TransactionRecord> list = (List<TransactionRecord>) page.getList();
 
@@ -426,8 +409,9 @@ public class UserController {
             businessTypeMap.put(6, "额度转出");
             businessTypeMap.put(7, "返水");
             businessTypeMap.put(8, "优惠活动");
-            businessTypeMap.put(9, "人工上分");
-            businessTypeMap.put(10, "人工下分");
+            businessTypeMap.put(9, "后台入款");
+            businessTypeMap.put(10, "后台扣款");
+            businessTypeMap.put(11, "和局退款");
             JSONArray arr = new JSONArray();
             for (TransactionRecord temp : list) {
                 JSONObject obj = new JSONObject();
@@ -435,7 +419,8 @@ public class UserController {
                 obj.put("time", temp.getCreateTime());
                 obj.put("amount", temp.getAmount());
                 obj.put("afterAmount", temp.getAfterAmount());
-                obj.put("typeStr", businessTypeMap.getOrDefault(temp.getBusinessType(), "未知"));
+//                obj.put("typeStr", businessTypeMap.getOrDefault(temp.getBusinessType(), "未知"));
+                obj.put("typeStr", temp.getRemark());
                 arr.add(obj);
             }
             page.setList(arr);
@@ -816,23 +801,23 @@ public class UserController {
         params.put("userName", userName);
         params.put("platCode", request.getPlatCode());
         //1:今天 2:昨天 3:一周内 4:一月内
-        Date startDate = new Date();
-        Date endTime = new Date();
-        if (StringUtils.isNotBlank(request.getDateStr())) {
-            if (StringUtils.equals(request.getDateStr(), "2")) {
-                startDate = DateUtil.offsetDay(startDate, -1);
-                endTime = startDate;
-            } else if (StringUtils.equals(request.getDateStr(), "3")) {
-                startDate = DateUtil.offsetWeek(startDate, -1);
-            } else if (StringUtils.equals(request.getDateStr(), "4")) {
-                startDate = DateUtil.offsetMonth(startDate, -1);
-            }
-        }
-        Date begin = DateUtil.beginOfDay(startDate);
-        Date end = DateUtil.endOfDay(endTime);
-
-        params.put("startTime", begin);
-        params.put("endTime", end);
+//        Date startDate = new Date();
+//        Date endTime = new Date();
+//        if (StringUtils.isNotBlank(request.getDateStr())) {
+//            if (StringUtils.equals(request.getDateStr(), "2")) {
+//                startDate = DateUtil.offsetDay(startDate, -1);
+//                endTime = startDate;
+//            } else if (StringUtils.equals(request.getDateStr(), "3")) {
+//                startDate = DateUtil.offsetWeek(startDate, -1);
+//            } else if (StringUtils.equals(request.getDateStr(), "4")) {
+//                startDate = DateUtil.offsetMonth(startDate, -1);
+//            }
+//        }
+//        Date begin = DateUtil.beginOfDay(startDate);
+//        Date end = DateUtil.endOfDay(endTime);
+//
+//        params.put("startTime", begin);
+//        params.put("endTime", end);
 
         PageUtils page = eduOrderService.queryPage(params);
         if (CollUtil.isNotEmpty(page.getList())) {
