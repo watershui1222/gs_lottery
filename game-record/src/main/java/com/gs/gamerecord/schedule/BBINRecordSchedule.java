@@ -1,7 +1,6 @@
 package com.gs.gamerecord.schedule;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 /**
  * BBIN定时任务
@@ -205,7 +203,14 @@ public class BBINRecordSchedule {
             for (Object obj : data1) {
                 JSONObject recordJson = (JSONObject) obj;
                 BbinRecord record = new BbinRecord();
-                record.setUserName(recordJson.getString("UserName"));
+                //判断是不是本平台用户
+                String ownerUsername = recordJson.getString("UserName");
+                String subOwnerStr = ownerUsername.substring(0, 2);
+                if(!StrUtil.equals(subOwnerStr, this.owner)){
+                    continue;
+                }
+                String username = ownerUsername.substring(2);
+                record.setUserName(username);
                 record.setPlatUserName(recordJson.getString("UserName"));
                 record.setOrderNo(recordJson.getString("WagersID"));
                 record.setGameId(recordJson.getString("GameType"));

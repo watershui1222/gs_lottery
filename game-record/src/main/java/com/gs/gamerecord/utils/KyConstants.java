@@ -57,7 +57,7 @@ public class KyConstants {
         GAME_NAME.put("3005", "欧式轮盘");
         GAME_NAME.put("2005", "富贵三张");
         GAME_NAME.put("3006", "官人坏坏百J乐");
-        GAME_NAME.put("2007", "闪电 21 点");
+        GAME_NAME.put("2007", "闪电21点");
         GAME_NAME.put("2008", "终极德州扑克");
         GAME_NAME.put("7479", "炸财神");
         GAME_NAME.put("7484", "幸运熊猫");

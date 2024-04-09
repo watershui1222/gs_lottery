@@ -370,8 +370,8 @@ public class ShaBaSport {
         return "FAIL";
     }
 
-    public static void main(String[] args) {
-        ShaBaSport sb = new ShaBaSport();
-        System.out.println(sb.getRecord());
-    }
+//    public static void main(String[] args) {
+//        ShaBaSport sb = new ShaBaSport();
+//        System.out.println(sb.getRecord());
+//    }
 }
