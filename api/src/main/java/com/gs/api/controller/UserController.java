@@ -388,7 +388,7 @@ public class UserController {
 
     @ApiOperation(value = "用户流水记录")
     @GetMapping("/transactionRecord/list")
-    public R orderList(TransactionRecordRequest request, HttpServletRequest httpServletRequest) {
+    public R transactionRecordList(TransactionRecordRequest request, HttpServletRequest httpServletRequest) {
         String userName = JwtUtils.getUserName(httpServletRequest);
 
         Map<String, Object> params = new HashMap<>();
