@@ -380,9 +380,9 @@ public class HuangGuanSport {
     }
 
 
-    public static void main(String[] args){
-        HuangGuanSport cr = new HuangGuanSport();
-        System.out.println(cr.aLLWager());
-    }
+//    public static void main(String[] args){
+//        HuangGuanSport cr = new HuangGuanSport();
+//        System.out.println(cr.aLLWager());
+//    }
 
 }

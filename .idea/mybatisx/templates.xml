@@ -68,8 +68,8 @@
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="EleGame" />
-                  <option name="tableName" value="t_ele_game" />
+                  <option name="className" value="AgRecord" />
+                  <option name="tableName" value="t_ag_record" />
                 </TableUIInfo>
               </list>
             </option>

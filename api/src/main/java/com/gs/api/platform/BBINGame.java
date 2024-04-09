@@ -558,9 +558,9 @@ public class BBINGame {
         return "";
     }
 
-    public static void main(String[] args) {
-        BBINGame bg = new BBINGame();
-        System.out.println(bg.getFishRecord());
-    }
+//    public static void main(String[] args) {
+//        BBINGame bg = new BBINGame();
+//        System.out.println(bg.getFishRecord());
+//    }
 
 }
