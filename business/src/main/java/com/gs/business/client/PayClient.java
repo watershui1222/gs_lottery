@@ -11,6 +11,10 @@ import org.springframework.stereotype.Component;
 public class PayClient {
     @Autowired
     private PayService obPayService;
+    @Autowired
+    private PayService okPayService;
+    @Autowired
+    private PayService toPayService;
 
     /**
      * 获取支付URL
@@ -22,6 +26,10 @@ public class PayClient {
     public String getUrl(PayMerchant merchant, PayOrder order) throws Exception {
         if (StringUtils.equals(merchant.getMerchantCode(), "OB")) {
             return obPayService.getPayUrl(merchant, order);
+        } else if (StringUtils.equals(merchant.getMerchantCode(), "OK")) {
+            return okPayService.getPayUrl(merchant, order);
+        } else if (StringUtils.equals(merchant.getMerchantCode(), "TO")) {
+            return toPayService.getPayUrl(merchant, order);
         }
         return null;
     }
