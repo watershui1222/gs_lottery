@@ -150,7 +150,7 @@ public class PayCallbackController {
         log.info("ok签名字符串:{}", stringSignTemp);
         log.info("ok签名:{}  ---  验签:{}", sign, checkSign);
 
-        if (!StringUtils.equals(sign, checkSign)) {
+        if (!StringUtils.equals(retsign, checkSign)) {
             return "check sign error";
         }
 
@@ -201,7 +201,7 @@ public class PayCallbackController {
         log.info("to签名字符串:{}", stringSignTemp);
         log.info("to签名:{}  ---  验签:{}", sign, checkSign);
 
-        if (!StringUtils.equals(sign, checkSign)) {
+        if (!StringUtils.equals(retsign, checkSign)) {
             return "check sign error";
         }
 
