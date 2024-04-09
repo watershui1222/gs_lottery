@@ -208,4 +208,60 @@ public class PayCallbackController {
         payDepositService.deposit(payOrder);
         return "success";
     }
+
+
+
+    @ApiOperation(value = "cb回调")
+    @PostMapping("/cb")
+    public String cb(HttpServletRequest httpServletRequest) throws Exception {
+        Map<String, String> body = ServletUtil.getParamMap(httpServletRequest);
+
+        String merchantId = body.get("userCode");
+        String outTradeNo = body.get("orderCode");
+        String amount = body.get("amount");
+        String status = body.get("status");
+        String sign = body.get("sign");
+
+        if (!StringUtils.equals(status, "3")) {
+            return "error";
+        }
+
+
+        PayOrder payOrder = payOrderService.getOne(
+                new LambdaQueryWrapper<PayOrder>()
+                        .eq(PayOrder::getOrderNo, outTradeNo)
+                        .eq(PayOrder::getStatus, 0)
+        );
+        if (null == payOrder) {
+            return "error";
+        }
+
+
+        // 查询商户
+        PayMerchant payMerchant = payMerchantService.getOne(new LambdaQueryWrapper<PayMerchant>().eq(PayMerchant::getMerchantCode, payOrder.getMerchantCode()));
+        String merchantDetail = payMerchant.getMerchantDetail();
+        JSONObject object = JSON.parseObject(merchantDetail);
+        String key = object.getString("key");
+
+        // 校验加密规则
+        String stringSignTemp = StringUtils.join(outTradeNo
+                , "&", amount
+                , "&", merchantId
+                , "&", status, "&", key);
+        String checkSign = SecureUtil.md5(stringSignTemp).toUpperCase();
+
+
+
+        log.info("CB签名data:{}", JSON.toJSONString(body));
+        log.info("CB签名字符串:{}", stringSignTemp);
+        log.info("CB签名:{}  ---  验签:{}", sign, checkSign);
+
+        if (!StringUtils.equals(sign, checkSign)) {
+            return "check sign error";
+        }
+
+        // 给用户加钱
+        payDepositService.deposit(payOrder);
+        return "success";
+    }
 }

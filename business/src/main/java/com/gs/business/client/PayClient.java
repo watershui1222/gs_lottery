@@ -15,6 +15,8 @@ public class PayClient {
     private PayService okPayService;
     @Autowired
     private PayService toPayService;
+    @Autowired
+    private PayService cbPayService;
 
     /**
      * 获取支付URL
@@ -30,6 +32,8 @@ public class PayClient {
             return okPayService.getPayUrl(merchant, order);
         } else if (StringUtils.equals(merchant.getMerchantCode(), "TO")) {
             return toPayService.getPayUrl(merchant, order);
+        } else if (StringUtils.equals(merchant.getMerchantCode(), "CB")) {
+            return cbPayService.getPayUrl(merchant, order);
         }
         return null;
     }
