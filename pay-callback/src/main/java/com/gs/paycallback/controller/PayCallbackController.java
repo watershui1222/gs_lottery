@@ -140,7 +140,6 @@ public class PayCallbackController {
         String merchantDetail = payMerchant.getMerchantDetail();
         JSONObject object = JSON.parseObject(merchantDetail);
         String key = object.getString("key");
-        Long merchantId = object.getLong("merchantId");
 
         // 校验加密规则
         String stringSignTemp = StringUtils.join(sign, key);
@@ -191,7 +190,6 @@ public class PayCallbackController {
         String merchantDetail = payMerchant.getMerchantDetail();
         JSONObject object = JSON.parseObject(merchantDetail);
         String key = object.getString("key");
-        Long merchantId = object.getLong("merchantId");
 
         // 校验加密规则
         String stringSignTemp = StringUtils.join(sign, key);
