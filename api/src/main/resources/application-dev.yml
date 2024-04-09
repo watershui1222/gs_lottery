@@ -24,6 +24,7 @@ login:
       - /user/login
       - /lottery/getAllPlay/*
       - /lottery/getAllOdds/**
+      - /callback/*
 #token失效时间
 token:
   expire: 15000
