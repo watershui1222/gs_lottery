@@ -25,17 +25,4 @@ public class PayClient {
         }
         return null;
     }
-
-    /**
-     * 获取支付URL
-     * @param merchant
-     * @return
-     * @throws Exception
-     */
-    public String genOrderNo(PayMerchant merchant) throws Exception {
-        if (StringUtils.equals(merchant.getMerchantCode(), "OB")) {
-            return obPayService.genPayOrderNo();
-        }
-        return null;
-    }
 }

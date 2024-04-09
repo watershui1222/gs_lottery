@@ -6,6 +6,4 @@ import com.gs.commons.entity.PayOrder;
 public interface PayService {
 
     String getPayUrl(PayMerchant merchant, PayOrder order);
-
-    String genPayOrderNo();
 }

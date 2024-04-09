@@ -8,15 +8,14 @@ import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.gs.business.service.PayService;
+import com.gs.business.utils.pay.ObUtil;
 import com.gs.commons.entity.PayMerchant;
 import com.gs.commons.entity.PayOrder;
-import com.gs.commons.utils.IdUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 
 @Slf4j
@@ -36,7 +35,7 @@ public class ObPayServiceImpl implements PayService {
         treeMap.put("currency", "OB");
         treeMap.put("notifyUrl", merchant.getCallbackUrl());
 
-        String sortData = sortData(treeMap);
+        String sortData = ObUtil.sortData(treeMap, "&");
         String stringSignTemp = StringUtils.join(sortData, "&", key);
         String sign = SecureUtil.md5(stringSignTemp).toUpperCase();
         treeMap.put("sign", sign);
@@ -54,35 +53,5 @@ public class ObPayServiceImpl implements PayService {
             return responseObj.getJSONObject("data").getString("payUrl");
         }
         return null;
-    }
-
-    @Override
-    public String genPayOrderNo() {
-        return IdUtils.getPayOrderNo();
-    }
-
-    public static String sortData(Map<String, ?> sourceMap) {
-        String returnStr = sortData(sourceMap, "&");
-        return returnStr;
-    }
-
-    public static String sortData(Map<String, ?> sourceMap, String link) {
-        if (StringUtils.isEmpty(link)) {
-            link = "&";
-        }
-        Map<String, Object> sortedMap = new TreeMap<String, Object>();
-        sortedMap.putAll(sourceMap);
-        Set<Map.Entry<String, Object>> entrySet = sortedMap.entrySet();
-        StringBuilder sbf = new StringBuilder();
-        for (Map.Entry<String, Object> entry : entrySet) {
-            if (null != entry.getValue() && StringUtils.isNotEmpty(entry.getValue().toString())) {
-                sbf.append(entry.getKey()).append("=").append(entry.getValue()).append(link);
-            }
-        }
-        String returnStr = sbf.toString();
-        if (returnStr.endsWith(link)) {
-            returnStr = returnStr.substring(0, returnStr.length() - 1);
-        }
-        return returnStr;
     }
 }
