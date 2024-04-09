@@ -17,7 +17,10 @@ public class PayClient {
     private PayService toPayService;
     @Autowired
     private PayService cbPayService;
-
+    @Autowired
+    private PayService jdPayService;
+    @Autowired
+    private PayService kdPayService;
     /**
      * 获取支付URL
      * @param merchant
@@ -34,6 +37,10 @@ public class PayClient {
             return toPayService.getPayUrl(merchant, order);
         } else if (StringUtils.equals(merchant.getMerchantCode(), "CB")) {
             return cbPayService.getPayUrl(merchant, order);
+        } else if (StringUtils.equals(merchant.getMerchantCode(), "JD")) {
+            return jdPayService.getPayUrl(merchant, order);
+        }  else if (StringUtils.equals(merchant.getMerchantCode(), "KD")) {
+            return kdPayService.getPayUrl(merchant, order);
         }
         return null;
     }
