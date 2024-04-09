@@ -441,8 +441,8 @@ public class UserController {
                 obj.put("time", temp.getCreateTime());
                 obj.put("amount", temp.getAmount());
                 obj.put("afterAmount", temp.getAfterAmount());
-//                obj.put("typeStr", businessTypeMap.getOrDefault(temp.getBusinessType(), "未知"));
-                obj.put("typeStr", temp.getRemark());
+                obj.put("typeStr", businessTypeMap.getOrDefault(temp.getBusinessType(), "未知"));
+                obj.put("remark", temp.getRemark());
                 arr.add(obj);
             }
             page.setList(arr);
