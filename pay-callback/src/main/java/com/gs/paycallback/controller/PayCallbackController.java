@@ -85,7 +85,9 @@ public class PayCallbackController {
         // 校验加密规则
         Map<String, Object> treeMap = new TreeMap<>();
         for (Map.Entry<String, Object> stringObjectEntry : bodyObj.entrySet()) {
-            treeMap.put(stringObjectEntry.getKey(), stringObjectEntry.getValue());
+            if (!StringUtils.equals(stringObjectEntry.getKey(), "sign")) {
+                treeMap.put(stringObjectEntry.getKey(), stringObjectEntry.getValue());
+            }
         }
         String sortData = ObUtil.sortData(treeMap, "&");
         String stringSignTemp = StringUtils.join(sortData, "&", key);
@@ -145,7 +147,7 @@ public class PayCallbackController {
         String checkSign = SecureUtil.md5(stringSignTemp);
         log.info("ok签名data:{}", JSON.toJSONString(bodyObj));
         log.info("ok签名字符串:{}", stringSignTemp);
-        log.info("ok签名:{}  ---  验签:{}", sign, checkSign);
+        log.info("ok签名:{}  ---  验签:{}", retsign, checkSign);
 
         if (!StringUtils.equals(sign, checkSign)) {
             return "check sign error";
@@ -198,7 +200,7 @@ public class PayCallbackController {
         log.info("to签名字符串:{}", stringSignTemp);
         log.info("to签名:{}  ---  验签:{}", sign, checkSign);
 
-        if (!StringUtils.equals(sign, checkSign)) {
+        if (!StringUtils.equals(retsign, checkSign)) {
             return "check sign error";
         }
 
