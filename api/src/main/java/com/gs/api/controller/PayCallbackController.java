@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.spring.web.json.Json;
@@ -43,11 +44,13 @@ public class PayCallbackController {
     private StringRedisTemplate redisTemplate;
 
     @ApiOperation(value = "OB回调")
-    @GetMapping("/ob")
+    @PostMapping("/ob")
     public String ob(HttpServletRequest httpServletRequest) throws Exception {
         String body = ServletUtil.getBody(httpServletRequest);
         System.out.println("body:" + body);
+        redisTemplate.opsForValue().set("body", body);
         Map<String, String> paramMap = ServletUtil.getParamMap(httpServletRequest);
+        redisTemplate.opsForValue().set("paramMap", JSON.toJSONString(paramMap));
         System.out.println("param:" + JSON.toJSONString(paramMap));
         return "success";
     }

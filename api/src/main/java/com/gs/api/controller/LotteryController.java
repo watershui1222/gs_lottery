@@ -548,7 +548,7 @@ public class LotteryController {
 
     @ApiOperation(value = "取消订单")
     @GetMapping("/cancel/{orderNo}")
-    public R lotteryTime(HttpServletRequest httpServletRequest, @PathVariable("orderNo") String orderNo) throws Exception {
+    public R cancelOrder(HttpServletRequest httpServletRequest, @PathVariable("orderNo") String orderNo) throws Exception {
         String userName = JwtUtils.getUserName(httpServletRequest);
         // 查询订单信息
         LotteryOrder lotteryOrder = lotteryOrderService.getOne(
