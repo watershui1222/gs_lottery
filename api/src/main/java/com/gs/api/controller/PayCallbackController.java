@@ -86,7 +86,9 @@ public class PayCallbackController {
         // 校验加密规则
         Map<String, Object> treeMap = new TreeMap<>();
         for (Map.Entry<String, Object> stringObjectEntry : bodyObj.entrySet()) {
-            treeMap.put(stringObjectEntry.getKey(), stringObjectEntry.getValue());
+            if (!StringUtils.equals(stringObjectEntry.getKey(), "sign")) {
+                treeMap.put(stringObjectEntry.getKey(), stringObjectEntry.getValue());
+            }
         }
         String sortData = ObUtil.sortData(treeMap, "&");
         String stringSignTemp = StringUtils.join(sortData, "&", key);
@@ -208,5 +210,13 @@ public class PayCallbackController {
         // 给用户加钱
         payDepositService.deposit(payOrder);
         return "success";
+    }
+
+    public static void main(String[] args) {
+        String s = "26E5EFAE48DA2FC6EA77B5D107B358E5";
+        String s1 = SecureUtil.md5("amount=10000&currency=OB&merchantNo=16212792&outTradeNo=P1777658104457854977&status=1&tradeNo=1712661686016843428864304&56cad83c30ea37591fdc2e1bcb60aa24").toUpperCase();
+        System.out.println(StringUtils.equals(s, s1));
+
+        System.out.println();
     }
 }
