@@ -340,36 +340,79 @@ public class PlatController {
         List<EleGame> list = new ArrayList<>();
         String path = "C:\\Users\\69000\\Desktop\\elegame\\bbin";
         File[] ls = FileUtil.ls(path);
-        for (File l : ls) {
-
-            EleGame eleGame = new EleGame();
-            System.out.println(l.getName());
-            String[] s = l.getName().split("_");
-            eleGame.setPlatCode("BBIN");
-            eleGame.setGameCode(s[0]);
-            eleGame.setGameName(s[1]);
-            eleGame.setImg("/gs/platform/elegame/bbin/" + l.getName());
-            eleGame.setStatus(0);
-            eleGame.setCreateTime(new Date());
-            eleGame.setUpdateTime(new Date());
-            eleGame.setPxh(0);
-
-            list.add(eleGame);
-        }
-        eleGameService.saveBatch(list);
+//        for (File l : ls) {
+//
+//            EleGame eleGame = new EleGame();
+//            System.out.println(l.getName());
+//            String[] s = l.getName().split("_");
+//            eleGame.setPlatCode("BBIN");
+//            eleGame.setPlatSubCode("");
+//            eleGame.setGameCode(s[0]);
+//            eleGame.setGameName(s[1]);
+//            eleGame.setImg("/gs/platform/elegame/bbin/" + l.getName());
+//            eleGame.setStatus(0);
+//            eleGame.setCreateTime(new Date());
+//            eleGame.setUpdateTime(new Date());
+//            eleGame.setPxh(0);
+//
+//            list.add(eleGame);
+//        }
 
         list.clear();
 
         ls = FileUtil.ls("C:\\Users\\69000\\Desktop\\elegame\\ly");
 
+//        for (File l : ls) {
+//            EleGame eleGame = new EleGame();
+//            System.out.println(l.getName());
+//            String[] s = l.getName().split("_");
+//            eleGame.setPlatCode("LY");
+//            eleGame.setPlatSubCode("");
+//            eleGame.setGameCode(s[0]);
+//            eleGame.setGameName(s[1].replace(".png", ""));
+//            eleGame.setImg("/gs/platform/elegame/ly/" + l.getName());
+//            eleGame.setStatus(0);
+//            eleGame.setCreateTime(new Date());
+//            eleGame.setUpdateTime(new Date());
+//            eleGame.setPxh(0);
+//
+//            list.add(eleGame);
+//        }
+
+        list.clear();
+
+        ls = FileUtil.ls("C:\\Users\\69000\\Desktop\\elegame\\ag");
+
+//        for (File l : ls) {
+//            EleGame eleGame = new EleGame();
+//            System.out.println(l.getName());
+//            String[] s = l.getName().split("_");
+//            eleGame.setPlatCode("AG");
+//            eleGame.setPlatSubCode("AGELE");
+//            eleGame.setGameCode(s[0]);
+//            eleGame.setGameName(s[1].replace(".png", ""));
+//            eleGame.setImg("/gs/platform/elegame/ag/" + l.getName());
+//            eleGame.setStatus(0);
+//            eleGame.setCreateTime(new Date());
+//            eleGame.setUpdateTime(new Date());
+//            eleGame.setPxh(0);
+//
+//            list.add(eleGame);
+//        }
+
+        list.clear();
+
+        ls = FileUtil.ls("C:\\Users\\69000\\Desktop\\elegame\\ky");
+
         for (File l : ls) {
             EleGame eleGame = new EleGame();
             System.out.println(l.getName());
             String[] s = l.getName().split("_");
-            eleGame.setPlatCode("LY");
+            eleGame.setPlatCode("KY");
+            eleGame.setPlatSubCode("KY");
             eleGame.setGameCode(s[0]);
             eleGame.setGameName(s[1].replace(".png", ""));
-            eleGame.setImg("/gs/platform/elegame/ly/" + l.getName());
+            eleGame.setImg("/gs/platform/elegame/ky/" + l.getName());
             eleGame.setStatus(0);
             eleGame.setCreateTime(new Date());
             eleGame.setUpdateTime(new Date());
@@ -377,29 +420,7 @@ public class PlatController {
 
             list.add(eleGame);
         }
-        System.out.println(JSON.toJSONString(list));
         eleGameService.saveBatch(list);
         return R.ok();
-    }
-
-    public static void main(String[] args) {
-        List<EleGame> list = new ArrayList<>();
-        File[] ls = FileUtil.ls("C:\\Users\\69000\\Downloads\\Telegram Desktop\\BB Casino-180x180-cn\\BB Casino-180x180-cn");
-        for (File l : ls) {
-            EleGame eleGame = new EleGame();
-            System.out.println(l.getName());
-            String[] s = l.getName().split("_");
-            eleGame.setPlatCode("BBIN");
-            eleGame.setGameCode(s[0]);
-            eleGame.setGameName(s[1]);
-            eleGame.setImg("/gs/platform/elegame/bbin/" + l.getName());
-            eleGame.setStatus(0);
-            eleGame.setCreateTime(new Date());
-            eleGame.setUpdateTime(new Date());
-            eleGame.setPxh(0);
-
-            list.add(eleGame);
-        }
-        System.out.println(JSON.toJSONString(list));
     }
 }

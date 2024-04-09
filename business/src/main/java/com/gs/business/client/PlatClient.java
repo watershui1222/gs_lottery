@@ -98,20 +98,15 @@ public class PlatClient {
     public String getLoginUrl(PlatLoginUrlBO request) throws Exception {
         if (StringUtils.equals(request.getPlatCode(), "KY")) {
             return kyService.getLoginUrl(request);
-        }
-        if (StringUtils.equals(request.getPlatCode(), "LY")) {
+        } else if (StringUtils.equals(request.getPlatCode(), "LY")) {
             return lyService.getLoginUrl(request);
-        }
-        if (StringUtils.equals(request.getPlatCode(), "HG")) {
+        } else if (StringUtils.equals(request.getPlatCode(), "HG")) {
             return hgService.getLoginUrl(request);
-        }
-        if (StringUtils.equals(request.getPlatCode(), "BBIN")) {
+        } else if (StringUtils.equals(request.getPlatCode(), "BBIN")) {
             return bbinService.getLoginUrl(request);
-        }
-        if (StringUtils.equals(request.getPlatCode(), "AG")) {
+        } else if (StringUtils.equals(request.getPlatCode(), "AG")) {
             return agService.getLoginUrl(request);
-        }
-        if (StringUtils.equals(request.getPlatCode(), "SB")) {
+        } else if (StringUtils.equals(request.getPlatCode(), "SB")) {
             return sbService.getLoginUrl(request);
         }
         return null;

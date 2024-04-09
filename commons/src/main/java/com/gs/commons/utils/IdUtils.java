@@ -30,4 +30,8 @@ public class IdUtils {
     public static String getLotteryOrderNo() {
         return "L" + IdUtil.getSnowflakeNextIdStr();
     }
+
+    public static String getPayOrderNo() {
+        return "P" + IdUtil.getSnowflakeNextIdStr();
+    }
 }

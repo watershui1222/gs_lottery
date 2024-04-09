@@ -1,23 +1,21 @@
 package com.gs.api.controller;
+import java.util.Date;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.gs.api.controller.request.CompanyDepositRequest;
 import com.gs.api.controller.request.CompanyVirDepositRequest;
 import com.gs.api.controller.request.DepositRecordRequest;
+import com.gs.api.controller.request.PayUrlRequest;
 import com.gs.api.utils.JwtUtils;
+import com.gs.business.client.PayClient;
 import com.gs.commons.constants.Constant;
-import com.gs.commons.entity.CompanyAccount;
-import com.gs.commons.entity.CompanyVirtual;
-import com.gs.commons.entity.Deposit;
-import com.gs.commons.entity.UserInfo;
-import com.gs.commons.service.CompanyAccountService;
-import com.gs.commons.service.CompanyVirtualService;
-import com.gs.commons.service.DepositService;
-import com.gs.commons.service.UserInfoService;
+import com.gs.commons.entity.*;
+import com.gs.commons.service.*;
 import com.gs.commons.utils.IdUtils;
 import com.gs.commons.utils.MsgUtil;
 import com.gs.commons.utils.PageUtils;
@@ -25,6 +23,7 @@ import com.gs.commons.utils.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.validation.annotation.Validated;
@@ -38,8 +37,8 @@ import java.math.BigDecimal;
 import java.util.*;
 
 @Slf4j
-@Api(value = "充值相关", tags = "充值相关")
-@RequestMapping("/deposit")
+@Api(value = "三方支付相关", tags = "三方支付相关")
+@RequestMapping("/pay")
 @RestController
 public class PayController {
     @Autowired
@@ -49,205 +48,67 @@ public class PayController {
     private UserInfoService userInfoService;
 
     @Autowired
-    private CompanyAccountService companyAccountService;
+    private PayOrderService payOrderService;
 
     @Autowired
-    private CompanyVirtualService companyVirtualService;
+    private PayMerchantService payMerchantService;
 
     @Autowired
-    private DepositService depositService;
+    private PayChannelService payChannelService;
+
+    @Autowired
+    private PayClient payClient;
 
 
-    @ApiOperation(value = "获取公司入款充值方式")
-    @GetMapping("/getCompany")
-    public R companyList(HttpServletRequest httpServletRequest) {
-        List<CompanyAccount> list = companyAccountService.list(
-                new LambdaQueryWrapper<CompanyAccount>()
-                        .eq(CompanyAccount::getStatus, 0)
-                        .orderByDesc(CompanyAccount::getPxh)
-        );
-
-        Map<String, Object> account = new HashMap<>();
-        List<JSONObject> arr = new ArrayList<>();
-        for (CompanyAccount companyAccount : list) {
-            JSONObject object = new JSONObject();
-            object.put("channelId", companyAccount.getId());
-            object.put("accountName", companyAccount.getAccountName());
-            object.put("payeeName", companyAccount.getPayeeName());
-            object.put("accountNo", companyAccount.getAccountNo());
-            object.put("address", companyAccount.getAddress());
-            object.put("minAmount", companyAccount.getMinAmount());
-            object.put("maxAmount", companyAccount.getMaxAmount());
-            object.put("remark", companyAccount.getRemark());
-            object.put("type", companyAccount.getType());
-            if (account.containsKey(String.valueOf(companyAccount.getType()))) {
-                continue;
-            }
-            account.put(String.valueOf(companyAccount.getType()), object);
-            arr.add(object);
-        }
-        return R.ok().put("list", arr);
-    }
-
-
-    @ApiOperation(value = "获取虚拟货币充值方式")
-    @GetMapping("/getvirtual")
-    public R virtualList(HttpServletRequest httpServletRequest) {
-        List<CompanyVirtual> list = companyVirtualService.list(
-                new LambdaQueryWrapper<CompanyVirtual>()
-                        .eq(CompanyVirtual::getStatus, 0)
-                        .orderByDesc(CompanyVirtual::getPxh)
-        );
-
-        Map<String, Object> account = new HashMap<>();
-        List<JSONObject> arr = new ArrayList<>();
-        for (CompanyVirtual companyAccount : list) {
-            JSONObject object = new JSONObject();
-            object.put("channelId", companyAccount.getId());
-            object.put("name", companyAccount.getChannelName());
-            object.put("type", companyAccount.getChannelType());
-            object.put("exchangeRate", companyAccount.getExchangeRate());
-            object.put("address", companyAccount.getAccountNo());
-            object.put("remark", companyAccount.getRemark());
-            object.put("minAmount", companyAccount.getMinAmount());
-            object.put("maxAmount", companyAccount.getMaxAmount());
-            if (account.containsKey(String.valueOf(companyAccount.getChannelType()))) {
-                continue;
-            }
-            account.put(String.valueOf(companyAccount.getChannelType()), object);
-            arr.add(object);
-        }
-        return R.ok().put("list", arr);
-    }
-
-
-    @ApiOperation(value = "公司入款充值")
-    @PostMapping("/companyDeposit")
-    public R companyDeposit(@Validated CompanyDepositRequest request, HttpServletRequest httpServletRequest) {
+    @ApiOperation(value = "获取三方支付URL")
+    @GetMapping("/getPayUrl")
+    public R getPayUrl(@Validated PayUrlRequest request, HttpServletRequest httpServletRequest) throws Exception {
         String userName = JwtUtils.getUserName(httpServletRequest);
+
+        // 获取用户信息
         UserInfo user = userInfoService.getUserByName(userName);
 
-        CompanyAccount companyAccount = companyAccountService.getById(request.getChannelId());
-        BigDecimal amount = new BigDecimal(request.getAmount());
-
-        // 校验是否还有未充值订单
-        List<Deposit> deposits = depositService.list(
-                new LambdaQueryWrapper<Deposit>()
-                        .eq(Deposit::getUserName, user.getUserName())
-                        .eq(Deposit::getStatus, 0)
+        // 获取支付通道
+        PayChannel payChannel = payChannelService.getById(request.getChannelId());
+        if (payChannel == null || payChannel.getStatus().intValue() == 1) {
+            return R.error("通道维护中...");
+        }
+        // 获取商户信息
+        PayMerchant payMerchant = payMerchantService.getOne(
+                new LambdaQueryWrapper<PayMerchant>()
+                        .eq(PayMerchant::getStatus, 0)
+                        .eq(PayMerchant::getMerchantCode, payChannel.getMerchantCode())
         );
-        if (CollUtil.isNotEmpty(deposits)) {
-            return R.error(MsgUtil.get("system.deposit.company.err1"));
+        if (payMerchant == null || payMerchant.getStatus().intValue() == 1) {
+            return R.error("通道维护中...");
         }
-
-        Date now = new Date();
-        Deposit deposit = new Deposit();
-        deposit.setUserName(user.getUserName());
-        deposit.setOrderNo(IdUtils.getDepositOrderNo());
-        deposit.setAmount(amount);
-        deposit.setDepositType(companyAccount.getType());
-        deposit.setCreateTime(now);
-        deposit.setCheckTime(null);
-        deposit.setUpdateTime(null);
-        deposit.setOperName(null);
-        deposit.setRemark(null);
-        String accountDetail = companyAccount.getAccountName()
-                + "|"
-                + companyAccount.getPayeeName()
-                + "|"
-                + companyAccount.getAccountNo()
-                + "|"
-                + companyAccount.getAddress();
-        deposit.setAccountDetail(accountDetail);
-        String depositDetail = "存款人姓名:[" + request.getName() + "],转账备注:" + request.getRemark();
-        deposit.setDepositDetail(depositDetail);
-        deposit.setStatus(0);
-        depositService.save(deposit);
-        return R.ok(MsgUtil.get("system.deposit.company.success"));
-    }
-
-
-    @ApiOperation(value = "虚拟货币充值")
-    @PostMapping("/companyVirDeposit")
-    public R companyVirDeposit(@Validated CompanyVirDepositRequest request, HttpServletRequest httpServletRequest) {
-        String userName = JwtUtils.getUserName(httpServletRequest);
-        UserInfo user = userInfoService.getUserByName(userName);
-
-        CompanyVirtual companyVirtual = companyVirtualService.getById(request.getChannelId());
-        // 计算汇率
         BigDecimal amount = new BigDecimal(request.getAmount());
-        amount = NumberUtil.mul(amount, companyVirtual.getExchangeRate());
-        // 校验是否还有未充值订单
-        List<Deposit> deposits = depositService.list(
-                new LambdaQueryWrapper<Deposit>()
-                        .eq(Deposit::getUserName, user.getUserName())
-                        .eq(Deposit::getStatus, 0)
-        );
-        if (CollUtil.isNotEmpty(deposits)) {
-            return R.error(MsgUtil.get("system.deposit.company.err1"));
+        if (amount.doubleValue() < payChannel.getMinAmount().doubleValue() || amount.doubleValue() > payChannel.getMaxAmount().doubleValue()) {
+            return R.error(StrUtil.format("通道支持金额:{}-{}", payChannel.getMinAmount(), payChannel.getMaxAmount()));
         }
 
+        // 组装订单信息
         Date now = new Date();
-        Deposit deposit = new Deposit();
-        deposit.setUserName(user.getUserName());
-        deposit.setOrderNo(IdUtils.getDepositOrderNo());
-        deposit.setAmount(amount);
-        deposit.setDepositType(4);
-        deposit.setCreateTime(now);
-        deposit.setCheckTime(null);
-        deposit.setUpdateTime(null);
-        deposit.setOperName(null);
-        deposit.setRemark(null);
-        String channelType = companyVirtual.getChannelType().intValue() == 1 ? "TRC20" : "ERC20";
-        String accountDetail = companyVirtual.getChannelName()
-                + "|"
-                + channelType
-                + "|"
-                + companyVirtual.getAccountNo();
-        deposit.setAccountDetail(accountDetail);
-        String depositDetail = "交易ID:[" + request.getTrxId() + "]";
-        deposit.setDepositDetail(depositDetail);
-        deposit.setStatus(0);
-        depositService.save(deposit);
-        return R.ok(MsgUtil.get("system.deposit.company.success"));
-    }
-
-
-    @ApiOperation(value = "用户充值记录")
-    @GetMapping("/record")
-    public R recordList(DepositRecordRequest request, HttpServletRequest httpServletRequest) {
-        String userName = JwtUtils.getUserName(httpServletRequest);
-
-        Map<String, Object> params = new HashMap<>();
-        params.put(Constant.PAGE, request.getPage());
-        params.put(Constant.LIMIT, request.getLimit());
-        params.put("userName", userName);
-        PageUtils page = depositService.queryPage(params);
-        List<Deposit> list = (List<Deposit>) page.getList();
-
-        if (CollUtil.isNotEmpty(list)) {
-            Map<Integer, String> depositTypeMap = new HashMap<>();
-            depositTypeMap.put(1, "银行卡转账");
-            depositTypeMap.put(2, "微信");
-            depositTypeMap.put(3, "支付宝");
-            depositTypeMap.put(4, "虚拟货币");
-            depositTypeMap.put(5, "在线支付");
-            JSONArray arr = new JSONArray();
-            for (Deposit temp : list) {
-                JSONObject obj = new JSONObject();
-                obj.put("time", temp.getCreateTime());
-                obj.put("amount", temp.getAmount());
-                obj.put("checkTime", temp.getCheckTime());
-                obj.put("status", temp.getStatus());
-                obj.put("remark", temp.getRemark());
-                obj.put("orderId", temp.getOrderNo());
-                obj.put("depositTypeStr", depositTypeMap.getOrDefault(temp.getDepositType(), "未知"));
-                obj.put("depositType",temp.getDepositType());
-                arr.add(obj);
-            }
-            page.setList(arr);
+        PayOrder payOrder = new PayOrder();
+        payOrder.setOrderNo(IdUtils.getPayOrderNo());
+        payOrder.setAmount(amount);
+        payOrder.setUserName(userName);
+        payOrder.setOrderNo(IdUtils.getPayOrderNo());
+        payOrder.setCreateTime(now);
+        payOrder.setUpdateTime(now);
+        payOrder.setStatus(0);
+        payOrder.setRemark(null);
+        payOrder.setErrorMsg(null);
+        payOrder.setMerchantCode(payMerchant.getMerchantCode());
+        payOrder.setChannelCode(payChannel.getChannelCode());
+        payOrder.setMerchantName(payMerchant.getMerchantName());
+        payOrder.setChannelName(payChannel.getChannelName());
+        // 调用获取URL接口
+        String url = payClient.getUrl(payMerchant, payOrder);
+        if (StringUtils.isNotBlank(url)) {
+            payOrderService.save(payOrder);
+            return R.ok().put("url", url);
         }
-
-        return R.ok().put("page", page);
+        return R.error();
     }
 }

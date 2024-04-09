@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gs.commons.mapper.PayMerchantMapper">
+
+    <resultMap id="BaseResultMap" type="com.gs.commons.entity.PayMerchant">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="merchantCode" column="merchant_code" jdbcType="VARCHAR"/>
+            <result property="merchantName" column="merchant_name" jdbcType="VARCHAR"/>
+            <result property="merchantDetail" column="merchant_detail" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="status" column="status" jdbcType="INTEGER"/>
+            <result property="callbackUrl" column="callback_url" jdbcType="VARCHAR"/>
+            <result property="callbackIp" column="callback_ip" jdbcType="VARCHAR"/>
+            <result property="payUrl" column="pay_url" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,merchant_code,merchant_name,
+        merchant_detail,create_time,update_time,
+        status,callback_url,callback_ip,
+        pay_url
+    </sql>
+</mapper>
