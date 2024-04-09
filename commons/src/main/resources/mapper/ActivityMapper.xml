@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gs.commons.mapper.ActivityMapper">
+
+    <resultMap id="BaseResultMap" type="com.gs.commons.entity.Activity">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="title" column="title" jdbcType="VARCHAR"/>
+            <result property="img1" column="img1" jdbcType="VARCHAR"/>
+            <result property="img2" column="img2" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="status" column="status" jdbcType="INTEGER"/>
+            <result property="operName" column="oper_name" jdbcType="VARCHAR"/>
+            <result property="pxh" column="pxh" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,title,img1,
+        img2,create_time,update_time,
+        status,oper_name,pxh
+    </sql>
+</mapper>
