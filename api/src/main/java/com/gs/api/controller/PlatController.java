@@ -383,15 +383,36 @@ public class PlatController {
 
         ls = FileUtil.ls("C:\\Users\\69000\\Desktop\\elegame\\ag");
 
+//        for (File l : ls) {
+//            EleGame eleGame = new EleGame();
+//            System.out.println(l.getName());
+//            String[] s = l.getName().split("_");
+//            eleGame.setPlatCode("AG");
+//            eleGame.setPlatSubCode("AGELE");
+//            eleGame.setGameCode(s[0]);
+//            eleGame.setGameName(s[1].replace(".png", ""));
+//            eleGame.setImg("/gs/platform/elegame/ag/" + l.getName());
+//            eleGame.setStatus(0);
+//            eleGame.setCreateTime(new Date());
+//            eleGame.setUpdateTime(new Date());
+//            eleGame.setPxh(0);
+//
+//            list.add(eleGame);
+//        }
+
+        list.clear();
+
+        ls = FileUtil.ls("C:\\Users\\69000\\Desktop\\elegame\\ky");
+
         for (File l : ls) {
             EleGame eleGame = new EleGame();
             System.out.println(l.getName());
             String[] s = l.getName().split("_");
-            eleGame.setPlatCode("AG");
-            eleGame.setPlatSubCode("AGELE");
+            eleGame.setPlatCode("KY");
+            eleGame.setPlatSubCode("KY");
             eleGame.setGameCode(s[0]);
             eleGame.setGameName(s[1].replace(".png", ""));
-            eleGame.setImg("/gs/platform/elegame/ag/" + l.getName());
+            eleGame.setImg("/gs/platform/elegame/ky/" + l.getName());
             eleGame.setStatus(0);
             eleGame.setCreateTime(new Date());
             eleGame.setUpdateTime(new Date());

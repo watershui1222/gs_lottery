@@ -1,5 +1,4 @@
 package com.gs.api.controller;
-import java.util.Date;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
@@ -10,23 +9,15 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.extra.servlet.ServletUtil;
-import cn.hutool.http.HtmlUtil;
-import cn.hutool.http.HttpUtil;
-import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.core.toolkit.sql.StringEscape;
 import com.gs.api.controller.request.*;
 import com.gs.api.utils.JwtUtils;
-import com.gs.business.client.LotteryClient;
-import com.gs.business.pojo.LotteryCurrQsBO;
-import com.gs.business.service.LotteryBetService;
 import com.gs.commons.constants.Constant;
 import com.gs.commons.entity.*;
-import com.gs.commons.enums.LotteryCodeEnum;
 import com.gs.commons.enums.PlatSubEnum;
 import com.gs.commons.service.*;
 import com.gs.commons.utils.*;
@@ -49,7 +40,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Api(value = "用户相关", tags = "用户")
@@ -310,12 +300,17 @@ public class UserController {
 
     @ApiOperation(value = "修改用户昵称")
     @PostMapping("/updateNickName")
-    public R register(@Validated UpdateNickNameRequest request, HttpServletRequest httpServletRequest) {
+    public R updateNickName(@Validated UpdateNickNameRequest request, HttpServletRequest httpServletRequest) {
         if (request.getNickName().length() > 6) {
             return R.error();
         }
 
         String userName = JwtUtils.getUserName(httpServletRequest);
+
+        UserInfo user = userInfoService.getUserByName(userName);
+        if (StringUtils.isNotBlank(user.getNickName())) {
+            return R.error("用户只能修改一次昵称");
+        }
 
         userInfoService.update(
                 new LambdaUpdateWrapper<UserInfo>()
@@ -864,9 +859,5 @@ public class UserController {
         }
 
         return R.ok().put("page", page);
-    }
-
-    public static void main(String[] args) {
-        System.out.println(HttpUtil.get("https://www.speedtest.net/zh-Hans"));
     }
 }
