@@ -22,6 +22,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -141,6 +143,8 @@ public class HgRecordSchedule {
                             hgRecord.setIoratio(wager.getBigDecimal("ioratio"));
                             hgRecord.setLeague(wager.getString("league"));
                             hgRecord.setOrderNo(wager.getString("id"));
+                            BigDecimal win = wager.getBigDecimal("wingold_d");
+                            BigDecimal profit = win.subtract(hgRecord.getEffectiveBet());
                             hgRecord.setProfit(wager.getBigDecimal("vgold"));
                             hgRecord.setParlaynum(wager.getInteger("parlaynum"));
                             hgRecord.setBetTime(DateUtil.parse(wager.getString("adddate")));
