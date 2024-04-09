@@ -310,12 +310,17 @@ public class UserController {
 
     @ApiOperation(value = "修改用户昵称")
     @PostMapping("/updateNickName")
-    public R register(@Validated UpdateNickNameRequest request, HttpServletRequest httpServletRequest) {
+    public R updateNickName(@Validated UpdateNickNameRequest request, HttpServletRequest httpServletRequest) {
         if (request.getNickName().length() > 6) {
             return R.error();
         }
 
         String userName = JwtUtils.getUserName(httpServletRequest);
+
+        UserInfo user = userInfoService.getUserByName(userName);
+        if (StringUtils.isNotBlank(user.getNickName())) {
+            return R.error("用户只能修改一次昵称");
+        }
 
         userInfoService.update(
                 new LambdaUpdateWrapper<UserInfo>()
@@ -864,9 +869,5 @@ public class UserController {
         }
 
         return R.ok().put("page", page);
-    }
-
-    public static void main(String[] args) {
-        System.out.println(HttpUtil.get("https://www.speedtest.net/zh-Hans"));
     }
 }
