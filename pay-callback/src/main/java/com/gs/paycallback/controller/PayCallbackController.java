@@ -276,9 +276,9 @@ public class PayCallbackController {
         String status = body.get("status");
         String sign = body.get("sign");
 
-//        if (!StringUtils.equals(status, "3")) {
-//            return "error";
-//        }
+        if (!StringUtils.equals(status, "3")) {
+            return "error";
+        }
 
 
         PayOrder payOrder = payOrderService.getOne(
@@ -301,6 +301,7 @@ public class PayCallbackController {
         String stringSignTemp = StringUtils.join(outTradeNo
                 , "&", amount
                 , "&", merchantId
+                , "&", status
                 , "&", key);
         String checkSign = SecureUtil.md5(stringSignTemp).toUpperCase();
 
@@ -325,9 +326,13 @@ public class PayCallbackController {
 
         String merchantId = body.get("userCode");
         String outTradeNo = body.get("orderCode");
+        String status = body.get("status");
         String amount = body.get("amount");
         String sign = body.get("sign");
 
+        if (!StringUtils.equals(status, "3")) {
+            return "error";
+        }
 
 
         PayOrder payOrder = payOrderService.getOne(
@@ -350,6 +355,7 @@ public class PayCallbackController {
         String stringSignTemp = StringUtils.join(outTradeNo
                 , "&", amount
                 , "&", merchantId
+                , "&", status
                 , "&", key);
         String checkSign = SecureUtil.md5(stringSignTemp).toUpperCase();
 
@@ -364,5 +370,15 @@ public class PayCallbackController {
         // 给用户加钱
         payDepositService.deposit(payOrder);
         return "success";
+    }
+
+    public static void main(String[] args) {
+        String stringSignTemp = StringUtils.join("P1777697541933993985"
+                , "&", "10.00000000"
+                , "&", "231202186261"
+                , "&", "3"
+                , "&", "t8ln2HPaGZp50qZei02T4rGaYFHzewVA");
+        String checkSign = SecureUtil.md5(stringSignTemp).toUpperCase();
+        System.out.println(checkSign);
     }
 }
