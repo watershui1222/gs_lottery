@@ -354,6 +354,7 @@ public class LotteryController {
                 jsonObject.put("openResult", lotteryOrder.getOpenResult());
                 jsonObject.put("betContent", lotteryOrder.getBetContent());
                 jsonObject.put("orderStatus", lotteryOrder.getOrderStatus());
+                jsonObject.put("oods", lotteryOrder.getOdds());
                 jsonArray.add(jsonObject);
 
             }
