@@ -83,6 +83,12 @@ public class LyRecord implements Serializable {
     private Date gameEndTime;
 
     /**
+     * 结算时间
+     */
+    @TableField(value = "settle_time")
+    private Date settleTime;
+
+    /**
      * 创建时间
      */
     @TableField(value = "create_time")

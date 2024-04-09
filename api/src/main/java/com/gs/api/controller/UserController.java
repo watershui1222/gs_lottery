@@ -87,6 +87,12 @@ public class UserController {
 
     @Autowired
     private BbinRecordService bbinRecordService;
+    @Autowired
+    private AgRecordService agRecordService;
+    @Autowired
+    private HgRecordService hgRecordService;
+    @Autowired
+    private SbRecordService sbRecordService;
 
     @ApiOperation(value = "用户信息")
     @GetMapping("/info")
@@ -274,17 +280,33 @@ public class UserController {
         loginLog.setCreateTime(now);
         userLoginLogService.save(loginLog);
 
-        /** 保存token **/
-        Map<String, String> map = new HashMap<>();
-        map.put("userName", user.getUserName());
-        map.put("userIp", clientIP);
-        map.put("random", RandomUtil.randomString(6));
-        String token = JwtUtils.getToken(map);
-        redisTemplate.opsForValue().set(RedisKeyUtil.UserTokenKey(user.getUserName()), token, expire, TimeUnit.MINUTES);
+        // 多端登录
+        String token = redisTemplate.opsForValue().get(RedisKeyUtil.UserTokenKey(user.getUserName()));
+        if (StringUtils.isBlank(token)) {
+            /** 保存token **/
+            Map<String, String> map = new HashMap<>();
+            map.put("userName", user.getUserName());
+            map.put("userIp", clientIP);
+            map.put("random", RandomUtil.randomString(6));
+            token = JwtUtils.getToken(map);
+            redisTemplate.opsForValue().set(RedisKeyUtil.UserTokenKey(user.getUserName()), token, expire, TimeUnit.MINUTES);
+        }
         // 续期在线用户
         redisTemplate.opsForValue().set(RedisKeyUtil.UserOnlineKey(user.getUserName()), token, RedisKeyUtil.USER_TOKEN_EXPIRE, TimeUnit.MINUTES);
         /** 删除密码输入错误次数 **/
         redisTemplate.delete(incKey);
+
+//        /** 保存token **/
+//        Map<String, String> map = new HashMap<>();
+//        map.put("userName", user.getUserName());
+//        map.put("userIp", clientIP);
+//        map.put("random", RandomUtil.randomString(6));
+//        String token = JwtUtils.getToken(map);
+//        redisTemplate.opsForValue().set(RedisKeyUtil.UserTokenKey(user.getUserName()), token, expire, TimeUnit.MINUTES);
+//        // 续期在线用户
+//        redisTemplate.opsForValue().set(RedisKeyUtil.UserOnlineKey(user.getUserName()), token, RedisKeyUtil.USER_TOKEN_EXPIRE, TimeUnit.MINUTES);
+//        /** 删除密码输入错误次数 **/
+//        redisTemplate.delete(incKey);
         return R.ok().put("token", token);
     }
 
@@ -766,19 +788,23 @@ public class UserController {
             pageUtils = bbinRecordService.queryPage(params);
         } else if (StringUtils.equals(PlatSubEnum.BBINELE.getPlatSubCode(), request.getSubPlatCode())) {
             params.put("gameType", PlatSubEnum.BBINELE.getGameType());
-            pageUtils = lyRecordService.queryPage(params);
+            pageUtils = bbinRecordService.queryPage(params);
         } else if (StringUtils.equals(PlatSubEnum.BBINLIVE.getPlatSubCode(), request.getSubPlatCode())) {
             params.put("gameType", PlatSubEnum.BBINLIVE.getGameType());
-            pageUtils = lyRecordService.queryPage(params);
+            pageUtils = bbinRecordService.queryPage(params);
         } else if (StringUtils.equals(PlatSubEnum.AGFISH.getPlatSubCode(), request.getSubPlatCode())) {
             params.put("gameType", PlatSubEnum.AGFISH.getGameType());
-            pageUtils = bbinRecordService.queryPage(params);
+            pageUtils = agRecordService.queryPage(params);
         } else if (StringUtils.equals(PlatSubEnum.AGELE.getPlatSubCode(), request.getSubPlatCode())) {
             params.put("gameType", PlatSubEnum.AGELE.getGameType());
-            pageUtils = lyRecordService.queryPage(params);
+            pageUtils = agRecordService.queryPage(params);
         } else if (StringUtils.equals(PlatSubEnum.AGLIVE.getPlatSubCode(), request.getSubPlatCode())) {
             params.put("gameType", PlatSubEnum.AGLIVE.getGameType());
-            pageUtils = lyRecordService.queryPage(params);
+            pageUtils = agRecordService.queryPage(params);
+        }else if (StringUtils.equals(PlatSubEnum.SB.getPlatSubCode(), request.getSubPlatCode())) {
+            pageUtils = sbRecordService.queryPage(params);
+        }else if (StringUtils.equals(PlatSubEnum.HG.getPlatSubCode(), request.getSubPlatCode())) {
+            pageUtils = hgRecordService.queryPage(params);
         }else {
             return R.error("未查到对应游戏厅方");
         }

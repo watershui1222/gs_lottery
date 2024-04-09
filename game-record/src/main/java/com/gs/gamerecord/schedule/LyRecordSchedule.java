@@ -130,6 +130,7 @@ public class LyRecordSchedule {
                 lyRecord.setProfit(profit.getBigDecimal(i));
                 lyRecord.setGameStartTime(gameStartTime.getDate(i));
                 lyRecord.setGameEndTime(gameEndTime.getDate(i));
+                lyRecord.setSettleTime(gameEndTime.getDate(i));
                 lyRecord.setCreateTime(new Date());
                 lyRecord.setUpdateTime(new Date());
                 lyRecords.add(lyRecord);

@@ -46,12 +46,12 @@ public class LyRecordServiceImpl extends ServiceImpl<LyRecordMapper, LyRecord>
         wrapper.eq(StringUtils.isNotBlank(userName), LyRecord::getUserName, userName);
 
         Date startTime = MapUtil.getDate(params, "startTime");
-        wrapper.ge(startTime != null, LyRecord::getCreateTime, startTime);
+        wrapper.ge(startTime != null, LyRecord::getSettleTime, startTime);
 
         Date endTime = MapUtil.getDate(params, "endTime");
-        wrapper.le(endTime != null, LyRecord::getCreateTime, endTime);
+        wrapper.le(endTime != null, LyRecord::getSettleTime, endTime);
 
-        wrapper.orderByDesc(LyRecord::getCreateTime);
+        wrapper.orderByDesc(LyRecord::getSettleTime);
         IPage<LyRecord> page = this.page(
                 new Query<LyRecord>().getPage(params),
                 wrapper);
