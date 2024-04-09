@@ -1,10 +1,12 @@
 package com.gs.api.controller;
 
+import cn.hutool.crypto.SecureUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.gs.business.service.PayDepositService;
+import com.gs.business.utils.pay.ObUtil;
 import com.gs.commons.entity.PayChannel;
 import com.gs.commons.entity.PayMerchant;
 import com.gs.commons.entity.PayOrder;
@@ -14,6 +16,7 @@ import com.gs.commons.service.PayOrderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
+import java.util.TreeMap;
 
 @Slf4j
 @Api(value = "三方支付回调相关", tags = "三方支付回调相关")
@@ -60,6 +65,7 @@ public class PayCallbackController {
             return "error";
         }
 
+
         PayOrder payOrder = payOrderService.getOne(
                 new LambdaQueryWrapper<PayOrder>()
                         .eq(PayOrder::getOrderNo, outTradeNo)
@@ -69,27 +75,31 @@ public class PayCallbackController {
             return "error";
         }
 
+
         // 查询商户
         PayMerchant payMerchant = payMerchantService.getOne(new LambdaQueryWrapper<PayMerchant>().eq(PayMerchant::getMerchantCode, payOrder.getMerchantCode()));
         String merchantDetail = payMerchant.getMerchantDetail();
         JSONObject object = JSON.parseObject(merchantDetail);
         String key = object.getString("key");
         Long merchantId = object.getLong("merchantId");
-        // 查询通道
-        PayChannel payChannel = payChannelService.getOne(new LambdaQueryWrapper<PayChannel>().eq(PayChannel::getChannelCode, payOrder.getChannelCode()));
 
         // 校验加密规则
-//        Map<String, Object> treeMap = new TreeMap<>();
-//        treeMap.put("merchantNo", merchantId);
-//        treeMap.put("outTradeNo", payOrder.getOrderNo());
-//        treeMap.put("amount", NumberUtil.mul(payOrder.getAmount(), 100).intValue());
-//        treeMap.put("currency", currency);
-//
-//        String sortData = sortData(treeMap);
-//        String stringSignTemp = StringUtils.join(sortData, "&", key);
-//        String signStr = SecureUtil.md5(stringSignTemp).toUpperCase();
-//        treeMap.put("sign", signStr);
-//        log.info("参数加密:{}", JSON.toJSONString(treeMap));
+        Map<String, Object> treeMap = new TreeMap<>();
+        for (Map.Entry<String, Object> stringObjectEntry : bodyObj.entrySet()) {
+            treeMap.put(stringObjectEntry.getKey(), stringObjectEntry.getValue());
+        }
+        String sortData = ObUtil.sortData(treeMap, "&");
+        String stringSignTemp = StringUtils.join(sortData, "&", key);
+        String checkSign = SecureUtil.md5(stringSignTemp).toUpperCase();
+        log.info("签名data:{}", JSON.toJSONString(treeMap));
+        log.info("签名字符串:{}", stringSignTemp);
+        log.info("签名:{}  ---  验签:{}", sign, checkSign);
+
+        if (!StringUtils.equals(sign, checkSign)) {
+            return "check sign error";
+        }
+
+
 
         // 给用户加钱
         payDepositService.deposit(payOrder);
