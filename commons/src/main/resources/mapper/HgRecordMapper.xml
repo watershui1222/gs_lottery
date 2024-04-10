@@ -12,6 +12,7 @@
             <result property="gameName" column="game_name" jdbcType="VARCHAR"/>
             <result property="wtype" column="wtype" jdbcType="VARCHAR"/>
             <result property="rtype" column="rtype" jdbcType="VARCHAR"/>
+            <result property="orderContent" column="order_content" jdbcType="VARCHAR"/>
             <result property="tnameHome" column="tname_home" jdbcType="VARCHAR"/>
             <result property="tnameAway" column="tname_away" jdbcType="VARCHAR"/>
             <result property="league" column="league" jdbcType="VARCHAR"/>
@@ -49,7 +50,7 @@
         INSERT INTO t_hg_record(
         user_name,plat_user_name,
         order_no,game_name,wtype,
-        rtype,tname_home,tname_away,
+        rtype,order_content,tname_home,tname_away,
         league,strong,ioratio,
         effective_bet,all_bet,profit,
         bet_time,settle_time,settle_status,
@@ -60,7 +61,7 @@
         values
         <foreach collection="list" item="i" separator=",">
             (
-            #{i.userName}, #{i.platUserName}, #{i.orderNo}, #{i.gameName}, #{i.wtype}, #{i.rtype}, #{i.tnameHome}, #{i.tnameAway}, #{i.league}, #{i.strong}, #{i.ioratio},
+            #{i.userName}, #{i.platUserName}, #{i.orderNo}, #{i.gameName}, #{i.wtype}, #{i.rtype}, #{i.orderContent}, #{i.tnameHome}, #{i.tnameAway}, #{i.league}, #{i.strong}, #{i.ioratio},
             #{i.effectiveBet}, #{i.allBet}, #{i.profit}, #{i.betTime}, #{i.settleTime},#{i.settleStatus},
             #{i.resultStatus},#{i.resultScore},#{i.oddsFormat}, #{i.parlaynum},#{i.parlaysub},#{i.rawData}, #{i.createTime},#{i.updateTime}
             )

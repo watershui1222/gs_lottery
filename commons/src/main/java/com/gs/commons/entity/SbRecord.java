@@ -47,10 +47,16 @@ public class SbRecord implements Serializable {
     private String gameName;
 
     /**
-     * 玩法bettypename
+     * 玩法
      */
     @TableField(value = "wtype")
     private String wtype;
+
+    /**
+     * 玩法结果
+     */
+    @TableField(value = "rtype")
+    private String rtype;
 
     /**
      * 主队名称hometeamname

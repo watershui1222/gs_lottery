@@ -9,10 +9,11 @@ import lombok.Data;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 
- * @TableName t_ky_record
+ * @TableName 通用注单内容
  */
 @Data
 public class PlatRecordBO {
@@ -39,5 +40,16 @@ public class PlatRecordBO {
 
 
     private Date settleTime;
+
+    /**
+     * 0 不是   1:单条注单  2:串关
+     */
+    private Integer isSport = 0;
+
+    private PlatRecordSprotBO sportDetail;
+
+    private List<PlatRecordSprotBO> sportDetailList;
+
+
 
 }

@@ -809,7 +809,7 @@ public class UserController {
             return R.error("未查到对应游戏厅方");
         }
 
-        PlatSubEnum platSubEnum = PlatSubEnum.getByCode(request.getSubPlatCode());
+        PlatSubEnum platSubEnum = PlatSubEnum.getBySubCode(request.getSubPlatCode());
         String platName = (null == platSubEnum) ? "" : platSubEnum.getPlatName();
         return R.ok().put("page", pageUtils).put("platSubName", platName);
     }
