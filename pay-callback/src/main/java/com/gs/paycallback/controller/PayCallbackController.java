@@ -392,55 +392,54 @@ public class PayCallbackController {
         Long timestamp = jsonObject.getLong("timestamp");
         String sign = jsonObject.getString("sign");
 
-        return body;
 
 //        if (!StringUtils.equals(status, "SUCCESS")) {
 //            return "error";
 //        }
-//
-//
-//        PayOrder payOrder = payOrderService.getOne(
-//                new LambdaQueryWrapper<PayOrder>()
-//                        .eq(PayOrder::getOrderNo, outTradeNo)
-//                        .eq(PayOrder::getStatus, 0)
-//        );
-//        if (null == payOrder) {
-//            return "error";
-//        }
-//
-//
-//        BigDecimal realPayAmount = NumberUtil.div(String.valueOf(realAmount), "100");
-//
-//        // 查询商户
-//        PayMerchant payMerchant = payMerchantService.getOne(new LambdaQueryWrapper<PayMerchant>().eq(PayMerchant::getMerchantCode, payOrder.getMerchantCode()));
-//        String merchantDetail = payMerchant.getMerchantDetail();
-//        JSONObject object = JSON.parseObject(merchantDetail);
-//        String key = object.getString("key");
-//
-//        // 校验加密规则
-//
-//        Map<String, Object> treeMap = new TreeMap<>();
-//        for (Map.Entry<String, Object> stringObjectEntry : jsonObject.entrySet()) {
-//            if (!StringUtils.equals(stringObjectEntry.getKey(), "sign")) {
-//                treeMap.put(stringObjectEntry.getKey(), stringObjectEntry.getValue());
-//            }
-//        }
-//        String needSignParamString = MkpayUtil.getNeedSignParamString(treeMap, key);
-//        String checkSign = SecureUtil.md5(needSignParamString);
-//
-//        log.info("MK签名data:{}", JSON.toJSONString(treeMap));
-//        log.info("MK签名字符串:{}", needSignParamString);
-//        log.info("MK签名:{}  ---  验签:{}", sign, checkSign);
-//
-//        if (!StringUtils.equals(sign, checkSign)) {
-//            return "check sign error";
-//        }
-//
-//        // 给用户加钱
-//        payOrder.setAmount(realPayAmount);
-//        payOrder.setRemark(StrUtil.format("拉单金额:{},支付金额:{}", amount, realPayAmount));
-//        payDepositService.deposit(payOrder);
-//        return "SUCCESS";
+
+
+        PayOrder payOrder = payOrderService.getOne(
+                new LambdaQueryWrapper<PayOrder>()
+                        .eq(PayOrder::getOrderNo, outTradeNo)
+                        .eq(PayOrder::getStatus, 0)
+        );
+        if (null == payOrder) {
+            return "error";
+        }
+
+
+        BigDecimal realPayAmount = (null != realAmount && realAmount != 0) ? NumberUtil.div(String.valueOf(realAmount), "100") : payOrder.getAmount();
+
+        // 查询商户
+        PayMerchant payMerchant = payMerchantService.getOne(new LambdaQueryWrapper<PayMerchant>().eq(PayMerchant::getMerchantCode, payOrder.getMerchantCode()));
+        String merchantDetail = payMerchant.getMerchantDetail();
+        JSONObject object = JSON.parseObject(merchantDetail);
+        String key = object.getString("key");
+
+        // 校验加密规则
+
+        Map<String, Object> treeMap = new TreeMap<>();
+        for (Map.Entry<String, Object> stringObjectEntry : jsonObject.entrySet()) {
+            if (!StringUtils.equals(stringObjectEntry.getKey(), "sign")) {
+                treeMap.put(stringObjectEntry.getKey(), stringObjectEntry.getValue());
+            }
+        }
+        String needSignParamString = MkpayUtil.getNeedSignParamString(treeMap, key);
+        String checkSign = SecureUtil.md5(needSignParamString);
+
+        log.info("MK签名data:{}", JSON.toJSONString(treeMap));
+        log.info("MK签名字符串:{}", needSignParamString);
+        log.info("MK签名:{}  ---  验签:{}", sign, checkSign);
+
+        if (!StringUtils.equals(sign, checkSign)) {
+            return "check sign error";
+        }
+
+        // 给用户加钱
+        payOrder.setAmount(realPayAmount);
+        payOrder.setRemark(StrUtil.format("拉单金额:{},支付金额:{}", amount, realPayAmount));
+        payDepositService.deposit(payOrder);
+        return "SUCCESS";
     }
 
     public static void main(String[] args) {
