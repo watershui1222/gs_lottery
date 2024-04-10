@@ -15,6 +15,7 @@ import com.gs.api.utils.JwtUtils;
 import com.gs.business.client.PayClient;
 import com.gs.commons.constants.Constant;
 import com.gs.commons.entity.*;
+import com.gs.commons.excption.BusinessException;
 import com.gs.commons.service.*;
 import com.gs.commons.utils.IdUtils;
 import com.gs.commons.utils.MsgUtil;
@@ -104,11 +105,17 @@ public class PayController {
         payOrder.setMerchantName(payMerchant.getMerchantName());
         payOrder.setChannelName(payChannel.getChannelName());
         // 调用获取URL接口
-        String url = payClient.getUrl(payMerchant, payOrder, payChannel);
+        String url = null;
+        String errMsg = "拉起支付失败.请联系客服...";
+        try {
+            url = payClient.getUrl(payMerchant, payOrder, payChannel);
+        } catch (BusinessException businessException) {
+            errMsg = businessException.getMessage();
+        }
         if (StringUtils.isNotBlank(url)) {
             payOrderService.save(payOrder);
             return R.ok().put("url", url);
         }
-        return R.error();
+        return R.error(errMsg);
     }
 }

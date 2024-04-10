@@ -15,6 +15,7 @@ import com.gs.business.utils.pay.ObUtil;
 import com.gs.commons.entity.PayChannel;
 import com.gs.commons.entity.PayMerchant;
 import com.gs.commons.entity.PayOrder;
+import com.gs.commons.excption.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -59,7 +60,9 @@ public class MkPayServiceImpl implements PayService {
             order.setPayOrderNo(tradeNo);
             JSONObject url = data.getJSONObject("url");
             return url.getString("payUrl");
+        } else {
+            String errmsg = responseObj.getString("msg");
+            throw new BusinessException(errmsg);
         }
-        return null;
     }
 }

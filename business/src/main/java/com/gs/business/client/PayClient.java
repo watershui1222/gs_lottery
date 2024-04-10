@@ -24,14 +24,15 @@ public class PayClient {
     private PayService kdPayService;
     @Autowired
     private PayService mkPayService;
+    @Autowired
+    private PayService hxfPayService;
     /**
      * 获取支付URL
      * @param merchant
      * @param order
      * @return
-     * @throws Exception
      */
-    public String getUrl(PayMerchant merchant, PayOrder order, PayChannel payChannel) throws Exception {
+    public String getUrl(PayMerchant merchant, PayOrder order, PayChannel payChannel) {
         if (StringUtils.equals(merchant.getMerchantCode(), "OB")) {
             return obPayService.getPayUrl(merchant, order, payChannel);
         } else if (StringUtils.equals(merchant.getMerchantCode(), "OK")) {
@@ -46,6 +47,8 @@ public class PayClient {
             return kdPayService.getPayUrl(merchant, order, payChannel);
         } else if (StringUtils.equals(merchant.getMerchantCode(), "MK")) {
             return mkPayService.getPayUrl(merchant, order, payChannel);
+        } else if (StringUtils.equals(merchant.getMerchantCode(), "HXF")) {
+            return hxfPayService.getPayUrl(merchant, order, payChannel);
         }
         return null;
     }
