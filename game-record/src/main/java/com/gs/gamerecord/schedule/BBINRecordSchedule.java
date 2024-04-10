@@ -52,7 +52,7 @@ public class BBINRecordSchedule {
      * BBIN视讯拉单任务
      * @throws Exception
      */
-    @Scheduled(cron = "0/40 * * * * ?")
+    @Scheduled(cron = "0/15 * * * * ?")
     public void bbinliveRecord() throws Exception {
         Date now = new Date();
         PlatRecordControl bbinlive = platRecordControlService.getOne(
@@ -282,7 +282,7 @@ public class BBINRecordSchedule {
      * bbin捕鱼拉单任务
      * @throws Exception
      */
-    @Scheduled(cron = "0 0/2 * * * ?")
+    @Scheduled(cron = "0/20 * * * * ?")
     public void bbinfishgameRecord() throws Exception {
         Date now = new Date();
         PlatRecordControl bbinfish = platRecordControlService.getOne(
