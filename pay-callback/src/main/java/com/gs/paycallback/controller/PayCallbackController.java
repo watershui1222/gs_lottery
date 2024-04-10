@@ -393,9 +393,9 @@ public class PayCallbackController {
         String sign = jsonObject.getString("sign");
 
 
-//        if (!StringUtils.equals(status, "SUCCESS")) {
-//            return "error";
-//        }
+        if (!StringUtils.equals(status, "SUCCESS")) {
+            return "error";
+        }
 
 
         PayOrder payOrder = payOrderService.getOne(
@@ -440,6 +440,74 @@ public class PayCallbackController {
         payOrder.setAmount(realPayAmount);
         payDepositService.deposit(payOrder);
         return "SUCCESS";
+    }
+
+
+
+
+    @ApiOperation(value = "豪享付回调")
+    @PostMapping("/hxf")
+    public String hxf(HttpServletRequest httpServletRequest) throws Exception {
+        Map<String, String> paramMap = ServletUtil.getParamMap(httpServletRequest);
+        String merchantId = paramMap.get("mchId");
+        String outTradeNo = paramMap.get("mchOrderNo");
+
+
+        String amount = paramMap.get("amount");
+        String realAmount = paramMap.get("income");
+        String status = paramMap.get("status");
+        String sign = paramMap.get("sign");
+
+
+        // -订单生成,1-支付中,2-支付成功,3-业务处理完成
+        if (!StringUtils.equals(status, "2")) {
+            return "error";
+        }
+
+
+        PayOrder payOrder = payOrderService.getOne(
+                new LambdaQueryWrapper<PayOrder>()
+                        .eq(PayOrder::getOrderNo, outTradeNo)
+                        .eq(PayOrder::getStatus, 0)
+        );
+        if (null == payOrder) {
+            return "error";
+        }
+
+
+        BigDecimal realPayAmount = StringUtils.isNotBlank(realAmount) && Integer.parseInt(realAmount) != 0 ? NumberUtil.div(realAmount, "100") : payOrder.getAmount();
+
+        // 查询商户
+        PayMerchant payMerchant = payMerchantService.getOne(new LambdaQueryWrapper<PayMerchant>().eq(PayMerchant::getMerchantCode, payOrder.getMerchantCode()));
+        String merchantDetail = payMerchant.getMerchantDetail();
+        JSONObject object = JSON.parseObject(merchantDetail);
+        String key = object.getString("key");
+
+        // 校验加密规则
+
+        Map<String, Object> treeMap = new TreeMap<>();
+        for (Map.Entry<String, String> stringObjectEntry : paramMap.entrySet()) {
+            if (!StringUtils.equals(stringObjectEntry.getKey(), "sign")) {
+                treeMap.put(stringObjectEntry.getKey(), stringObjectEntry.getValue());
+            }
+        }
+        String stringSignTemp = StringUtils.join(ObUtil.sortData(treeMap, "&"), "&key=", key);
+
+        String checkSign = SecureUtil.md5(stringSignTemp).toUpperCase();
+
+        log.info("HXF签名data:{}", JSON.toJSONString(treeMap));
+        log.info("HXF签名字符串:{}", stringSignTemp);
+        log.info("HXF签名:{}  ---  验签:{}", sign, checkSign);
+
+        if (!StringUtils.equals(sign, checkSign)) {
+            return "check sign error";
+        }
+
+        // 给用户加钱
+        payOrder.setRemark(StrUtil.format("拉单金额:{} | 支付金额:{}", payOrder.getAmount(), realPayAmount));
+        payOrder.setAmount(realPayAmount);
+        payDepositService.deposit(payOrder);
+        return "success";
     }
 
     public static void main(String[] args) {
