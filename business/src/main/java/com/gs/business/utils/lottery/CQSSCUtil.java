@@ -159,8 +159,19 @@ public class CQSSCUtil {
                 order.setOrderStatus(2);
             }
         } else if (StringUtils.equals("高排", betContent)) {
-
+            if (checkGaoPai(resultArr)) {
+                order.setOrderStatus(1);
+            } else {
+                order.setOrderStatus(2);
+            }
         }
+    }
+
+    private static boolean checkGaoPai(String[] resultArr) {
+        if (checkWt(resultArr) || checkSt(resultArr) || checkHulu(resultArr) || checkSz(resultArr) || checkSantiao(resultArr) || checkLiangDui(resultArr) || checkYidui(resultArr)) {
+            return false;
+        }
+        return true;
     }
 
     private static boolean checkLiangDui(String[] resultArr) {
@@ -247,14 +258,6 @@ public class CQSSCUtil {
         }
         return false;
     }
-
-    public static void main(String[] args) {
-        String resultArr[] = new String[]{"4", "5", "5", "5", "5"};
-        Map<String, Integer> map = CollUtil.countMap(Arrays.asList(resultArr));
-        System.out.println(map.size());
-        System.out.println(CollUtil.countMap(Arrays.asList(resultArr)));
-    }
-
 
     /**
      * 斗牛-两面
