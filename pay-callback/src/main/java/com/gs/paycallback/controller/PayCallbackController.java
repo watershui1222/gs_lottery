@@ -436,8 +436,8 @@ public class PayCallbackController {
         }
 
         // 给用户加钱
+        payOrder.setRemark(StrUtil.format("拉单金额:{},支付金额:{}", payOrder.getAmount(), realPayAmount));
         payOrder.setAmount(realPayAmount);
-        payOrder.setRemark(StrUtil.format("拉单金额:{},支付金额:{}", amount, realPayAmount));
         payDepositService.deposit(payOrder);
         return "SUCCESS";
     }
