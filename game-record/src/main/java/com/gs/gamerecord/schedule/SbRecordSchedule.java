@@ -104,9 +104,7 @@ public class SbRecordSchedule {
         param.put("start_date", start_date);
         param.put("end_date", end_date);
         param.put("time_type", time_type);
-        log.info("SB RECORD URL = {}  PARAM = {}",apiUrlStr, param);
         String result = HttpUtil.post(apiUrlStr, param);
-        log.info("SB RECORD result = {}",result);
         JSONObject resJSON = JSONObject.parseObject(result);
         int error_code = resJSON.getIntValue("error_code");
         if(error_code == 0){
