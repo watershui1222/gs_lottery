@@ -222,17 +222,10 @@ public class LotteryController {
     @ApiOperation(value = "历史开奖")
     @GetMapping("/openHistory/list")
     public R openHistoryList(OpenResultHistoryRequest request, HttpServletRequest httpServletRequest) {
-        Lottery lottery = lotteryService.getOne(Wrappers.lambdaQuery(Lottery.class).eq(Lottery::getLotteryCode, request.getLotteryCode()).eq(Lottery::getStatus, 0));
-        if (null == lottery) {
-            return R.error("该彩种不存在或已停用");
-        }
-
         Map<String, Object> params = new HashMap<>();
-        if (null == request.getPage()) {
-
-        }
         params.put(Constant.PAGE, request.getPage());
         params.put(Constant.LIMIT, request.getLimit());
+        request.setDateStr(StringUtils.isEmpty(request.getDateStr()) ? "4" : request.getDateStr());
 
         //1:今天 2:昨天 3:一周内 4:一月内
         Date startDate = new Date();
@@ -287,7 +280,7 @@ public class LotteryController {
         }
 
 
-        return R.ok().put("page", pageUtils).put("lotteryType", lottery.getLotteryType());
+        return R.ok().put("page", pageUtils);
 
     }
 
