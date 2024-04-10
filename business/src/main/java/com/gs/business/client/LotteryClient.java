@@ -47,7 +47,7 @@ public class LotteryClient {
     public void checkWin(LotteryOrder order) {
         if (StringUtils.equalsAny(order.getLotteryCode(), "JSK3")) {
             K3Util.checkWin(order);
-        } else if (StringUtils.equalsAny(order.getLotteryCode(), "JSK3")) {
+        } else if (StringUtils.equalsAny(order.getLotteryCode(), "PCDD")) {
             PCDDUtil.checkWin(order);
         } else if (StringUtils.equalsAny(order.getLotteryCode(), "BJPK10", "FT")) {
             PK10Util.checkWin(order);
