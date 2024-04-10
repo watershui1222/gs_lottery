@@ -104,7 +104,7 @@ public class PayController {
         payOrder.setMerchantName(payMerchant.getMerchantName());
         payOrder.setChannelName(payChannel.getChannelName());
         // 调用获取URL接口
-        String url = payClient.getUrl(payMerchant, payOrder);
+        String url = payClient.getUrl(payMerchant, payOrder, payChannel);
         if (StringUtils.isNotBlank(url)) {
             payOrderService.save(payOrder);
             return R.ok().put("url", url);

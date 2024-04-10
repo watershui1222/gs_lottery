@@ -9,6 +9,7 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.gs.business.service.PayService;
 import com.gs.business.utils.pay.ObUtil;
+import com.gs.commons.entity.PayChannel;
 import com.gs.commons.entity.PayMerchant;
 import com.gs.commons.entity.PayOrder;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,7 @@ import java.util.TreeMap;
 @Service("cbPayService")
 public class CBPayServiceImpl implements PayService {
     @Override
-    public String getPayUrl(PayMerchant merchant, PayOrder order) {
+    public String getPayUrl(PayMerchant merchant, PayOrder order, PayChannel payChannel) {
         String merchantDetail = merchant.getMerchantDetail();
         JSONObject object = JSON.parseObject(merchantDetail);
         String key = object.getString("key");
