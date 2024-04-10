@@ -67,9 +67,9 @@ public class LotteryBetServiceImpl implements LotteryBetService {
         // 查询用户信息
         UserInfo user = userInfoService.getUserByName(lotteryOrder.getUserName());
         // 修改订单状态
-        lotteryOrderService.update(
+        boolean update = lotteryOrderService.update(
                 new LambdaUpdateWrapper<LotteryOrder>()
-                        .set(LotteryOrder::getSettleTime, now)
+//                        .set(LotteryOrder::getSettleTime, now)
                         .set(LotteryOrder::getSettleStatus, 3)
                         .set(LotteryOrder::getOrderStatus, 3)
                         .set(LotteryOrder::getUpdateTime, now)
@@ -78,6 +78,9 @@ public class LotteryBetServiceImpl implements LotteryBetService {
                         .eq(LotteryOrder::getSettleStatus, 0)
                         .eq(LotteryOrder::getOrderStatus, 0)
         );
+        if (!update) {
+            throw new BusinessException("修改订单状态失败");
+        }
         // 给用户加钱
         userInfoService.updateUserBalance(user.getUserName(), lotteryOrder.getBetAmount());
         // 添加流水记录

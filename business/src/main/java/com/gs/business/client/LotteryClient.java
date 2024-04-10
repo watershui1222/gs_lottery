@@ -3,6 +3,8 @@ package com.gs.business.client;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.gs.business.pojo.LotteryCurrQsBO;
+import com.gs.business.utils.lottery.K3Util;
+import com.gs.business.utils.lottery.PCDDUtil;
 import com.gs.commons.entity.*;
 import com.gs.commons.enums.LotteryCodeEnum;
 import com.gs.commons.service.*;
@@ -35,6 +37,18 @@ public class LotteryClient {
     private OpenresultMo6hcService openresultMo6hcService;
     @Autowired
     private OpenresultPcddService openresultPcddService;
+
+    /**
+     * 校验订单输赢
+     * @param order
+     */
+    public void checkWin(LotteryOrder order) {
+        if (StringUtils.equalsAny(order.getLotteryCode(), "JSK3")) {
+            K3Util.checkWin(order);
+        } else if (StringUtils.equalsAny(order.getLotteryCode(), "JSK3")) {
+            PCDDUtil.checkWin(order);
+        }
+    }
 
     /**
      * 根据彩种代码获取当前期
