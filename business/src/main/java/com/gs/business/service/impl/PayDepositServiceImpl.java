@@ -72,6 +72,7 @@ public class PayDepositServiceImpl implements PayDepositService {
         // 修改三方订单状态
         boolean update = payOrderService.update(
                 new LambdaUpdateWrapper<PayOrder>()
+                        .set(PayOrder::getRemark, order.getRemark())
                         .set(PayOrder::getStatus, 1)
                         .eq(PayOrder::getId, order.getId())
                         .eq(PayOrder::getStatus, 0)

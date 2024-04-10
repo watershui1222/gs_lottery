@@ -1,11 +1,14 @@
 package com.gs.paycallback.controller;
 
+import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.gs.business.service.PayDepositService;
+import com.gs.business.utils.pay.MkpayUtil;
 import com.gs.business.utils.pay.ObUtil;
 import com.gs.commons.entity.PayMerchant;
 import com.gs.commons.entity.PayOrder;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -372,13 +376,77 @@ public class PayCallbackController {
         return "success";
     }
 
-    public static void main(String[] args) {
-        String stringSignTemp = StringUtils.join("P1777697541933993985"
-                , "&", "10.00000000"
-                , "&", "231202186261"
-                , "&", "3"
-                , "&", "t8ln2HPaGZp50qZei02T4rGaYFHzewVA");
-        String checkSign = SecureUtil.md5(stringSignTemp).toUpperCase();
-        System.out.println(checkSign);
+
+
+    @ApiOperation(value = "MK回调")
+    @PostMapping("/mk")
+    public String mk(HttpServletRequest httpServletRequest) throws Exception {
+        String body = ServletUtil.getBody(httpServletRequest);
+        JSONObject jsonObject = JSON.parseObject(body);
+        String merchantId = jsonObject.getString("mchKey");
+        String outTradeNo = jsonObject.getString("mchOrderNo");
+        String nonce = jsonObject.getString("nonce");
+        String status = jsonObject.getString("payStatus");
+        Integer amount = jsonObject.getIntValue("amount");
+        Integer realAmount = jsonObject.getIntValue("realAmount");
+        Long timestamp = jsonObject.getLong("timestamp");
+        String sign = jsonObject.getString("sign");
+
+
+        if (!StringUtils.equals(status, "SUCCESS")) {
+            return "error";
+        }
+
+
+        PayOrder payOrder = payOrderService.getOne(
+                new LambdaQueryWrapper<PayOrder>()
+                        .eq(PayOrder::getOrderNo, outTradeNo)
+                        .eq(PayOrder::getStatus, 0)
+        );
+        if (null == payOrder) {
+            return "error";
+        }
+
+
+        BigDecimal realPayAmount = NumberUtil.div(String.valueOf(realAmount), "100");
+
+        // 查询商户
+        PayMerchant payMerchant = payMerchantService.getOne(new LambdaQueryWrapper<PayMerchant>().eq(PayMerchant::getMerchantCode, payOrder.getMerchantCode()));
+        String merchantDetail = payMerchant.getMerchantDetail();
+        JSONObject object = JSON.parseObject(merchantDetail);
+        String key = object.getString("key");
+
+        // 校验加密规则
+
+        Map<String, Object> treeMap = new TreeMap<>();
+        for (Map.Entry<String, Object> stringObjectEntry : jsonObject.entrySet()) {
+            if (!StringUtils.equals(stringObjectEntry.getKey(), "sign")) {
+                treeMap.put(stringObjectEntry.getKey(), stringObjectEntry.getValue());
+            }
+        }
+        String needSignParamString = MkpayUtil.getNeedSignParamString(treeMap, key);
+        String checkSign = SecureUtil.md5(needSignParamString);
+
+        log.info("MK签名data:{}", JSON.toJSONString(treeMap));
+        log.info("MK签名字符串:{}", needSignParamString);
+        log.info("MK签名:{}  ---  验签:{}", sign, checkSign);
+
+        if (!StringUtils.equals(sign, checkSign)) {
+            return "check sign error";
+        }
+
+        // 给用户加钱
+        payOrder.setAmount(realPayAmount);
+        payOrder.setRemark(StrUtil.format("拉单金额:{},支付金额:{}", amount, realPayAmount));
+        payDepositService.deposit(payOrder);
+        return "SUCCESS";
     }
+
+    public static void main(String[] args) {
+        int amount = 1000;
+        BigDecimal div = NumberUtil.div(String.valueOf(amount), "100");
+        System.out.println(div);
+    }
+
+
 }
