@@ -12,6 +12,7 @@ import com.gs.business.utils.pay.ObUtil;
 import com.gs.commons.entity.PayChannel;
 import com.gs.commons.entity.PayMerchant;
 import com.gs.commons.entity.PayOrder;
+import com.gs.commons.excption.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -53,7 +54,9 @@ public class CBPayServiceImpl implements PayService {
             String tradeNo = responseObj.getJSONObject("data").getString("orderNo");
             order.setPayOrderNo(tradeNo);
             return responseObj.getJSONObject("data").getString("url");
+        } else {
+            String errmsg = responseObj.getString("message");
+            throw new BusinessException(errmsg);
         }
-        return null;
     }
 }

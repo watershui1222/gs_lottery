@@ -24,44 +24,43 @@ import java.util.Map;
 import java.util.TreeMap;
 
 @Slf4j
-@Service("mkPayService")
-public class MkPayServiceImpl implements PayService {
+@Service("hxfPayService")
+public class HxfPayServiceImpl implements PayService {
     @Override
     public String getPayUrl(PayMerchant merchant, PayOrder order, PayChannel payChannel) {
         String merchantDetail = merchant.getMerchantDetail();
         JSONObject object = JSON.parseObject(merchantDetail);
         String key = object.getString("key");
-        String merchantId = object.getString("merchantId");
+        Long merchantId = object.getLong("merchantId");
 
         Map<String, Object> treeMap = new TreeMap<>();
 
-        treeMap.put("mchKey", merchantId);
-        treeMap.put("product", payChannel.getChannelCode());
+        treeMap.put("mchId", merchantId);
+        treeMap.put("productId", Integer.valueOf(payChannel.getChannelCode()));
         treeMap.put("mchOrderNo", order.getOrderNo());
         treeMap.put("amount", NumberUtil.mul(order.getAmount(), 100).intValue());
-        treeMap.put("nonce", RandomUtil.randomString(15));
-        treeMap.put("timestamp", String.valueOf(DateUtil.date().getTime()));
         treeMap.put("notifyUrl", merchant.getCallbackUrl());
+        treeMap.put("subject", "网络购物");
+        treeMap.put("body", "网络购物");
+        treeMap.put("extra", "1");
 
+        String stringSignTemp = StringUtils.join(ObUtil.sortData(treeMap, "&"), "&key=", key);
 
-        String stringSignTemp = MkpayUtil.getNeedSignParamString(treeMap, key);
-        String sign = SecureUtil.md5(stringSignTemp);
+        String sign = SecureUtil.md5(stringSignTemp).toUpperCase();
         treeMap.put("sign", sign);
-        HttpRequest request = HttpUtil.createPost(merchant.getPayUrl() + "/api/v1/payment/init");
-        request.header("Content-Type", "application/json; charset=utf-8");
-        request.body(JSON.toJSONString(treeMap));
+        HttpRequest request = HttpUtil.createPost(merchant.getPayUrl() + "/api/pay/create_order");
+        request.contentType("application/x-www-form-urlencoded");
+        request.form(treeMap);
         HttpResponse response = request.execute();
-        log.info("mk充值响应:{}", response.body());
+        log.info("hxf充值响应:{}", response.body());
         JSONObject responseObj = JSON.parseObject(response.body());
-        if ("200".equals(responseObj.getString("code"))) {
-            JSONObject data = responseObj.getJSONObject("data");
+        if ("SUCCESS".equals(responseObj.getString("retCode"))) {
+            JSONObject payParams = responseObj.getJSONObject("payParams");
             // 设置三方订单号
-            String tradeNo = data.getString("serialOrderNo");
-            order.setPayOrderNo(tradeNo);
-            JSONObject url = data.getJSONObject("url");
-            return url.getString("payUrl");
+            order.setPayOrderNo(order.getOrderNo());
+            return payParams.getString("payUrl");
         } else {
-            String errmsg = responseObj.getString("msg");
+            String errmsg = responseObj.getString("retMsg");
             throw new BusinessException(errmsg);
         }
     }
