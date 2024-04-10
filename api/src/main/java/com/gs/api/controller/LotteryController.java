@@ -340,7 +340,7 @@ public class LotteryController {
             JSONArray jsonArray = new JSONArray();
             for (LotteryOrder lotteryOrder : pageList) {
                 JSONObject jsonObject = new JSONObject();
-
+                jsonObject.put("orderNo", lotteryOrder.getOrderNo());
                 jsonObject.put("lotteryName", lotteryOrder.getLotteryName());
                 jsonObject.put("gameCode", lotteryOrder.getLotteryCode());
                 Lottery lottery = lotteryMap.get(lotteryOrder.getLotteryCode());
