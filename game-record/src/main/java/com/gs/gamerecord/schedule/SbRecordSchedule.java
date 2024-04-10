@@ -63,7 +63,7 @@ public class SbRecordSchedule {
             /**
              * 昨天的  只能一天一天的查询 为防止每天的最后一段时间的单漏掉 这里只能获取昨天 和 今天的
              */
-            Date yesterday = DateUtil.offsetHour(DateUtil.yesterday(), -12);//美东时间
+            Date yesterday = DateUtil.offsetHour(sb.getEndTime(), -36);//美东时间
             Date beginYes = DateUtil.beginOfDay(yesterday);
             Date endYes = DateUtil.endOfDay(yesterday);
             getRecord(beginYes, endYes);
@@ -71,7 +71,7 @@ public class SbRecordSchedule {
             /**
              * 今天的
              */
-            Date today = DateUtil.offsetHour(new Date(), -12);
+            Date today = DateUtil.offsetHour(sb.getEndTime(), -12);
             Date beginToday = DateUtil.beginOfDay(today);
             Date endToday = DateUtil.endOfDay(today);
             getRecord(beginToday, endToday);
@@ -82,7 +82,7 @@ public class SbRecordSchedule {
                 platRecordControlService.update(
                         new LambdaUpdateWrapper<PlatRecordControl>()
                                 .set(PlatRecordControl::getBeginTime, sb.getEndTime())
-                                .set(PlatRecordControl::getEndTime, DateUtil.offsetMinute(sb.getEndTime(), 15))
+                                .set(PlatRecordControl::getEndTime, DateUtil.offsetMinute(sb.getEndTime(), 60))
                                 .eq(PlatRecordControl::getPlatCode, "sb")
                 );
             }
@@ -104,7 +104,9 @@ public class SbRecordSchedule {
         param.put("start_date", start_date);
         param.put("end_date", end_date);
         param.put("time_type", time_type);
+        log.info("SB RECORD URL = {}  PARAM = {}",apiUrlStr, param);
         String result = HttpUtil.post(apiUrlStr, param);
+        log.info("SB RECORD result = {}",result);
         JSONObject resJSON = JSONObject.parseObject(result);
         int error_code = resJSON.getIntValue("error_code");
         if(error_code == 0){
@@ -125,21 +127,31 @@ public class SbRecordSchedule {
                     record.setUserName(username);
                     record.setPlatUserName(ownerUsername);
                     record.setOrderNo(recordJSON.getString("trans_id"));
-                    JSONArray sportName = recordJSON.getJSONArray("sportname");
-                    String sportNameCN = sportName.stream().filter(t -> ((JSONObject) t).getString("lang").equals("cs")).map(t -> ((JSONObject) t).getString("name")).distinct().collect(Collectors.joining());
-                    record.setGameName(sportNameCN);
+                    record.setIsLive(recordJSON.getInteger("islive"));
                     JSONArray bettypename = recordJSON.getJSONArray("bettypename");
                     String bettypenameCN = bettypename.stream().filter(t -> ((JSONObject) t).getString("lang").equals("cs")).map(t -> ((JSONObject) t).getString("name")).distinct().collect(Collectors.joining());
-                    record.setWtype(bettypenameCN);
-                    JSONArray hometeamname = recordJSON.getJSONArray("hometeamname");
-                    String hometeamnameCN = hometeamname.stream().filter(t -> ((JSONObject) t).getString("lang").equals("cs")).map(t -> ((JSONObject) t).getString("name")).distinct().collect(Collectors.joining());
-                    record.setTnameHome(hometeamnameCN);
-                    JSONArray awayteamname = recordJSON.getJSONArray("awayteamname");
-                    String awayteamnameCN = awayteamname.stream().filter(t -> ((JSONObject) t).getString("lang").equals("cs")).map(t -> ((JSONObject) t).getString("name")).distinct().collect(Collectors.joining());
-                    record.setTnameAway(awayteamnameCN);
-                    JSONArray leaguename = recordJSON.getJSONArray("leaguename");
-                    String leaguenameCN = leaguename.stream().filter(t -> ((JSONObject) t).getString("lang").equals("cs")).map(t -> ((JSONObject) t).getString("name")).distinct().collect(Collectors.joining());
-                    record.setLeague(leaguenameCN);
+                    if(!StrUtil.equals(bettypenameCN, "串关")){
+                        JSONArray sportName = recordJSON.getJSONArray("sportname");
+                        String sportNameCN = sportName.stream().filter(t -> ((JSONObject) t).getString("lang").equals("cs")).map(t -> ((JSONObject) t).getString("name")).distinct().collect(Collectors.joining());
+                        record.setGameName(sportNameCN);
+                        JSONArray hometeamname = recordJSON.getJSONArray("hometeamname");
+                        String hometeamnameCN = hometeamname.stream().filter(t -> ((JSONObject) t).getString("lang").equals("cs")).map(t -> ((JSONObject) t).getString("name")).distinct().collect(Collectors.joining());
+                        record.setTnameHome(hometeamnameCN);
+                        JSONArray awayteamname = recordJSON.getJSONArray("awayteamname");
+                        String awayteamnameCN = awayteamname.stream().filter(t -> ((JSONObject) t).getString("lang").equals("cs")).map(t -> ((JSONObject) t).getString("name")).distinct().collect(Collectors.joining());
+                        record.setTnameAway(awayteamnameCN);
+                        JSONArray leaguename = recordJSON.getJSONArray("leaguename");
+                        String leaguenameCN = leaguename.stream().filter(t -> ((JSONObject) t).getString("lang").equals("cs")).map(t -> ((JSONObject) t).getString("name")).distinct().collect(Collectors.joining());
+                        record.setLeague(leaguenameCN);
+                        String home_score = recordJSON.getString("home_score");
+                        String away_score = recordJSON.getString("away_score");
+                        record.setResultScore(home_score + ":" + away_score);
+                        record.setWtype(record.getIsLive() == 1?"滚球":"其他" + bettypenameCN);
+                        record.setRtype(bettypenameCN);
+                    }else{
+                        record.setGameName(bettypenameCN);
+                        record.setWtype(bettypenameCN);
+                    }
                     record.setIoratio(recordJSON.getBigDecimal("odds"));
                     record.setEffectiveBet(recordJSON.getBigDecimal("stake"));
                     record.setAllBet(record.getEffectiveBet());
@@ -155,13 +167,9 @@ public class SbRecordSchedule {
                     }else{
                         continue;
                     }
-                    String home_score = recordJSON.getString("home_score");
-                    String away_score = recordJSON.getString("away_score");
-                    record.setResultScore(home_score + ":" + away_score);
                     record.setParlaysub(recordJSON.getString("ParlayData"));
                     record.setRawData(recordJSON.toJSONString());
                     record.setResettlementinfo(recordJSON.getString("resettlementinfo"));
-                    record.setIsLive(recordJSON.getInteger("islive"));
                     record.setCreateTime(new Date());
                     record.setUpdateTime(new Date());
                     list.add(record);

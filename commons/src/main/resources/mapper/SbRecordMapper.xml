@@ -11,6 +11,7 @@
             <result property="orderNo" column="order_no" jdbcType="VARCHAR"/>
             <result property="gameName" column="game_name" jdbcType="VARCHAR"/>
             <result property="wtype" column="wtype" jdbcType="VARCHAR"/>
+            <result property="rtype" column="rtype" jdbcType="VARCHAR"/>
             <result property="tnameHome" column="tname_home" jdbcType="VARCHAR"/>
             <result property="tnameAway" column="tname_away" jdbcType="VARCHAR"/>
             <result property="league" column="league" jdbcType="VARCHAR"/>
@@ -35,7 +36,7 @@
 
     <sql id="Base_Column_List">
         id,user_name,plat_user_name,
-        order_no,game_name,wtype,
+        order_no,game_name,wtype,rtype,
         tname_home,tname_away,league,
         ioratio,effective_bet,all_bet,
         profit,bet_time,settle_time,
@@ -47,7 +48,7 @@
     <insert id="batchInsertOrUpdate" parameterType="java.util.List">
         INSERT INTO t_sb_record(
         user_name,plat_user_name,
-        order_no,game_name,wtype,
+        order_no,game_name,wtype,rtype,
         tname_home,tname_away,league,
         ioratio,effective_bet,all_bet,
         profit,bet_time,settle_time,
@@ -59,7 +60,7 @@
         values
         <foreach collection="list" item="i" separator=",">
             (
-            #{i.userName}, #{i.platUserName}, #{i.orderNo}, #{i.gameName}, #{i.wtype}, #{i.tnameHome}, #{i.tnameAway}, #{i.league}, #{i.ioratio},
+            #{i.userName}, #{i.platUserName}, #{i.orderNo}, #{i.gameName}, #{i.wtype}, #{i.rtype}, #{i.tnameHome}, #{i.tnameAway}, #{i.league}, #{i.ioratio},
             #{i.effectiveBet}, #{i.allBet}, #{i.profit}, #{i.betTime}, #{i.settleTime},#{i.settleStatus},
             #{i.resultStatus},#{i.resultScore},#{i.oddsFormat}, #{i.parlaynum},#{i.parlaysub},#{i.rawData},#{i.resettlementinfo},#{i.isLive},#{i.createTime},#{i.updateTime}
             )

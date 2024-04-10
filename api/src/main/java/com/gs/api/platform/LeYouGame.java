@@ -54,7 +54,7 @@ public class LeYouGame {
         StringBuilder urlSB = new StringBuilder();
         urlSB.append(this.apiDomain).append("?").append("agent=").append(agent).append("&timestamp=").append(timestamp).append("&param=").append(param).append("&key=").append(key);
         String result = HttpUtil.get(urlSB.toString());
-        log.info("乐游 login param= " + param + " result = " + result);
+        log.info("乐游 login url= " + urlSB + " result = " + result);
         JSONObject resJSON = JSONObject.parseObject(result);
         JSONObject d = resJSON.getJSONObject("d");
         if(d.getIntValue("code") == 0){
@@ -251,9 +251,9 @@ public class LeYouGame {
     }
 
 
-//    public static void main(String[] args){
-//        LeYouGame ly = new LeYouGame();
-//        System.out.println(ly.getRecord());
-//    }
+    public static void main(String[] args){
+        LeYouGame ly = new LeYouGame();
+        System.out.println(ly.login());
+    }
 
 }

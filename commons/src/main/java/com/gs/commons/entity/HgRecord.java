@@ -53,10 +53,16 @@ public class HgRecord implements Serializable {
     private String wtype;
 
     /**
-     * 玩法
+     * 玩法结果
      */
     @TableField(value = "rtype")
     private String rtype;
+
+    /**
+     * 下注内容
+     */
+    @TableField(value = "order_content")
+    private String orderContent;
 
     /**
      * 主队名称
