@@ -39,7 +39,7 @@ public class LotterySettleServiceImpl implements LotterySettleService {
             // 查询用户信息
             UserInfo user = userInfoService.getUserByName(order.getUserName());
             // 修改订单状态
-            lotteryOrderService.update(
+            boolean update = lotteryOrderService.update(
                     new LambdaUpdateWrapper<LotteryOrder>()
                             .set(LotteryOrder::getBonusAmount, bounsAmount)
                             .set(LotteryOrder::getProfitAmount, profitAmount)
@@ -51,6 +51,9 @@ public class LotterySettleServiceImpl implements LotterySettleService {
                             .eq(LotteryOrder::getId, order.getId())
                             .eq(LotteryOrder::getSettleStatus, 0)
                             .eq(LotteryOrder::getOrderStatus, 0));
+            if (!update) {
+                throw new BusinessException("修改订单失败");
+            }
 
             // 给用户加钱
             userInfoService.updateUserBalance(order.getUserName(), bounsAmount);
@@ -89,7 +92,7 @@ public class LotterySettleServiceImpl implements LotterySettleService {
             // 查询用户信息
             UserInfo user = userInfoService.getUserByName(order.getUserName());
             // 修改订单状态
-            lotteryOrderService.update(
+            boolean update = lotteryOrderService.update(
                     new LambdaUpdateWrapper<LotteryOrder>()
                             .set(LotteryOrder::getSettleTime, now)
                             .set(LotteryOrder::getSettleStatus, 2)
@@ -99,6 +102,9 @@ public class LotterySettleServiceImpl implements LotterySettleService {
                             .eq(LotteryOrder::getId, order.getId())
                             .eq(LotteryOrder::getSettleStatus, 0)
                             .eq(LotteryOrder::getOrderStatus, 0));
+            if (!update) {
+                throw new BusinessException("修改订单失败");
+            }
 
             // 给用户加钱
             userInfoService.updateUserBalance(order.getUserName(), order.getBetAmount());
