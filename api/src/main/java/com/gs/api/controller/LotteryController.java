@@ -436,6 +436,7 @@ public class LotteryController {
         String openResult = (null == lastQsData) ? "" : StringUtils.defaultString(lastQsData.getOpenResult());
         lastQsJson.put("qs", lastQs);
         lastQsJson.put("openResult", openResult);
+        lastQsJson.put("openStatus", lastQsData.getOpenStatus());
 
         return R.ok().put("nowQs", nowQsJson).put("lastQs", lastQsJson);
     }
