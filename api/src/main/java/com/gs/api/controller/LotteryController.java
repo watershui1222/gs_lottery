@@ -83,12 +83,10 @@ public class LotteryController {
     private OpenresultMo6hcService openresultMo6hcService;
     @Autowired
     private OpenresultPcddService openresultPcddService;
-
     @Autowired
     private LotteryOrderService lotteryOrderService;
     @Autowired
     private SysParamService sysParamService;
-
     @Autowired
     private LotteryBetService lotteryBetService;
     @Autowired
@@ -123,13 +121,13 @@ public class LotteryController {
     @GetMapping("/getAllPlay/{lotteryCode}")
     public R getAllPlay(@PathVariable("lotteryCode") String lotteryCode) {
         // 获取彩种信息
-        Lottery lottery = lotteryService.getOne(
-                new LambdaQueryWrapper<Lottery>()
-                        .eq(Lottery::getLotteryCode, lotteryCode)
-        );
+//        Lottery lottery = lotteryService.getOne(
+//                new LambdaQueryWrapper<Lottery>()
+//                        .eq(Lottery::getLotteryCode, lotteryCode)
+//        );
 
         // 从缓存读取 缓存没有去数据库读取
-        String redisKey = "lottery:plays:" + lottery;
+        String redisKey = "lottery:plays:" + lotteryCode;
 //        String redisValue = redisTemplate.opsForValue().get(redisKey);
 //        if (StringUtils.isNotBlank(redisValue)) {
 //            List<LotteryHandicapVo> lotteryHandicapVoList = JSONArray.parseArray(redisValue, LotteryHandicapVo.class);
@@ -139,14 +137,14 @@ public class LotteryController {
         // 获取彩种下的所有盘口
         List<LotteryHandicap> handicaps = lotteryHandicapService.list(
                 new LambdaQueryWrapper<LotteryHandicap>()
-                        .eq(LotteryHandicap::getLotteryCode, lottery.getLotteryCode())
+                        .eq(LotteryHandicap::getLotteryCode, lotteryCode)
                         .eq(LotteryHandicap::getStatus, 0)
                         .orderByDesc(LotteryHandicap::getPxh)
         );
         // 获取彩种下的所有玩法
         List<LotteryPlay> plays = lotteryPlayService.list(
                 new LambdaQueryWrapper<LotteryPlay>()
-                        .eq(LotteryPlay::getLotteryCode, lottery.getLotteryCode())
+                        .eq(LotteryPlay::getLotteryCode, lotteryCode)
                         .eq(LotteryPlay::getStatus, 0)
                         .orderByDesc(LotteryPlay::getPxh)
         );
@@ -183,18 +181,18 @@ public class LotteryController {
 
         // 写入缓存
         redisTemplate.opsForValue().set(redisKey, JSON.toJSONString(lotteryHandicapVoList), 1, TimeUnit.HOURS);
-        return R.ok().put("plays", lotteryHandicapVoList).put("lotteryType", lottery.getLotteryType());
+        return R.ok().put("plays", lotteryHandicapVoList);
     }
 
 
     @ApiOperation(value = "获取指定彩种下所有玩法的号码以及赔率")
     @GetMapping("/getAllOdds/{lotteryCode}/{playCode}")
-    public R getAllPlay(@PathVariable("lotteryCode") String lotteryCode, @PathVariable("playCode") String playCode) {
+    public R getAllOdds(@PathVariable("lotteryCode") String lotteryCode, @PathVariable("playCode") String playCode) {
         // 获取彩种信息
-        Lottery lottery = lotteryService.getOne(
-                new LambdaQueryWrapper<Lottery>()
-                        .eq(Lottery::getLotteryCode, lotteryCode)
-        );
+//        Lottery lottery = lotteryService.getOne(
+//                new LambdaQueryWrapper<Lottery>()
+//                        .eq(Lottery::getLotteryCode, lotteryCode)
+//        );
 
         List<LotteryOdds> oddsList = lotteryOddsService.list(
                 new LambdaQueryWrapper<LotteryOdds>()
@@ -470,7 +468,6 @@ public class LotteryController {
         // 投注内容
         List<LotteryOrder> orders = new ArrayList<>();
         String betContent = HtmlUtil.unescape(request.getBetContent());
-        System.out.println(betContent);
         JSONArray betContentArr = JSON.parseArray(betContent);
         // 获取所有投注项信息
         Set<String> oddsIds = new HashSet<>();
@@ -502,6 +499,9 @@ public class LotteryController {
                 throw new Exception("非法参数");
             }
 
+            // 校验组选、直选规则
+            checkPlayRules(betContentObj, lotteryOdds);
+
             // 组装投注记录
             LotteryOrder order = new LotteryOrder();
             order.setUserName(userName);
@@ -527,9 +527,6 @@ public class LotteryController {
             orders.add(order);
         }
 
-        // 校验投注项规则
-        checkPlayRules(betContentArr);
-
         // 用户信息
         UserInfo user = userInfoService.getUserByName(userName);
         if (betAmount.doubleValue() > user.getBalance().doubleValue()) {
@@ -542,10 +539,14 @@ public class LotteryController {
 
     /**
      * 校验投注项规则
-     * @param betContentArr
+     * @param betContentObj
      */
-    private void checkPlayRules(JSONArray betContentArr) {
+    private void checkPlayRules(JSONObject betContentObj, LotteryOdds lotteryOdds) {
+        String playCode = betContentObj.getString("playCode");
+        String hm = betContentObj.getString("hm");
+        if (StringUtils.equals(lotteryOdds.getLotteryCode(), LotteryCodeEnum.GD11X5.getLotteryCode())) {
 
+        }
     }
 
 
