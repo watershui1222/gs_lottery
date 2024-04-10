@@ -439,7 +439,7 @@ public class PayCallbackController {
         payOrder.setRemark(StrUtil.format("拉单金额:{} | 支付金额:{}", payOrder.getAmount(), realPayAmount));
         payOrder.setAmount(realPayAmount);
         payDepositService.deposit(payOrder);
-        return body + "||| " + JSON.toJSONString(treeMap) + "||| " + needSignParamString + "|||| " + checkSign;
+        return "SUCCESS";
     }
 
     public static void main(String[] args) {
