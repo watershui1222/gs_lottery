@@ -90,51 +90,18 @@ public class PlatController {
     }
 
     @ApiOperation(value = "获取指定平台电子游戏列表")
-    @GetMapping("/getElegame/{platCode}")
-    public R getElegame(HttpServletRequest httpServletRequest,@PathVariable("platCode") String platCode) {
-        String redisKey = "plat:elegame:" + platCode;
+    @GetMapping("/getElegame/{subPlatCode}")
+    public R getElegame(HttpServletRequest httpServletRequest,@PathVariable("subPlatCode") String subPlatCode) {
+        String redisKey = "plat:elegame:" + subPlatCode;
 //        String redisValue = redisTemplate.opsForValue().get(redisKey);
 //        if (StringUtils.isNotBlank(redisValue)) {
 //            return R.ok().put("list", JSON.parseArray(redisValue));
 //        }
-        //获取子平台
-        PlatSubEnum platSubEnum = PlatSubEnum.getByPlatCode(platCode, PlatGameTypeEnum.SLOT.getGameType());
         List<EleGame> list = eleGameService.list(
                 new LambdaQueryWrapper<EleGame>()
                         .eq(EleGame::getStatus, 0)
-                        .eq(EleGame::getPlatCode, platCode)
-                        .eq(EleGame::getPlatSubCode, platSubEnum.getPlatSubCode())
-                        .orderByDesc(EleGame::getPlatCode)
-        );
-        Map<String, String> allParamByMap = sysParamService.getAllParamByMap();
-        JSONArray array = new JSONArray();
-        for (EleGame eleGame : list) {
-            JSONObject object = new JSONObject();
-            object.put("gameCode", eleGame.getGameCode());
-            object.put("gameName", eleGame.getGameName());
-            object.put("img", allParamByMap.get("resource_domain") + eleGame.getImg());
-            array.add(object);
-        }
-        redisTemplate.opsForValue().set(redisKey, JSON.toJSONString(array), 1, TimeUnit.HOURS);
-        return R.ok().put("list", array);
-    }
-
-    @ApiOperation(value = "获取指定平台捕鱼游戏列表")
-    @GetMapping("/getFishGame/{platCode}")
-    public R getFishGame(HttpServletRequest httpServletRequest,@PathVariable("platCode") String platCode) {
-        String redisKey = "plat:fishgame:" + platCode;
-//        String redisValue = redisTemplate.opsForValue().get(redisKey);
-//        if (StringUtils.isNotBlank(redisValue)) {
-//            return R.ok().put("list", JSON.parseArray(redisValue));
-//        }
-        //获取子平台
-        PlatSubEnum platSubEnum = PlatSubEnum.getByPlatCode(platCode, PlatGameTypeEnum.FISH.getGameType());
-        List<EleGame> list = eleGameService.list(
-                new LambdaQueryWrapper<EleGame>()
-                        .eq(EleGame::getStatus, 0)
-                        .eq(EleGame::getPlatCode, platCode)
-                        .eq(EleGame::getPlatSubCode, platSubEnum.getPlatSubCode())
-                        .orderByDesc(EleGame::getPlatCode)
+                        .eq(EleGame::getPlatSubCode, subPlatCode)
+                        .orderByDesc(EleGame::getPxh)
         );
         Map<String, String> allParamByMap = sysParamService.getAllParamByMap();
         JSONArray array = new JSONArray();
