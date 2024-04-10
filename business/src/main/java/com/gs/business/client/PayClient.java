@@ -26,6 +26,8 @@ public class PayClient {
     private PayService mkPayService;
     @Autowired
     private PayService hxfPayService;
+    @Autowired
+    private PayService chaowanPayService;
     /**
      * 获取支付URL
      * @param merchant
@@ -49,6 +51,8 @@ public class PayClient {
             return mkPayService.getPayUrl(merchant, order, payChannel);
         } else if (StringUtils.equals(merchant.getMerchantCode(), "HXF")) {
             return hxfPayService.getPayUrl(merchant, order, payChannel);
+        } else if (StringUtils.equals(merchant.getMerchantCode(), "CHAOWAN")) {
+            return chaowanPayService.getPayUrl(merchant, order, payChannel);
         }
         return null;
     }
