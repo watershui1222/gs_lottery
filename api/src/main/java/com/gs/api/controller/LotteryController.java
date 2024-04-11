@@ -5,6 +5,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HtmlUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
@@ -21,6 +22,7 @@ import com.gs.api.utils.JwtUtils;
 import com.gs.business.client.LotteryClient;
 import com.gs.business.pojo.LotteryCurrQsBO;
 import com.gs.business.service.LotteryBetService;
+import com.gs.commons.bo.OpenResultBO;
 import com.gs.commons.bo.OpenresultTimeBO;
 import com.gs.commons.constants.Constant;
 import com.gs.commons.entity.*;
@@ -271,6 +273,12 @@ public class LotteryController {
 
         } else if (StringUtils.equals(LotteryCodeEnum.MO6HC.getLotteryCode(), request.getLotteryCode())) {
             pageUtils = openresultMo6hcService.queryPage(params);
+            if (CollUtil.isNotEmpty(pageUtils.getList())) {
+                List<OpenResultBO> list = (List<OpenResultBO>) pageUtils.getList();
+                list.stream()
+                        .filter(openResultBO -> StringUtils.isNotEmpty(openResultBO.getOpenResult()))
+                        .forEach(openResultBO -> openResultBO.setOpenResult(openResultBO.getOpenResult().replaceAll("\\+", ",")));
+            }
 
         } else if (StringUtils.equals(LotteryCodeEnum.PCDD.getLotteryCode(), request.getLotteryCode())) {
             pageUtils = openresultPcddService.queryPage(params);
