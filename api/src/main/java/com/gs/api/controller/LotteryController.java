@@ -21,6 +21,8 @@ import com.gs.api.utils.JwtUtils;
 import com.gs.business.client.LotteryClient;
 import com.gs.business.pojo.LotteryCurrQsBO;
 import com.gs.business.service.LotteryBetService;
+import com.gs.business.utils.lottery.LHCBetVerifyUtil;
+import com.gs.business.utils.lottery.SYX5BetVerifyUtil;
 import com.gs.commons.bo.OpenresultTimeBO;
 import com.gs.commons.constants.Constant;
 import com.gs.commons.entity.*;
@@ -537,88 +539,12 @@ public class LotteryController {
      * @param betContentObj
      */
     private void checkPlayRules(JSONObject betContentObj, LotteryOdds lotteryOdds) {
-        String playCode = betContentObj.getString("playCode");
-        String hm = betContentObj.getString("hm");
-        if (StringUtils.equals(lotteryOdds.getLotteryCode(), LotteryCodeEnum.MO6HC.getLotteryCode())) {
-            if (StringUtils.equals(playCode, "qbz_qbz")) {
-                String[] split = hm.split(",");
-                Set<String> set = Arrays.stream(split)
-                        .collect(Collectors.toSet());
-                if (StringUtils.equals(lotteryOdds.getHmCode(), "qbz_5")) {
-                    if (split.length != 5 || set.size() != 5) {
-                        throw new BusinessException("非法参数");
-                    }
-                } else if (StringUtils.equals(lotteryOdds.getHmCode(), "qbz_6")) {
-                    if (split.length != 6 || set.size() != 6) {
-                        throw new BusinessException("非法参数");
-                    }
-                } else if (StringUtils.equals(lotteryOdds.getHmCode(), "qbz_7")) {
-                    if (split.length != 7 || set.size() != 7) {
-                        throw new BusinessException("非法参数");
-                    }
-                } else if (StringUtils.equals(lotteryOdds.getHmCode(), "qbz_8")) {
-                    if (split.length != 8 || set.size() != 8) {
-                        throw new BusinessException("非法参数");
-                    }
-                } else if (StringUtils.equals(lotteryOdds.getHmCode(), "qbz_9")) {
-                    if (split.length != 9 || set.size() != 9) {
-                        throw new BusinessException("非法参数");
-                    }
-                } else if (StringUtils.equals(lotteryOdds.getHmCode(), "qbz_10")) {
-                    if (split.length != 10 || set.size() != 10) {
-                        throw new BusinessException("非法参数");
-                    }
-                } else if (StringUtils.equals(lotteryOdds.getHmCode(), "qbz_11")) {
-                    if (split.length != 11 || set.size() != 11) {
-                        throw new BusinessException("非法参数");
-                    }
-                }
-            } else if (StringUtils.equals(playCode, "hx_hx")) {
-                String[] split = hm.split(",");
-                Set<String> set = Arrays.stream(split)
-                        .collect(Collectors.toSet());
-                if (StringUtils.equals(lotteryOdds.getHmCode(), "hx_2x")) {
-                    if (split.length != 2 || set.size() != 2) {
-                        throw new BusinessException("非法参数");
-                    }
-                } else if (StringUtils.equals(lotteryOdds.getHmCode(), "hx_3x")) {
-                    if (split.length != 3 || set.size() != 3) {
-                        throw new BusinessException("非法参数");
-                    }
-                } else if (StringUtils.equals(lotteryOdds.getHmCode(), "hx_4x")) {
-                    if (split.length != 4 || set.size() != 4) {
-                        throw new BusinessException("非法参数");
-                    }
-                } else if (StringUtils.equals(lotteryOdds.getHmCode(), "hx_5x")) {
-                    if (split.length != 5 || set.size() != 5) {
-                        throw new BusinessException("非法参数");
-                    }
-                } else if (StringUtils.equals(lotteryOdds.getHmCode(), "hx_6x")) {
-                    if (split.length != 6 || set.size() != 6) {
-                        throw new BusinessException("非法参数");
-                    }
-                } else if (StringUtils.equals(lotteryOdds.getHmCode(), "hx_7x")) {
-                    if (split.length != 7 || set.size() != 7) {
-                        throw new BusinessException("非法参数");
-                    }
-                } else if (StringUtils.equals(lotteryOdds.getHmCode(), "hx_8x")) {
-                    if (split.length != 8 || set.size() != 8) {
-                        throw new BusinessException("非法参数");
-                    }
-                } else if (StringUtils.equals(lotteryOdds.getHmCode(), "hx_9x")) {
-                    if (split.length != 9 || set.size() != 9) {
-                        throw new BusinessException("非法参数");
-                    }
-                } else if (StringUtils.equals(lotteryOdds.getHmCode(), "hx_10x")) {
-                    if (split.length != 10 || set.size() != 10) {
-                        throw new BusinessException("非法参数");
-                    }
-                } else if (StringUtils.equals(lotteryOdds.getHmCode(), "hx_11x")) {
-                    if (split.length != 11 || set.size() != 11) {
-                        throw new BusinessException("非法参数");
-                    }
-                }
-            }
+        if (StringUtils.equalsAny(lotteryOdds.getLotteryCode(),
+                LotteryCodeEnum.MO6HC.getLotteryCode(),
+                LotteryCodeEnum.GS1MLHC.getLotteryCode())) {
+            LHCBetVerifyUtil.verify(betContentObj, lotteryOdds);
+        } else if (StringUtils.equalsAny(lotteryOdds.getLotteryCode(), LotteryCodeEnum.GD11X5.getLotteryCode())) {
+            SYX5BetVerifyUtil.verify(betContentObj, lotteryOdds);
         }
     }
 

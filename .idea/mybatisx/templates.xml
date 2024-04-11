@@ -68,8 +68,8 @@
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="PayMerchant" />
-                  <option name="tableName" value="t_pay_merchant" />
+                  <option name="className" value="PayChannel" />
+                  <option name="tableName" value="t_pay_channel" />
                 </TableUIInfo>
               </list>
             </option>

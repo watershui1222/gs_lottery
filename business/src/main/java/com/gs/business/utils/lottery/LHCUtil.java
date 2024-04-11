@@ -76,6 +76,44 @@ public class LHCUtil {
             checkQbz(order, resultArr);
         } else if (StringUtils.equals(order.getPlayCode(), "hx_hx")) {
             checkHx(order, resultArr[6]);
+        } else if (StringUtils.equals(order.getPlayCode(), "lianma_all2")) {
+            check2qz(order, resultArr);
+        } else if (StringUtils.equals(order.getPlayCode(), "lianma_all3")) {
+            check2qz(order, resultArr);
+        } else if (StringUtils.equals(order.getPlayCode(), "lianma_all4")) {
+            check2qz(order, resultArr);
+        } else if (StringUtils.equals(order.getPlayCode(), "lianma_tc")) {
+            checkTc(order, resultArr);
+        }
+    }
+
+    private static void checkTc(LotteryOrder order, String[] resultArr) {
+        List<String> betContent = Arrays.asList(order.getBetContent().split(","));
+        List<String> zm = Arrays.asList(new String[]{resultArr[0], resultArr[1], resultArr[2], resultArr[3], resultArr[4], resultArr[5]});
+        List<String> tm = Arrays.asList(new String[]{resultArr[6]});
+
+        if (hasNum(tm, betContent) && hasNum(zm, betContent)) {
+            order.setOrderStatus(1);
+        } else {
+            order.setOrderStatus(2);
+        }
+    }
+
+    private static boolean hasNum(List<String> betContent, List<String> result) {
+        if (CollUtil.containsAny(betContent, result)) {
+            return true;
+        }
+        return false;
+    }
+
+    private static void check2qz(LotteryOrder order, String[] resultArr) {
+        String betContent = order.getBetContent();
+        String[] result = new String[]{resultArr[0], resultArr[1], resultArr[2], resultArr[3], resultArr[4], resultArr[5]};
+        List<String> betList = Arrays.asList(betContent.split(","));
+        if (CollUtil.containsAll(Arrays.asList(result), betList)) {
+            order.setOrderStatus(1);
+        } else {
+            order.setOrderStatus(2);
         }
     }
 
