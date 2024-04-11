@@ -51,7 +51,7 @@ public class LotteryBetServiceImpl implements LotteryBetService {
         transactionRecord.setAfterAmount(NumberUtil.sub(info.getBalance(), amount));
         transactionRecord.setPayType(1);
         transactionRecord.setBusinessType(2);
-        transactionRecord.setBusinessOrder(businessOrder);
+        transactionRecord.setBusinessOrder(null);
         transactionRecord.setCreateTime(now);
         transactionRecord.setRemark("彩票下注");
         transactionRecord.setOperName(null);
