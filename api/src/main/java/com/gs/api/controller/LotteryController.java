@@ -274,11 +274,6 @@ public class LotteryController {
 
         } else if (StringUtils.equals(LotteryCodeEnum.MO6HC.getLotteryCode(), request.getLotteryCode())) {
             pageUtils = openresultMo6hcService.queryPage(params);
-            if (CollUtil.isNotEmpty(pageUtils.getList())) {
-                pageUtils.getList().stream()
-                        .filter(o -> StringUtils.isNotEmpty(((OpenResultBO) o).getOpenResult()))
-                        .forEach(o -> ((OpenResultBO) o).setOpenResult(((OpenResultBO) o).getOpenResult().replaceAll("\\+", ",")));
-            }
 
         } else if (StringUtils.equals(LotteryCodeEnum.PCDD.getLotteryCode(), request.getLotteryCode())) {
             pageUtils = openresultPcddService.queryPage(params);
