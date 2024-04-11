@@ -277,9 +277,6 @@ public class LotteryController {
                 pageUtils.getList().stream()
                         .filter(o -> StringUtils.isNotEmpty(((OpenResultBO) o).getOpenResult()))
                         .forEach(o -> ((OpenResultBO) o).setOpenResult(((OpenResultBO) o).getOpenResult().replaceAll("\\+", ",")));
-//                list.stream()
-//                        .filter(openResultBO -> StringUtils.isNotEmpty(openResultBO.getOpenResult()))
-//                        .forEach(openResultBO -> openResultBO.setOpenResult(openResultBO.getOpenResult().replaceAll("\\+", ",")));
             }
 
         } else if (StringUtils.equals(LotteryCodeEnum.PCDD.getLotteryCode(), request.getLotteryCode())) {
