@@ -107,7 +107,8 @@ public class Mo6hcLotteryDataServiceImpl extends LotteryDataService {
             JSONObject openObj = jsks.getJSONObject(i);
             OpenresultMo6hc openresultJsk3 = new OpenresultMo6hc();
             openresultJsk3.setPlatQs(openObj.getString("issue"));
-            openresultJsk3.setOpenResult(openObj.getString("code"));
+            String code = openObj.getString("code");
+            openresultJsk3.setOpenResult(code.replaceAll("\\+", ","));
             openresultJsk3.setOpenStatus(0);
             openresultJsk3.setOpenResultTime(new Date());
             openresultJsk3.setUpdateTime(new Date());
