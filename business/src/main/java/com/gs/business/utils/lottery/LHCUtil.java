@@ -171,7 +171,7 @@ public class LHCUtil {
         if (betContentList.contains(numStr)) {
             order.setOrderStatus(1);
         } else {
-            order.setOrderStatus(4);
+            order.setOrderStatus(2);
         }
 
     }
@@ -221,7 +221,7 @@ public class LHCUtil {
         if (strings.contains(numStr)) {
             order.setOrderStatus(1);
         } else {
-            order.setOrderStatus(4);
+            order.setOrderStatus(2);
         }
     }
 
@@ -333,7 +333,7 @@ public class LHCUtil {
         if (CollUtil.containsAny(strings, Arrays.asList(resultArr))) {
             order.setOrderStatus(1);
         } else {
-            order.setOrderStatus(4);
+            order.setOrderStatus(2);
         }
     }
 
@@ -343,73 +343,73 @@ public class LHCUtil {
             if (StringUtils.equalsAny(betContent, "1", "7", "13", "19", "23", "29", "35", "45")) {
                 order.setOrderStatus(1);
             } else {
-                order.setOrderStatus(4);
+                order.setOrderStatus(2);
             }
         } else if (StringUtils.equals(betContent, "红双")) {
             if (StringUtils.equalsAny(betContent, "2", "8", "12", "18", "24", "30", "34", "40", "46")) {
                 order.setOrderStatus(1);
             } else {
-                order.setOrderStatus(4);
+                order.setOrderStatus(2);
             }
         } else if (StringUtils.equals(betContent, "红大")) {
             if (StringUtils.equalsAny(betContent, "29", "30", "34", "35", "40", "45", "46")) {
                 order.setOrderStatus(1);
             } else {
-                order.setOrderStatus(4);
+                order.setOrderStatus(2);
             }
         } else if (StringUtils.equals(betContent, "红小")) {
             if (StringUtils.equalsAny(betContent, "1", "2", "7", "8", "12", "13", "18", "19", "23", "24")) {
                 order.setOrderStatus(1);
             } else {
-                order.setOrderStatus(4);
+                order.setOrderStatus(2);
             }
         } else if (StringUtils.equals(betContent, "蓝单")) {
             if (StringUtils.equalsAny(betContent, "3", "9", "15", "25", "31", "37", "41", "47")) {
                 order.setOrderStatus(1);
             } else {
-                order.setOrderStatus(4);
+                order.setOrderStatus(2);
             }
         } else if (StringUtils.equals(betContent, "蓝双")) {
             if (StringUtils.equalsAny(betContent, "2", "10", "14", "20", "26", "36", "42", "48")) {
                 order.setOrderStatus(1);
             } else {
-                order.setOrderStatus(4);
+                order.setOrderStatus(2);
             }
         } else if (StringUtils.equals(betContent, "蓝大")) {
             if (StringUtils.equalsAny(betContent, "25", "26", "31", "36", "37", "41", "42", "47", "48")) {
                 order.setOrderStatus(1);
             } else {
-                order.setOrderStatus(4);
+                order.setOrderStatus(2);
             }
         } else if (StringUtils.equals(betContent, "蓝小")) {
             if (StringUtils.equalsAny(betContent, "3", "4", "9", "10", "14", "15", "20")) {
                 order.setOrderStatus(1);
             } else {
-                order.setOrderStatus(4);
+                order.setOrderStatus(2);
             }
         } else if (StringUtils.equals(betContent, "绿单")) {
             if (StringUtils.equalsAny(betContent, "5", "11", "17", "21", "27", "33", "39", "43")) {
                 order.setOrderStatus(1);
             } else {
-                order.setOrderStatus(4);
+                order.setOrderStatus(2);
             }
         } else if (StringUtils.equals(betContent, "绿双")) {
             if (StringUtils.equalsAny(betContent, "6", "16", "22", "28", "32", "38", "44")) {
                 order.setOrderStatus(1);
             } else {
-                order.setOrderStatus(4);
+                order.setOrderStatus(2);
             }
         } else if (StringUtils.equals(betContent, "绿大")) {
             if (StringUtils.equalsAny(betContent, "27", "28", "32", "33", "38", "39", "43", "44")) {
                 order.setOrderStatus(1);
             } else {
-                order.setOrderStatus(4);
+                order.setOrderStatus(2);
             }
         } else if (StringUtils.equals(betContent, "绿小")) {
             if (StringUtils.equalsAny(betContent, "5", "6", "11", "16", "17", "21", "22")) {
                 order.setOrderStatus(1);
             } else {
-                order.setOrderStatus(4);
+                order.setOrderStatus(2);
             }
         }
     }

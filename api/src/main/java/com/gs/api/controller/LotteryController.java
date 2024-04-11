@@ -441,6 +441,12 @@ public class LotteryController {
     @PostMapping("/bet")
     public R bet(@Validated LotteryBetRequest request, HttpServletRequest httpServletRequest) throws Exception {
         String userName = JwtUtils.getUserName(httpServletRequest);
+        String redisKey = "lottery:bet:" + userName;
+        Boolean flag = redisTemplate.opsForValue().setIfAbsent(redisKey, "true", 2, TimeUnit.SECONDS);
+        if (!flag) {
+            return R.error("请勿频繁操作");
+        }
+
         // 总投注额
         BigDecimal betAmount = new BigDecimal("0");
         // 投注期号
@@ -531,6 +537,7 @@ public class LotteryController {
         }
 
         lotteryBetService.bet(user, betAmount, orders);
+        redisTemplate.delete(redisKey);
         return R.ok("投注成功!");
     }
 
