@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gs.commons.mapper.OpenresultGs1mftMapper">
+
+    <resultMap id="BaseResultMap" type="com.gs.commons.entity.OpenresultGs1mft">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="qs" column="qs" jdbcType="VARCHAR"/>
+            <result property="platQs" column="plat_qs" jdbcType="VARCHAR"/>
+            <result property="openResult" column="open_result" jdbcType="VARCHAR"/>
+            <result property="openStatus" column="open_status" jdbcType="INTEGER"/>
+            <result property="currCount" column="curr_count" jdbcType="INTEGER"/>
+            <result property="openTime" column="open_time" jdbcType="TIMESTAMP"/>
+            <result property="closeTime" column="close_time" jdbcType="TIMESTAMP"/>
+            <result property="openResultTime" column="open_result_time" jdbcType="TIMESTAMP"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,qs,plat_qs,
+        open_result,open_status,curr_count,
+        open_time,close_time,open_result_time,
+        create_time,update_time
+    </sql>
+</mapper>

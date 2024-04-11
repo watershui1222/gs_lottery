@@ -119,7 +119,7 @@ public class LotteryOrder implements Serializable {
     private Integer settleStatus;
 
     /**
-     * 0:待结算 1:已中奖 2:未中奖 3:已撤单
+     * 0:待结算 1:已中奖 2:未中奖 3:已撤单 4:和局
      */
     @TableField(value = "order_status")
     private Integer orderStatus;

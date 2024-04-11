@@ -1,6 +1,5 @@
 package com.gs.settle.schedule;
 
-import cn.hutool.core.util.NumberUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.gs.business.client.LotteryClient;
 import com.gs.business.pojo.LotteryCurrQsBO;
@@ -8,8 +7,6 @@ import com.gs.business.service.LotterySettleService;
 import com.gs.commons.entity.LotteryOrder;
 import com.gs.commons.service.LotteryOrderService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

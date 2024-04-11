@@ -65,7 +65,7 @@ public class PayChannel implements Serializable {
     private BigDecimal maxAmount;
 
     /**
-     * 1:钱包 2:微信 3:支付宝
+     * 1:钱包 2:微信 3:支付宝 4:QQ 5:数字人民币 6:银联 7:手机银行 8:云闪付
      */
     @TableField(value = "type")
     private Integer type;
@@ -87,6 +87,12 @@ public class PayChannel implements Serializable {
      */
     @TableField(value = "pxh")
     private Integer pxh;
+
+    /**
+     * 备注
+     */
+    @TableField(value = "remark")
+    private String remark;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
