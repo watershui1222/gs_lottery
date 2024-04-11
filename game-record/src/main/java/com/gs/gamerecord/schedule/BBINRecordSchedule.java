@@ -312,7 +312,7 @@ public class BBINRecordSchedule {
             log.info("BBIN捕鱼---拉单开始[{}]-[{}]", DateUtil.formatDateTime(bbinfish.getBeginTime()), DateUtil.formatDateTime(bbinfish.getEndTime()));
             Date mdBegin = DateUtil.offsetHour(bbinfish.getBeginTime(), -12);
             Date mdEnd = DateUtil.offsetHour(bbinfish.getEndTime(), -12);
-            mdEnd = DateUtil.offsetMinute(mdEnd, -5);
+            mdEnd = DateUtil.offsetMinute(mdEnd, -10);
             getFishRecord(mdBegin, mdEnd);
             log.info("BBIN捕鱼---拉单完成[{}]-[{}]", DateUtil.formatDateTime(bbinfish.getBeginTime()), DateUtil.formatDateTime(bbinfish.getEndTime()));
             // 如果当前时间大于结束时间，更新拉取时间范围
