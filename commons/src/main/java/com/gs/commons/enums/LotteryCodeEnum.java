@@ -20,6 +20,11 @@ public enum LotteryCodeEnum {
     BJPK10("BJPK10", "北京PK10"),
     MO6HC("MOLHC", "澳门六合彩"),
     FC3D("FC3D", "福彩3D"),
+    GS1MK3("GS1MK3", "一分快三"),
+    GS1MPK10("GS1MPK10", "一分赛车"),
+    GS1MSSC("GS1MSSC", "一分时时彩"),
+    GS1MFT("GS1MFT", "一分飞艇"),
+    GS1MLHC("GS1MLHC", "一分六合彩"),
     ;
     private String lotteryCode;
     private String name;

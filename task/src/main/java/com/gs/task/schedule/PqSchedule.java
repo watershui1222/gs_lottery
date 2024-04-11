@@ -116,16 +116,69 @@ public class PqSchedule {
     }
 
 
-//    @Scheduled(cron = "0/10 * * * * ?")
-//    public void fc3dPaiqi1() {
-//
-//        LotteryDataService pqService = lotteryDataClient.getSourceService(LotteryCodeEnum.FC3D.getLotteryCode());
-//
-//        pqService.generatePaiqi(new Date());
-//        pqService.generatePaiqi(DateUtil.tomorrow());
-//
-//
-//    }
+
+
+    @Scheduled(cron = "${paiqiTask.cron.gs1mk3}")
+    public void gs1mk3Paiqi1() {
+
+        LotteryDataService pqService = lotteryDataClient.getSourceService(LotteryCodeEnum.GS1MK3.getLotteryCode());
+
+        pqService.generatePaiqi(new Date());
+        pqService.generatePaiqi(DateUtil.tomorrow());
+
+
+    }
+
+
+
+    @Scheduled(cron = "${paiqiTask.cron.gs1mft}")
+    public void gs1mftPaiqi1() {
+
+        LotteryDataService pqService = lotteryDataClient.getSourceService(LotteryCodeEnum.GS1MFT.getLotteryCode());
+
+        pqService.generatePaiqi(new Date());
+        pqService.generatePaiqi(DateUtil.tomorrow());
+
+
+    }
+
+
+    @Scheduled(cron = "${paiqiTask.cron.gs1mssc}")
+    public void gs1msscPaiqi1() {
+
+        LotteryDataService pqService = lotteryDataClient.getSourceService(LotteryCodeEnum.GS1MSSC.getLotteryCode());
+
+        pqService.generatePaiqi(new Date());
+        pqService.generatePaiqi(DateUtil.tomorrow());
+
+
+    }
+
+
+    @Scheduled(cron = "${paiqiTask.cron.gs1mpk10}")
+    public void gs1mPK10Paiqi1() {
+
+        LotteryDataService pqService = lotteryDataClient.getSourceService(LotteryCodeEnum.GS1MPK10.getLotteryCode());
+
+        pqService.generatePaiqi(new Date());
+        pqService.generatePaiqi(DateUtil.tomorrow());
+
+
+    }
+
+    @Scheduled(cron = "${paiqiTask.cron.gs1mlhc}")
+    public void gs1mlhcPaiqi1() {
+
+        LotteryDataService pqService = lotteryDataClient.getSourceService(LotteryCodeEnum.GS1MLHC.getLotteryCode());
+
+        pqService.generatePaiqi(new Date());
+        pqService.generatePaiqi(DateUtil.tomorrow());
+
+
+    }
+
+
+
 
 
 }
