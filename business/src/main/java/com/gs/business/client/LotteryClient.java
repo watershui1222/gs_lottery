@@ -42,19 +42,19 @@ public class LotteryClient {
      * @param order
      */
     public void checkWin(LotteryOrder order) {
-        if (StringUtils.equalsAny(order.getLotteryCode(), "JSK3")) {
+        if (StringUtils.equalsAny(order.getLotteryCode(), "JSK3", "GS1MK3")) {
             K3Util.checkWin(order);
         } else if (StringUtils.equalsAny(order.getLotteryCode(), "PCDD")) {
             PCDDUtil.checkWin(order);
-        } else if (StringUtils.equalsAny(order.getLotteryCode(), "BJPK10", "FT")) {
+        } else if (StringUtils.equalsAny(order.getLotteryCode(), "BJPK10", "FT", "GS1MPK10", "GS1MFT")) {
             PK10Util.checkWin(order);
-        } else if (StringUtils.equalsAny(order.getLotteryCode(), "CQSSC")) {
+        } else if (StringUtils.equalsAny(order.getLotteryCode(), "CQSSC", "GS1MSSC")) {
             CQSSCUtil.checkWin(order);
         } else if (StringUtils.equalsAny(order.getLotteryCode(), "BJKL8")) {
             BJKL8Util.checkWin(order);
         } else if (StringUtils.equalsAny(order.getLotteryCode(), "GD11X5")) {
             SYX5Util.checkWin(order);
-        } else if (StringUtils.equalsAny(order.getLotteryCode(), "MOLHC")) {
+        } else if (StringUtils.equalsAny(order.getLotteryCode(), "MOLHC", "GS1MLHC")) {
             LHCUtil.checkWin(order);
         }
     }
