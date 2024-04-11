@@ -54,6 +54,8 @@ public class LotteryClient {
             BJKL8Util.checkWin(order);
         } else if (StringUtils.equalsAny(order.getLotteryCode(), "GD11X5")) {
             SYX5Util.checkWin(order);
+        } else if (StringUtils.equalsAny(order.getLotteryCode(), "MOLHC")) {
+            LHCUtil.checkWin(order);
         }
     }
 
