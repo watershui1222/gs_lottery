@@ -210,6 +210,7 @@ public class LotteryController {
 //            object.put("code", lotteryOdds.getHmCode());
             object.put("name", lotteryOdds.getHmName());
             object.put("odds", lotteryOdds.getOdds());
+            object.put("code", lotteryOdds.getHmCode());
             object.put("g", lotteryOdds.getGroupName());
             object.put("id", lotteryOdds.getId());
             jsonArray.add(object);
