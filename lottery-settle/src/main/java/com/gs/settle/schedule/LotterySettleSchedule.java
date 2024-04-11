@@ -40,7 +40,7 @@ public class LotterySettleSchedule {
                 new LambdaQueryWrapper<LotteryOrder>()
                         .eq(LotteryOrder::getSettleStatus, 0)
                         .eq(LotteryOrder::getOrderStatus, 0)
-//                        .le(LotteryOrder::getOpenResultTime, now)
+                        .le(LotteryOrder::getOpenResultTime, now)
         );
 
         Map<String, LotteryCurrQsBO> openResultMap = new HashMap<>();
