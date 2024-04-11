@@ -60,6 +60,27 @@ public class PayController {
     @Autowired
     private PayClient payClient;
 
+    @ApiOperation(value = "获取三方支付通道")
+    @GetMapping("/getPayChannel")
+    public R getPayChannel(HttpServletRequest httpServletRequest) throws Exception {
+        List<PayChannel> list = payChannelService.list(
+                new LambdaQueryWrapper<PayChannel>()
+                        .eq(PayChannel::getStatus, 0)
+                        .orderByDesc(PayChannel::getPxh)
+        );
+        JSONArray jsonArray = new JSONArray();
+        for (PayChannel payChannel : list) {
+            JSONObject obj = new JSONObject();
+            obj.put("id", payChannel.getId());
+            obj.put("channelName", payChannel.getChannelName());
+            obj.put("minAmount", payChannel.getMinAmount());
+            obj.put("maxAmount", payChannel.getMaxAmount());
+            obj.put("remark", payChannel.getRemark());
+            jsonArray.add(obj);
+        }
+        return R.ok().put("list", jsonArray);
+    }
+
 
     @ApiOperation(value = "获取三方支付URL")
     @GetMapping("/getPayUrl")
@@ -105,17 +126,11 @@ public class PayController {
         payOrder.setMerchantName(payMerchant.getMerchantName());
         payOrder.setChannelName(payChannel.getChannelName());
         // 调用获取URL接口
-        String url = null;
-        String errMsg = "拉起支付失败.请联系客服...";
-        try {
-            url = payClient.getUrl(payMerchant, payOrder, payChannel);
-        } catch (BusinessException businessException) {
-            errMsg = businessException.getMessage();
-        }
+        String url = payClient.getUrl(payMerchant, payOrder, payChannel);
         if (StringUtils.isNotBlank(url)) {
             payOrderService.save(payOrder);
             return R.ok().put("url", url);
         }
-        return R.error(errMsg);
+        return R.error();
     }
 }

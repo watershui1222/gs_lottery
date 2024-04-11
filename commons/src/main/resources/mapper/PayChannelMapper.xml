@@ -17,12 +17,14 @@
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="pxh" column="pxh" jdbcType="INTEGER"/>
+            <result property="remark" column="remark" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,channel_code,channel_name,
         merchant_code,merchant_name,status,
         min_amount,max_amount,type,
-        create_time,update_time,pxh
+        create_time,update_time,pxh,
+        remark
     </sql>
 </mapper>
