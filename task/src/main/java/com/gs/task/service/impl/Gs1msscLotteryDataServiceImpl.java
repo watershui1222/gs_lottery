@@ -70,7 +70,7 @@ public class Gs1msscLotteryDataServiceImpl extends LotteryDataService {
             String qs = getPaiqiQs(today, i);
             open.setQs(qs);
             open.setPlatQs(qs);
-            open.setOpenResult(RandomUtil.randomInt(1, 7) + "," + RandomUtil.randomInt(1, 7) + "," + RandomUtil.randomInt(1, 7));
+            open.setOpenResult(RandomUtil.randomInt(0, 10) + "," + RandomUtil.randomInt(0, 10) + "," + RandomUtil.randomInt(0, 10) + ","  + RandomUtil.randomInt(0, 10) + "," + RandomUtil.randomInt(0, 10));
             open.setOpenStatus(0);
             open.setCurrCount(i);
             open.setCloseTime(DateUtil.offsetSecond(firstOpenResult, -lottery.getCloseTime()));
