@@ -671,6 +671,9 @@ public class LotteryClient {
         } else if (StringUtils.equals(LotteryCodeEnum.GS1MPCDD.getLotteryCode(), lotteryCode)) {
             pageUtils = openresultGs1mpcddService.queryPage(params);
 
+        } else if (StringUtils.equals(LotteryCodeEnum.GS1MSSC.getLotteryCode(), lotteryCode)) {
+            pageUtils = openresultGs1msscService.queryPage(params);
+
         }
         return pageUtils;
     }
