@@ -12,6 +12,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.gs.api.controller.VO.LotteryHandicapVo;
+import com.gs.api.controller.VO.LotteryOddsVo;
 import com.gs.api.controller.VO.LotteryPlayVo;
 import com.gs.api.controller.request.LotteryBetRequest;
 import com.gs.api.controller.request.LotteryOrderListRequest;
@@ -24,11 +25,8 @@ import com.gs.business.pojo.RecommendVo;
 import com.gs.business.service.LotteryBetService;
 import com.gs.business.utils.lottery.LHCBetVerifyUtil;
 import com.gs.business.utils.lottery.SYX5BetVerifyUtil;
-import com.gs.commons.bo.OpenresultTimeBO;
 import com.gs.commons.constants.Constant;
 import com.gs.commons.entity.*;
-import com.gs.commons.enums.LotteryCodeEnum;
-import com.gs.commons.excption.BusinessException;
 import com.gs.commons.service.*;
 import com.gs.commons.utils.IdUtils;
 import com.gs.commons.utils.PageUtils;
@@ -153,11 +151,11 @@ public class LotteryController {
 
         // 从缓存读取 缓存没有去数据库读取
         String redisKey = "lottery:plays:" + lotteryCode;
-//        String redisValue = redisTemplate.opsForValue().get(redisKey);
-//        if (StringUtils.isNotBlank(redisValue)) {
-//            List<LotteryHandicapVo> lotteryHandicapVoList = JSONArray.parseArray(redisValue, LotteryHandicapVo.class);
-//            return R.ok().put("plays", lotteryHandicapVoList).put("lotteryType", lottery.getLotteryType());
-//        }
+        String redisValue = redisTemplate.opsForValue().get(redisKey);
+        if (StringUtils.isNotBlank(redisValue)) {
+            List<LotteryHandicapVo> lotteryHandicapVoList = JSONArray.parseArray(redisValue, LotteryHandicapVo.class);
+            return R.ok().put("plays", lotteryHandicapVoList).put("lotteryType", lottery.getLotteryType());
+        }
 
         // 获取彩种下的所有盘口
         List<LotteryHandicap> handicaps = lotteryHandicapService.list(
@@ -205,7 +203,7 @@ public class LotteryController {
         }
 
         // 写入缓存
-        redisTemplate.opsForValue().set(redisKey, JSON.toJSONString(lotteryHandicapVoList), 1, TimeUnit.HOURS);
+        redisTemplate.opsForValue().set(redisKey, JSON.toJSONString(lotteryHandicapVoList));
         return R.ok().put("plays", lotteryHandicapVoList).put("lotteryCode", lottery.getLotteryCode()).put("lotteryName", lottery.getLotteryName());
     }
 
@@ -219,6 +217,14 @@ public class LotteryController {
 //                        .eq(Lottery::getLotteryCode, lotteryCode)
 //        );
 
+        // 从缓存读取 缓存没有去数据库读取
+        String redisKey = "lottery:odds:" + lotteryCode;
+        String redisValue = redisTemplate.opsForValue().get(redisKey);
+        if (StringUtils.isNotBlank(redisValue)) {
+            List<LotteryOddsVo> lotteryHandicapVoList = JSONArray.parseArray(redisValue, LotteryOddsVo.class);
+            return R.ok().put("odds", lotteryHandicapVoList);
+        }
+
         List<LotteryOdds> oddsList = lotteryOddsService.list(
                 new LambdaQueryWrapper<LotteryOdds>()
                         .eq(LotteryOdds::getLotteryCode, lotteryCode)
@@ -227,19 +233,19 @@ public class LotteryController {
                         .orderByDesc(LotteryOdds::getPxh)
         );
 
-        JSONArray jsonArray = new JSONArray();
+        List<LotteryOddsVo> list = new ArrayList<>();
         for (LotteryOdds lotteryOdds : oddsList) {
-            JSONObject object = new JSONObject();
-//            object.put("code", lotteryOdds.getHmCode());
-            object.put("name", lotteryOdds.getHmName());
-            object.put("odds", lotteryOdds.getOdds());
-            object.put("code", lotteryOdds.getHmCode());
-            object.put("g", lotteryOdds.getGroupName());
-            object.put("id", lotteryOdds.getId());
-            jsonArray.add(object);
+            LotteryOddsVo lotteryOddsVo = new LotteryOddsVo();
+            lotteryOddsVo.setName(lotteryOdds.getHmName());
+            lotteryOddsVo.setOdds(lotteryOdds.getOdds());
+            lotteryOddsVo.setCode(lotteryOdds.getHmCode());
+            lotteryOddsVo.setG(lotteryOdds.getGroupName());
+            lotteryOddsVo.setId(lotteryOdds.getId());
+            list.add(lotteryOddsVo);
         }
-
-        return R.ok().put("odds", jsonArray);
+        // 写入缓存
+        redisTemplate.opsForValue().set(redisKey, JSON.toJSONString(list));
+        return R.ok().put("odds", list);
     }
 
 
