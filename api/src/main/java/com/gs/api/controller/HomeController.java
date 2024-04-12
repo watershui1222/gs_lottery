@@ -61,11 +61,26 @@ public class HomeController {
             JSONObject object = new JSONObject();
             object.put("id", activity.getId());
             object.put("title", activity.getTitle());
-            object.put("img1", allParamByMap.get("resource_domain") + activity.getImg1());
-            object.put("img2", allParamByMap.get("resource_domain") + activity.getImg2());
+            object.put("cover", allParamByMap.get("resource_domain") + activity.getImg1());
+            object.put("content", allParamByMap.get("resource_domain") + activity.getImg2());
             array.add(object);
         }
         return R.ok().put("list", array);
+    }
+
+    @ApiOperation(value = "获取活动详情")
+    @GetMapping("/activity/detail/{id}")
+    public R activityDetail(HttpServletRequest httpServletRequest, @PathVariable("id") String id) {
+
+        Map<String, String> allParamByMap = sysParamService.getAllParamByMap();
+
+        Activity activity = activityService.getById(id);
+        JSONObject object = new JSONObject();
+        object.put("id", activity.getId());
+        object.put("title", activity.getTitle());
+        object.put("cover", allParamByMap.get("resource_domain") + activity.getImg1());
+        object.put("content", allParamByMap.get("resource_domain") + activity.getImg2());
+        return R.ok().put("data", object);
     }
 
     @ApiOperation(value = "获取轮播图列表")
