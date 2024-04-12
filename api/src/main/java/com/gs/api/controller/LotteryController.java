@@ -315,7 +315,7 @@ public class LotteryController {
         }
 
 
-        return R.ok().put("page", pageUtils).put("lotteryCode", lottery.getLotteryCode());
+        return R.ok().put("page", pageUtils).put("lotteryType", lottery.getLotteryType());
 
     }
 
@@ -380,6 +380,7 @@ public class LotteryController {
                 jsonObject.put("betContent", lotteryOrder.getBetContent());
                 jsonObject.put("orderStatus", lotteryOrder.getOrderStatus());
                 jsonObject.put("odds", lotteryOrder.getOdds());
+                jsonObject.put("lotteryType", lottery.getLotteryType());
                 jsonArray.add(jsonObject);
 
             }
