@@ -353,12 +353,17 @@ public class LotteryController {
 
         double betAmountSum = 0;
         double profitAmountSum = 0;
+        double bonusAmountSum = 0;
         if (CollUtil.isNotEmpty(queryList)) {
             betAmountSum = queryList.stream().mapToDouble(value -> value.getBetAmount().doubleValue()).sum();
             profitAmountSum = queryList.stream().mapToDouble(value -> value.getProfitAmount().doubleValue()).sum();
+            bonusAmountSum = queryList.stream().mapToDouble(value -> value.getBonusAmount().doubleValue()).sum();
         }
 
-        return (R.ok().put("page", page).put("betAmountSum", betAmountSum).put("profitAmountSum", profitAmountSum));
+        return R.ok().put("page", page)
+                .put("betAmountSum", betAmountSum)
+                .put("profitAmountSum", profitAmountSum)
+                .put("bonusAmountSum", bonusAmountSum);
     }
 
 
