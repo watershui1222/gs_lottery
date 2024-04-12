@@ -20,6 +20,7 @@ import com.gs.api.controller.request.OpenResultHistoryRequest;
 import com.gs.api.utils.JwtUtils;
 import com.gs.business.client.LotteryClient;
 import com.gs.business.pojo.LotteryCurrQsBO;
+import com.gs.business.pojo.RecommendVo;
 import com.gs.business.service.LotteryBetService;
 import com.gs.business.utils.lottery.LHCBetVerifyUtil;
 import com.gs.business.utils.lottery.SYX5BetVerifyUtil;
@@ -44,6 +45,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -96,6 +99,9 @@ public class LotteryController {
     private LotteryClient lotteryClient;
     @Autowired
     private UserInfoService userInfoService;
+
+    @Autowired
+    private ThreadPoolExecutor threadPoolExecutor;
 
 
     @ApiOperation(value = "获取所有彩种")
@@ -221,8 +227,6 @@ public class LotteryController {
     }
 
 
-
-
     @ApiOperation(value = "历史开奖")
     @GetMapping("/openHistory/list")
     public R openHistoryList(OpenResultHistoryRequest request, HttpServletRequest httpServletRequest) {
@@ -247,9 +251,6 @@ public class LotteryController {
         Date begin = DateUtil.beginOfDay(startDate);
         params.put("startTime", begin);
         params.put("nowTime", endTime);
-
-
-
 
         PageUtils pageUtils;
         if (StringUtils.equals(LotteryCodeEnum.BJKL8.getLotteryCode(), request.getLotteryCode())) {
@@ -321,7 +322,6 @@ public class LotteryController {
         params.put("endTime", end);
 
 
-
         Map<String, String> paramsMap = sysParamService.getAllParamByMap();
         String resourceDomain = MapUtil.getStr(paramsMap, "resource_domain");
 
@@ -355,7 +355,6 @@ public class LotteryController {
             }
             page.setList(jsonArray);
         }
-
 
 
         List<LotteryOrder> queryList = lotteryOrderService.queryList(params);
@@ -410,7 +409,7 @@ public class LotteryController {
             currentQsData = openresultMo6hcService.getOneDataByTime(now, null);
 //            lastQsData = openresultMo6hcService.getOneDataByTime(null, now);
 
-        }else if (StringUtils.equals(LotteryCodeEnum.PCDD.getLotteryCode(), request.getLotteryCode())) {
+        } else if (StringUtils.equals(LotteryCodeEnum.PCDD.getLotteryCode(), request.getLotteryCode())) {
             currentQsData = openresultPcddService.getOneDataByTime(now, null);
 //            lastQsData = openresultPcddService.getOneDataByTime(null, now);
         } else {
@@ -487,7 +486,7 @@ public class LotteryController {
         if (CollUtil.isEmpty(lotteryOddsList)) {
             throw new Exception("获取投注项内容失败");
         }
-        Map<String, LotteryOdds> lotteryOddsMap = lotteryOddsList.stream().collect(Collectors.toMap(item-> String.valueOf(item.getId()), item->item));
+        Map<String, LotteryOdds> lotteryOddsMap = lotteryOddsList.stream().collect(Collectors.toMap(item -> String.valueOf(item.getId()), item -> item));
 
         for (int i = 0; i < betContentArr.size(); i++) {
             JSONObject betContentObj = betContentArr.getJSONObject(i);
@@ -543,6 +542,7 @@ public class LotteryController {
 
     /**
      * 校验投注项规则
+     *
      * @param betContentObj
      */
     private void checkPlayRules(JSONObject betContentObj, LotteryOdds lotteryOdds) {
@@ -567,7 +567,7 @@ public class LotteryController {
                         .eq(LotteryOrder::getUserName, userName)
         );
         if (lotteryOrder == null || lotteryOrder.getOrderStatus().intValue() != 0) {
-            throw new Exception("未获取到订单["+ orderNo +"]信息或该订单已完成!");
+            throw new Exception("未获取到订单[" + orderNo + "]信息或该订单已完成!");
         }
         // 查询当前期
         LotteryCurrQsBO currQs = lotteryClient.getCurrQs(lotteryOrder.getLotteryCode());
@@ -577,5 +577,59 @@ public class LotteryController {
         // 修改订单
         lotteryBetService.cancel(lotteryOrder);
         return R.ok();
+    }
+
+    @ApiOperation(value = "获取推荐彩种")
+    @GetMapping("/getRecommendLottery")
+    public R getRecommendLottery(HttpServletRequest httpServletRequest) {
+        List<Lottery> list = lotteryService.list(
+                new LambdaQueryWrapper<Lottery>()
+                        .eq(Lottery::getStatus, 0)
+                        .eq(Lottery::getRecommend, 0)
+                        .orderByDesc(Lottery::getPxh)
+        );
+        Map<String, String> allParamByMap = sysParamService.getAllParamByMap();
+
+        List<CompletableFuture> futures = new ArrayList<>();
+
+        List<RecommendVo> recommendVoList = new ArrayList<>();
+        for (Lottery lottery : list) {
+            CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+                RecommendVo recommendVo = new RecommendVo();
+                // 获取当前期
+                LotteryCurrQsBO currQs = lotteryClient.getCurrQs(lottery.getLotteryCode());
+                // 获取上一期
+                LotteryCurrQsBO lastQs = lotteryClient.getLastQs(lottery.getLotteryCode());
+
+                long closeTime = -1;
+                if (null != currQs) {
+                    closeTime = currQs.getCloseTime().getTime();
+                }
+                recommendVo.setCloseTime(closeTime);
+                recommendVo.setServerTime(System.currentTimeMillis());
+
+                recommendVo.setQs(currQs.getQs());
+                recommendVo.setLotteryName(lottery.getLotteryName());
+                recommendVo.setLotteryCode(lottery.getLotteryCode());
+                recommendVo.setOpenResultStatus(lastQs.getOpenStatus());
+                recommendVo.setLastOpenReuslt(lastQs.getOpenResult());
+                recommendVo.setPxh(lottery.getPxh());
+                recommendVo.setImg(allParamByMap.get("resource_domain") + lottery.getImg());
+                recommendVoList.add(recommendVo);
+
+            }, threadPoolExecutor);
+            futures.add(future);
+        }
+
+        // 合并线程
+        CompletableFuture[] args= new CompletableFuture[futures.size()];
+        for (int i = 0; i < futures.size(); i++) {
+            args[i] = futures.get(i);
+        }
+        CompletableFuture.allOf(args).join();
+
+        return R.ok().put("list", recommendVoList.stream()
+                .sorted(Comparator.comparing(RecommendVo::getPxh).reversed())
+                .collect(Collectors.toList()));
     }
 }

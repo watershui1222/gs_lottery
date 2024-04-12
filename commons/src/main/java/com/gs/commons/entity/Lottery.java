@@ -105,8 +105,17 @@ public class Lottery implements Serializable {
     @TableField(value = "qs_time")
     private Integer qsTime;
 
+    /**
+     * 昨天最后一期期号（bjkl8,bjpk10,pcdd排期使用)
+     */
     @TableField(value = "yesterday_qs")
     private String yesterdayQs;
+
+    /**
+     * 推荐彩种
+     */
+    @TableField(value = "recommend")
+    private Integer recommend;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

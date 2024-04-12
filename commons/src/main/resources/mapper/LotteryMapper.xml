@@ -21,6 +21,7 @@
             <result property="firstQsTime" column="first_qs_time" jdbcType="VARCHAR"/>
             <result property="qsTime" column="qs_time" jdbcType="INTEGER"/>
             <result property="yesterdayQs" column="yesterday_qs" jdbcType="VARCHAR"/>
+            <result property="recommend" column="recommend" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -28,6 +29,7 @@
         day_open,status,img,
         close_time,create_time,update_time,
         remark,pxh,lottery_type,
-        day_count,first_qs_time,qs_time,yesterdayQs
+        day_count,first_qs_time,qs_time,
+        yesterday_qs,recommend
     </sql>
 </mapper>
