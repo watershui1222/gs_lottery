@@ -351,7 +351,7 @@ public class UserController {
         String userName = JwtUtils.getUserName(httpServletRequest);
         UserInfo userInf = userInfoService.getUserByName(userName);
         if (StringUtils.isNotBlank(userInf.getPayPwd())) {
-            return R.error();
+            return R.error("您已经设置过资金密码了");
         }
         userInfoService.update(
                 new LambdaUpdateWrapper<UserInfo>()
