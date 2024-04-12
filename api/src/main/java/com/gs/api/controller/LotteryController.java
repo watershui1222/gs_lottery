@@ -140,10 +140,10 @@ public class LotteryController {
     @GetMapping("/getAllPlay/{lotteryCode}")
     public R getAllPlay(@PathVariable("lotteryCode") String lotteryCode) {
         // 获取彩种信息
-//        Lottery lottery = lotteryService.getOne(
-//                new LambdaQueryWrapper<Lottery>()
-//                        .eq(Lottery::getLotteryCode, lotteryCode)
-//        );
+        Lottery lottery = lotteryService.getOne(
+                new LambdaQueryWrapper<Lottery>()
+                        .eq(Lottery::getLotteryCode, lotteryCode)
+        );
 
         // 从缓存读取 缓存没有去数据库读取
         String redisKey = "lottery:plays:" + lotteryCode;
@@ -200,7 +200,7 @@ public class LotteryController {
 
         // 写入缓存
         redisTemplate.opsForValue().set(redisKey, JSON.toJSONString(lotteryHandicapVoList), 1, TimeUnit.HOURS);
-        return R.ok().put("plays", lotteryHandicapVoList);
+        return R.ok().put("plays", lotteryHandicapVoList).put("lotteryCode", lottery.getLotteryCode()).put("lotteryName", lottery.getLotteryName());
     }
 
 

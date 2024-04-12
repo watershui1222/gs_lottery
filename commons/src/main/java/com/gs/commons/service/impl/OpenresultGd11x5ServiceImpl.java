@@ -59,7 +59,7 @@ public class OpenresultGd11x5ServiceImpl extends ServiceImpl<OpenresultGd11x5Map
             for (OpenresultGd11x5 record : records) {
                 OpenResultBO openResultBO = new OpenResultBO();
                 openResultBO.setQs(record.getQs());
-                openResultBO.setOpenResult(record.getOpenResult());
+                openResultBO.setOpenResult(record.getOpenResult() == null ? "" : record.getOpenResult());
                 openResultBO.setOpenStatus(record.getOpenStatus());
                 openResultBO.setOpenResultTime(record.getOpenResultTime());
                 openResultBO.setCurrCount(record.getCurrCount());

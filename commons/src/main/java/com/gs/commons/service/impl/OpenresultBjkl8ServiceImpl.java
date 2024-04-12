@@ -57,7 +57,7 @@ public class OpenresultBjkl8ServiceImpl extends ServiceImpl<OpenresultBjkl8Mappe
             for (OpenresultBjkl8 record : records) {
                 OpenResultBO openResultBO = new OpenResultBO();
                 openResultBO.setQs(record.getQs());
-                openResultBO.setOpenResult(record.getOpenResult());
+                openResultBO.setOpenResult(record.getOpenResult() == null ? "" : record.getOpenResult());
                 openResultBO.setOpenStatus(record.getOpenStatus());
                 openResultBO.setOpenResultTime(record.getOpenResultTime());
                 openResultBO.setCurrCount(record.getCurrCount());
