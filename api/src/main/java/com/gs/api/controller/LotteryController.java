@@ -90,6 +90,16 @@ public class LotteryController {
     @Autowired
     private OpenresultPcddService openresultPcddService;
     @Autowired
+    private OpenresultGs1mftService openresultGs1mftService;
+    @Autowired
+    private OpenresultGs1mk3Service openresultGs1mk3Service;
+    @Autowired
+    private OpenresultGs1mlhcService openresultGs1mlhcService;
+    @Autowired
+    private OpenresultGs1mpk10Service openresultGs1mpk10Service;
+    @Autowired
+    private OpenresultGs1msscService openresultGs1msscService;
+    @Autowired
     private LotteryOrderService lotteryOrderService;
     @Autowired
     private SysParamService sysParamService;
@@ -284,6 +294,21 @@ public class LotteryController {
 
         } else if (StringUtils.equals(LotteryCodeEnum.PCDD.getLotteryCode(), request.getLotteryCode())) {
             pageUtils = openresultPcddService.queryPage(params);
+
+        } else if (StringUtils.equals(LotteryCodeEnum.GS1MFT.getLotteryCode(), request.getLotteryCode())) {
+            pageUtils = openresultGs1mftService.queryPage(params);
+
+        } else if (StringUtils.equals(LotteryCodeEnum.GS1MK3.getLotteryCode(), request.getLotteryCode())) {
+            pageUtils = openresultGs1mk3Service.queryPage(params);
+
+        } else if (StringUtils.equals(LotteryCodeEnum.GS1MLHC.getLotteryCode(), request.getLotteryCode())) {
+            pageUtils = openresultGs1mlhcService.queryPage(params);
+
+        } else if (StringUtils.equals(LotteryCodeEnum.GS1MPK10.getLotteryCode(), request.getLotteryCode())) {
+            pageUtils = openresultGs1mpk10Service.queryPage(params);
+
+        } else if (StringUtils.equals(LotteryCodeEnum.GS1MSSC.getLotteryCode(), request.getLotteryCode())) {
+            pageUtils = openresultGs1msscService.queryPage(params);
 
         } else {
             return R.error("未查询到对应彩种");

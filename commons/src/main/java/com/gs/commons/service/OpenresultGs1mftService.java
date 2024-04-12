@@ -2,6 +2,9 @@ package com.gs.commons.service;
 
 import com.gs.commons.entity.OpenresultGs1mft;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.gs.commons.utils.PageUtils;
+
+import java.util.Map;
 
 /**
 * @author tommm
@@ -9,5 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 * @createDate 2024-04-11 18:19:21
 */
 public interface OpenresultGs1mftService extends IService<OpenresultGs1mft> {
-
+    PageUtils queryPage(Map<String,Object> params);
 }
