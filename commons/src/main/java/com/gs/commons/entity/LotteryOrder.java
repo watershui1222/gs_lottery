@@ -113,7 +113,7 @@ public class LotteryOrder implements Serializable {
     private Date settleTime;
 
     /**
-     * 0:待结算 1:结算中 2:已结算 3:已撤单 4:结算异常
+     * 0:待结算 1:结算中(未使用) 2:已结算 3:已撤单 4:结算异常
      */
     @TableField(value = "settle_status")
     private Integer settleStatus;
@@ -147,6 +147,12 @@ public class LotteryOrder implements Serializable {
      */
     @TableField(value = "update_time")
     private Date updateTime;
+
+    /**
+     * 彩种类型
+     */
+    @TableField(value = "lottery_type")
+    private Integer lotteryType;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

@@ -53,19 +53,19 @@ public class LotteryClient {
      * @param order
      */
     public void checkWin(LotteryOrder order) {
-        if (StringUtils.equalsAny(order.getLotteryCode(), "JSK3", "GS1MK3")) {
+        if (order.getLotteryType().intValue() == 1) {
             K3Util.checkWin(order);
-        } else if (StringUtils.equalsAny(order.getLotteryCode(), "PCDD")) {
+        } else if (order.getLotteryType().intValue() == 5) {
             PCDDUtil.checkWin(order);
-        } else if (StringUtils.equalsAny(order.getLotteryCode(), "BJPK10", "FT", "GS1MPK10", "GS1MFT")) {
+        } else if (order.getLotteryType().intValue() == 3) {
             PK10Util.checkWin(order);
-        } else if (StringUtils.equalsAny(order.getLotteryCode(), "CQSSC", "GS1MSSC")) {
+        } else if (order.getLotteryType().intValue() == 2) {
             CQSSCUtil.checkWin(order);
-        } else if (StringUtils.equalsAny(order.getLotteryCode(), "BJKL8")) {
+        } else if (order.getLotteryType().intValue() == 8) {
             BJKL8Util.checkWin(order);
-        } else if (StringUtils.equalsAny(order.getLotteryCode(), "GD11X5")) {
+        } else if (order.getLotteryType().intValue() == 6) {
             SYX5Util.checkWin(order);
-        } else if (StringUtils.equalsAny(order.getLotteryCode(), "MOLHC", "GS1MLHC")) {
+        } else if (order.getLotteryType().intValue() == 4) {
             LHCUtil.checkWin(order);
         }
     }
