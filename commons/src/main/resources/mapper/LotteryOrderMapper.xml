@@ -27,6 +27,7 @@
             <result property="openResultTime" column="open_result_time" jdbcType="TIMESTAMP"/>
             <result property="settleGroup" column="settle_group" jdbcType="INTEGER"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="lotteryType" column="lottery_type" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -37,6 +38,6 @@
         bonus_amount,profit_amount,bet_time,
         settle_time,settle_status,order_status,
         open_result,open_result_time,settle_group,
-        update_time
+        update_time,lottery_type
     </sql>
 </mapper>

@@ -484,7 +484,7 @@ public class LotteryController {
             }
 
             // 校验组选、直选规则
-            checkPlayRules(betContentObj, lotteryOdds);
+            checkPlayRules(betContentObj, lotteryOdds, lottery);
 
             // 组装投注记录
             LotteryOrder order = new LotteryOrder();
@@ -508,6 +508,7 @@ public class LotteryController {
             order.setOpenResult(null);
             order.setOpenResultTime(currQs.getOpenResultTime());
             order.setSettleGroup(RandomUtil.randomInt(0, 9));
+            order.setLotteryType(lottery.getLotteryType());
             orders.add(order);
         }
 
@@ -527,12 +528,10 @@ public class LotteryController {
      *
      * @param betContentObj
      */
-    private void checkPlayRules(JSONObject betContentObj, LotteryOdds lotteryOdds) {
-        if (StringUtils.equalsAny(lotteryOdds.getLotteryCode(),
-                LotteryCodeEnum.MO6HC.getLotteryCode(),
-                LotteryCodeEnum.GS1MLHC.getLotteryCode())) {
+    private void checkPlayRules(JSONObject betContentObj, LotteryOdds lotteryOdds, Lottery lottery) {
+        if (lottery.getLotteryType().intValue() == 4) {
             LHCBetVerifyUtil.verify(betContentObj, lotteryOdds);
-        } else if (StringUtils.equalsAny(lotteryOdds.getLotteryCode(), LotteryCodeEnum.GD11X5.getLotteryCode())) {
+        } else if (lottery.getLotteryType().intValue() == 6) {
             SYX5BetVerifyUtil.verify(betContentObj, lotteryOdds);
         }
     }
@@ -596,6 +595,7 @@ public class LotteryController {
                 recommendVo.setOpenResultStatus(lastQs.getOpenStatus());
                 recommendVo.setLastOpenReuslt(lastQs.getOpenResult());
                 recommendVo.setPxh(lottery.getPxh());
+                recommendVo.setLotteryType(lottery.getLotteryType());
                 recommendVo.setImg(allParamByMap.get("resource_domain") + lottery.getImg());
                 recommendVoList.add(recommendVo);
 
