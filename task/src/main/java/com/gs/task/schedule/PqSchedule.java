@@ -178,6 +178,40 @@ public class PqSchedule {
     }
 
 
+    @Scheduled(cron = "${paiqiTask.cron.gs1mkl8}")
+    public void gs1mKl8Paiqi1() {
+
+        LotteryDataService pqService = lotteryDataClient.getSourceService(LotteryCodeEnum.GS1MKL8.getLotteryCode());
+
+        pqService.generatePaiqi(new Date());
+        pqService.generatePaiqi(DateUtil.tomorrow());
+
+
+    }
+
+
+    @Scheduled(cron = "${paiqiTask.cron.gs1m11x5}")
+    public void gs1m11x5Paiqi1() {
+
+        LotteryDataService pqService = lotteryDataClient.getSourceService(LotteryCodeEnum.GS1M11X5.getLotteryCode());
+
+        pqService.generatePaiqi(new Date());
+        pqService.generatePaiqi(DateUtil.tomorrow());
+
+
+    }
+
+
+    @Scheduled(cron = "${paiqiTask.cron.gs1mpcdd}")
+    public void gs1mpcddPaiqi1() {
+
+        LotteryDataService pqService = lotteryDataClient.getSourceService(LotteryCodeEnum.GS1MPCDD.getLotteryCode());
+
+        pqService.generatePaiqi(new Date());
+        pqService.generatePaiqi(DateUtil.tomorrow());
+
+
+    }
 
 
 
