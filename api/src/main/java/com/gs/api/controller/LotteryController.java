@@ -230,6 +230,11 @@ public class LotteryController {
     @ApiOperation(value = "历史开奖")
     @GetMapping("/openHistory/list")
     public R openHistoryList(OpenResultHistoryRequest request, HttpServletRequest httpServletRequest) {
+        Lottery lottery = lotteryService.getLotteryInfo(request.getLotteryCode());
+        if (lottery == null) {
+            return R.error();
+        }
+
         Map<String, Object> params = new HashMap<>();
         params.put(Constant.PAGE, request.getPage());
         params.put(Constant.LIMIT, request.getLimit());
@@ -285,7 +290,7 @@ public class LotteryController {
         }
 
 
-        return R.ok().put("page", pageUtils);
+        return R.ok().put("page", pageUtils).put("lotteryCode", lottery.getLotteryCode());
 
     }
 

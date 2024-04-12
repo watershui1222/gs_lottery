@@ -24,4 +24,6 @@ public class RecommendVo {
     private String img;
 
     private long serverTime;
+
+    private int lotteryType;
 }
