@@ -100,6 +100,12 @@ public class LotteryController {
     @Autowired
     private OpenresultGs1msscService openresultGs1msscService;
     @Autowired
+    private OpenresultGs1mkl8Service openresultGs1mkl8Service;
+    @Autowired
+    private OpenresultGs1m11x5Service openresultGs1m11x5Service;
+    @Autowired
+    private OpenresultGs1mpcddService openresultGs1mpcddService;
+    @Autowired
     private LotteryOrderService lotteryOrderService;
     @Autowired
     private SysParamService sysParamService;
@@ -267,53 +273,8 @@ public class LotteryController {
         params.put("startTime", begin);
         params.put("nowTime", endTime);
 
-        PageUtils pageUtils;
-        if (StringUtils.equals(LotteryCodeEnum.BJKL8.getLotteryCode(), request.getLotteryCode())) {
-            pageUtils = openresultBjkl8Service.queryPage(params);
 
-        } else if (StringUtils.equals(LotteryCodeEnum.BJPK10.getLotteryCode(), request.getLotteryCode())) {
-            pageUtils = openresultBjpk10Service.queryPage(params);
-
-        } else if (StringUtils.equals(LotteryCodeEnum.CQSSC.getLotteryCode(), request.getLotteryCode())) {
-            pageUtils = openresultCqsscService.queryPage(params);
-
-        } else if (StringUtils.equals(LotteryCodeEnum.FC3D.getLotteryCode(), request.getLotteryCode())) {
-            pageUtils = openresultFc3dService.queryPage(params);
-
-        } else if (StringUtils.equals(LotteryCodeEnum.FT.getLotteryCode(), request.getLotteryCode())) {
-            pageUtils = openresultFtService.queryPage(params);
-
-        } else if (StringUtils.equals(LotteryCodeEnum.GD11X5.getLotteryCode(), request.getLotteryCode())) {
-            pageUtils = openresultGd11x5Service.queryPage(params);
-
-        } else if (StringUtils.equals(LotteryCodeEnum.JSK3.getLotteryCode(), request.getLotteryCode())) {
-            pageUtils = openresultJsk3Service.queryPage(params);
-
-        } else if (StringUtils.equals(LotteryCodeEnum.MO6HC.getLotteryCode(), request.getLotteryCode())) {
-            pageUtils = openresultMo6hcService.queryPage(params);
-
-        } else if (StringUtils.equals(LotteryCodeEnum.PCDD.getLotteryCode(), request.getLotteryCode())) {
-            pageUtils = openresultPcddService.queryPage(params);
-
-        } else if (StringUtils.equals(LotteryCodeEnum.GS1MFT.getLotteryCode(), request.getLotteryCode())) {
-            pageUtils = openresultGs1mftService.queryPage(params);
-
-        } else if (StringUtils.equals(LotteryCodeEnum.GS1MK3.getLotteryCode(), request.getLotteryCode())) {
-            pageUtils = openresultGs1mk3Service.queryPage(params);
-
-        } else if (StringUtils.equals(LotteryCodeEnum.GS1MLHC.getLotteryCode(), request.getLotteryCode())) {
-            pageUtils = openresultGs1mlhcService.queryPage(params);
-
-        } else if (StringUtils.equals(LotteryCodeEnum.GS1MPK10.getLotteryCode(), request.getLotteryCode())) {
-            pageUtils = openresultGs1mpk10Service.queryPage(params);
-
-        } else if (StringUtils.equals(LotteryCodeEnum.GS1MSSC.getLotteryCode(), request.getLotteryCode())) {
-            pageUtils = openresultGs1msscService.queryPage(params);
-
-        } else {
-            return R.error("未查询到对应彩种");
-        }
-
+        PageUtils pageUtils = lotteryClient.gethistoryByPage(request.getLotteryCode(), params);
 
         return R.ok().put("page", pageUtils).put("lotteryType", lottery.getLotteryType());
 

@@ -9,12 +9,14 @@ import com.gs.commons.entity.*;
 import com.gs.commons.enums.LotteryCodeEnum;
 import com.gs.commons.service.*;
 import com.gs.commons.utils.BeanUtil;
+import com.gs.commons.utils.PageUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class LotteryClient {
@@ -47,6 +49,12 @@ public class LotteryClient {
     private OpenresultGs1mpk10Service openresultGs1mpk10Service;
     @Autowired
     private OpenresultGs1msscService openresultGs1msscService;
+    @Autowired
+    private OpenresultGs1mkl8Service openresultGs1mkl8Service;
+    @Autowired
+    private OpenresultGs1m11x5Service openresultGs1m11x5Service;
+    @Autowired
+    private OpenresultGs1mpcddService openresultGs1mpcddService;
 
     /**
      * 校验订单输赢
@@ -231,6 +239,39 @@ public class LotteryClient {
                 BeanUtil.copyPropertiesIgnoreNull(list.get(0), lotteryCurrQsBO);
                 return lotteryCurrQsBO;
             }
+        } else if (StringUtils.equals(lotteryCode, LotteryCodeEnum.GS1MKL8.getLotteryCode())) {
+            LambdaQueryWrapper<OpenresultGs1mkl8> wrapper = new LambdaQueryWrapper<OpenresultGs1mkl8>()
+                    .le(OpenresultGs1mkl8::getOpenTime, now)
+                    .gt(OpenresultGs1mkl8::getOpenResultTime, now)
+                    .orderByDesc(OpenresultGs1mkl8::getOpenResultTime);
+            List<OpenresultGs1mkl8> list = openresultGs1mkl8Service.list(wrapper);
+            if (CollUtil.isNotEmpty(list)) {
+                LotteryCurrQsBO lotteryCurrQsBO = new LotteryCurrQsBO();
+                BeanUtil.copyPropertiesIgnoreNull(list.get(0), lotteryCurrQsBO);
+                return lotteryCurrQsBO;
+            }
+        } else if (StringUtils.equals(lotteryCode, LotteryCodeEnum.GS1M11X5.getLotteryCode())) {
+            LambdaQueryWrapper<OpenresultGs1m11x5> wrapper = new LambdaQueryWrapper<OpenresultGs1m11x5>()
+                    .le(OpenresultGs1m11x5::getOpenTime, now)
+                    .gt(OpenresultGs1m11x5::getOpenResultTime, now)
+                    .orderByDesc(OpenresultGs1m11x5::getOpenResultTime);
+            List<OpenresultGs1m11x5> list = openresultGs1m11x5Service.list(wrapper);
+            if (CollUtil.isNotEmpty(list)) {
+                LotteryCurrQsBO lotteryCurrQsBO = new LotteryCurrQsBO();
+                BeanUtil.copyPropertiesIgnoreNull(list.get(0), lotteryCurrQsBO);
+                return lotteryCurrQsBO;
+            }
+        } else if (StringUtils.equals(lotteryCode, LotteryCodeEnum.GS1MPCDD.getLotteryCode())) {
+            LambdaQueryWrapper<OpenresultGs1mpcdd> wrapper = new LambdaQueryWrapper<OpenresultGs1mpcdd>()
+                    .le(OpenresultGs1mpcdd::getOpenTime, now)
+                    .gt(OpenresultGs1mpcdd::getOpenResultTime, now)
+                    .orderByDesc(OpenresultGs1mpcdd::getOpenResultTime);
+            List<OpenresultGs1mpcdd> list = openresultGs1mpcddService.list(wrapper);
+            if (CollUtil.isNotEmpty(list)) {
+                LotteryCurrQsBO lotteryCurrQsBO = new LotteryCurrQsBO();
+                BeanUtil.copyPropertiesIgnoreNull(list.get(0), lotteryCurrQsBO);
+                return lotteryCurrQsBO;
+            }
         }
         return null;
     }
@@ -382,6 +423,36 @@ public class LotteryClient {
                 BeanUtil.copyPropertiesIgnoreNull(page.getRecords().get(0), lotteryCurrQsBO);
                 return lotteryCurrQsBO;
             }
+        } else if (StringUtils.equals(lotteryCode, LotteryCodeEnum.GS1MKL8.getLotteryCode())) {
+            LambdaQueryWrapper<OpenresultGs1mkl8> wrapper = new LambdaQueryWrapper<OpenresultGs1mkl8>()
+                    .le(OpenresultGs1mkl8::getOpenResultTime, now)
+                    .orderByDesc(OpenresultGs1mkl8::getOpenResultTime);
+            Page<OpenresultGs1mkl8> page = openresultGs1mkl8Service.page(new Page<>(1, 1), wrapper);
+            if (CollUtil.isNotEmpty(page.getRecords())) {
+                LotteryCurrQsBO lotteryCurrQsBO = new LotteryCurrQsBO();
+                BeanUtil.copyPropertiesIgnoreNull(page.getRecords().get(0), lotteryCurrQsBO);
+                return lotteryCurrQsBO;
+            }
+        } else if (StringUtils.equals(lotteryCode, LotteryCodeEnum.GS1M11X5.getLotteryCode())) {
+            LambdaQueryWrapper<OpenresultGs1m11x5> wrapper = new LambdaQueryWrapper<OpenresultGs1m11x5>()
+                    .le(OpenresultGs1m11x5::getOpenResultTime, now)
+                    .orderByDesc(OpenresultGs1m11x5::getOpenResultTime);
+            Page<OpenresultGs1m11x5> page = openresultGs1m11x5Service.page(new Page<>(1, 1), wrapper);
+            if (CollUtil.isNotEmpty(page.getRecords())) {
+                LotteryCurrQsBO lotteryCurrQsBO = new LotteryCurrQsBO();
+                BeanUtil.copyPropertiesIgnoreNull(page.getRecords().get(0), lotteryCurrQsBO);
+                return lotteryCurrQsBO;
+            }
+        } else if (StringUtils.equals(lotteryCode, LotteryCodeEnum.GS1MPCDD.getLotteryCode())) {
+            LambdaQueryWrapper<OpenresultGs1mpcdd> wrapper = new LambdaQueryWrapper<OpenresultGs1mpcdd>()
+                    .le(OpenresultGs1mpcdd::getOpenResultTime, now)
+                    .orderByDesc(OpenresultGs1mpcdd::getOpenResultTime);
+            Page<OpenresultGs1mpcdd> page = openresultGs1mpcddService.page(new Page<>(1, 1), wrapper);
+            if (CollUtil.isNotEmpty(page.getRecords())) {
+                LotteryCurrQsBO lotteryCurrQsBO = new LotteryCurrQsBO();
+                BeanUtil.copyPropertiesIgnoreNull(page.getRecords().get(0), lotteryCurrQsBO);
+                return lotteryCurrQsBO;
+            }
         }
         return null;
     }
@@ -519,7 +590,88 @@ public class LotteryClient {
                 BeanUtil.copyPropertiesIgnoreNull(list.get(0), lotteryCurrQsBO);
                 return lotteryCurrQsBO;
             }
+        } else if (StringUtils.equals(lotteryCode, LotteryCodeEnum.GS1MKL8.getLotteryCode())) {
+            LambdaQueryWrapper<OpenresultGs1mkl8> wrapper = new LambdaQueryWrapper<OpenresultGs1mkl8>()
+                    .eq(OpenresultGs1mkl8::getQs, qs);
+            List<OpenresultGs1mkl8> list = openresultGs1mkl8Service.list(wrapper);
+            if (CollUtil.isNotEmpty(list)) {
+                LotteryCurrQsBO lotteryCurrQsBO = new LotteryCurrQsBO();
+                BeanUtil.copyPropertiesIgnoreNull(list.get(0), lotteryCurrQsBO);
+                return lotteryCurrQsBO;
+            }
+        } else if (StringUtils.equals(lotteryCode, LotteryCodeEnum.GS1M11X5.getLotteryCode())) {
+            LambdaQueryWrapper<OpenresultGs1m11x5> wrapper = new LambdaQueryWrapper<OpenresultGs1m11x5>()
+                    .eq(OpenresultGs1m11x5::getQs, qs);
+            List<OpenresultGs1m11x5> list = openresultGs1m11x5Service.list(wrapper);
+            if (CollUtil.isNotEmpty(list)) {
+                LotteryCurrQsBO lotteryCurrQsBO = new LotteryCurrQsBO();
+                BeanUtil.copyPropertiesIgnoreNull(list.get(0), lotteryCurrQsBO);
+                return lotteryCurrQsBO;
+            }
+        } else if (StringUtils.equals(lotteryCode, LotteryCodeEnum.GS1MPCDD.getLotteryCode())) {
+            LambdaQueryWrapper<OpenresultGs1mpcdd> wrapper = new LambdaQueryWrapper<OpenresultGs1mpcdd>()
+                    .eq(OpenresultGs1mpcdd::getQs, qs);
+            List<OpenresultGs1mpcdd> list = openresultGs1mpcddService.list(wrapper);
+            if (CollUtil.isNotEmpty(list)) {
+                LotteryCurrQsBO lotteryCurrQsBO = new LotteryCurrQsBO();
+                BeanUtil.copyPropertiesIgnoreNull(list.get(0), lotteryCurrQsBO);
+                return lotteryCurrQsBO;
+            }
         }
         return null;
+    }
+
+    public PageUtils gethistoryByPage(String lotteryCode, Map<String, Object> params) {
+        PageUtils pageUtils = null;
+        if (StringUtils.equals(LotteryCodeEnum.BJKL8.getLotteryCode(), lotteryCode)) {
+            pageUtils = openresultBjkl8Service.queryPage(params);
+
+        } else if (StringUtils.equals(LotteryCodeEnum.BJPK10.getLotteryCode(), lotteryCode)) {
+            pageUtils = openresultBjpk10Service.queryPage(params);
+
+        } else if (StringUtils.equals(LotteryCodeEnum.CQSSC.getLotteryCode(), lotteryCode)) {
+            pageUtils = openresultCqsscService.queryPage(params);
+
+        } else if (StringUtils.equals(LotteryCodeEnum.FC3D.getLotteryCode(), lotteryCode)) {
+            pageUtils = openresultFc3dService.queryPage(params);
+
+        } else if (StringUtils.equals(LotteryCodeEnum.FT.getLotteryCode(), lotteryCode)) {
+            pageUtils = openresultFtService.queryPage(params);
+
+        } else if (StringUtils.equals(LotteryCodeEnum.GD11X5.getLotteryCode(), lotteryCode)) {
+            pageUtils = openresultGd11x5Service.queryPage(params);
+
+        } else if (StringUtils.equals(LotteryCodeEnum.JSK3.getLotteryCode(), lotteryCode)) {
+            pageUtils = openresultJsk3Service.queryPage(params);
+
+        } else if (StringUtils.equals(LotteryCodeEnum.MO6HC.getLotteryCode(), lotteryCode)) {
+            pageUtils = openresultMo6hcService.queryPage(params);
+
+        } else if (StringUtils.equals(LotteryCodeEnum.PCDD.getLotteryCode(), lotteryCode)) {
+            pageUtils = openresultPcddService.queryPage(params);
+
+        } else if (StringUtils.equals(LotteryCodeEnum.GS1MFT.getLotteryCode(), lotteryCode)) {
+            pageUtils = openresultGs1mftService.queryPage(params);
+
+        } else if (StringUtils.equals(LotteryCodeEnum.GS1MK3.getLotteryCode(), lotteryCode)) {
+            pageUtils = openresultGs1mk3Service.queryPage(params);
+
+        } else if (StringUtils.equals(LotteryCodeEnum.GS1MLHC.getLotteryCode(), lotteryCode)) {
+            pageUtils = openresultGs1mlhcService.queryPage(params);
+
+        } else if (StringUtils.equals(LotteryCodeEnum.GS1MPK10.getLotteryCode(), lotteryCode)) {
+            pageUtils = openresultGs1mpk10Service.queryPage(params);
+
+        } else if (StringUtils.equals(LotteryCodeEnum.GS1MKL8.getLotteryCode(), lotteryCode)) {
+            pageUtils = openresultGs1mkl8Service.queryPage(params);
+
+        } else if (StringUtils.equals(LotteryCodeEnum.GS1M11X5.getLotteryCode(), lotteryCode)) {
+            pageUtils = openresultGs1m11x5Service.queryPage(params);
+
+        } else if (StringUtils.equals(LotteryCodeEnum.GS1MPCDD.getLotteryCode(), lotteryCode)) {
+            pageUtils = openresultGs1mpcddService.queryPage(params);
+
+        }
+        return pageUtils;
     }
 }
