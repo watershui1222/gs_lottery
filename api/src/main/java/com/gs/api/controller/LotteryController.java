@@ -374,47 +374,7 @@ public class LotteryController {
     @GetMapping("/lotteryQsTime")
     public R lotteryTime(@Validated LotteryTimeRequest request, HttpServletRequest httpServletRequest) {
         String userName = JwtUtils.getUserName(httpServletRequest);
-        Date now = new Date();
-        OpenresultTimeBO currentQsData;
-//        OpenresultTimeBO lastQsData;
-        if (StringUtils.equals(LotteryCodeEnum.BJKL8.getLotteryCode(), request.getLotteryCode())) {
-            currentQsData = openresultBjkl8Service.getOneDataByTime(now, null);
-//            lastQsData = openresultBjkl8Service.getOneDataByTime(null, now);
-
-        } else if (StringUtils.equals(LotteryCodeEnum.BJPK10.getLotteryCode(), request.getLotteryCode())) {
-            currentQsData = openresultBjpk10Service.getOneDataByTime(now, null);
-//            lastQsData = openresultBjpk10Service.getOneDataByTime(null, now);
-
-        } else if (StringUtils.equals(LotteryCodeEnum.CQSSC.getLotteryCode(), request.getLotteryCode())) {
-            currentQsData = openresultCqsscService.getOneDataByTime(now, null);
-//            lastQsData = openresultCqsscService.getOneDataByTime(null, now);
-
-        } else if (StringUtils.equals(LotteryCodeEnum.FC3D.getLotteryCode(), request.getLotteryCode())) {
-            currentQsData = openresultFc3dService.getOneDataByTime(now, null);
-//            lastQsData = openresultFc3dService.getOneDataByTime(null, now);
-
-        } else if (StringUtils.equals(LotteryCodeEnum.FT.getLotteryCode(), request.getLotteryCode())) {
-            currentQsData = openresultFtService.getOneDataByTime(now, null);
-//            lastQsData = openresultFtService.getOneDataByTime(null, now);
-
-        } else if (StringUtils.equals(LotteryCodeEnum.GD11X5.getLotteryCode(), request.getLotteryCode())) {
-            currentQsData = openresultGd11x5Service.getOneDataByTime(now, null);
-//            lastQsData = openresultGd11x5Service.getOneDataByTime(null, now);
-
-        } else if (StringUtils.equals(LotteryCodeEnum.JSK3.getLotteryCode(), request.getLotteryCode())) {
-            currentQsData = openresultJsk3Service.getOneDataByTime(now, null);
-//            lastQsData = openresultJsk3Service.getOneDataByTime(null, now);
-
-        } else if (StringUtils.equals(LotteryCodeEnum.MO6HC.getLotteryCode(), request.getLotteryCode())) {
-            currentQsData = openresultMo6hcService.getOneDataByTime(now, null);
-//            lastQsData = openresultMo6hcService.getOneDataByTime(null, now);
-
-        } else if (StringUtils.equals(LotteryCodeEnum.PCDD.getLotteryCode(), request.getLotteryCode())) {
-            currentQsData = openresultPcddService.getOneDataByTime(now, null);
-//            lastQsData = openresultPcddService.getOneDataByTime(null, now);
-        } else {
-            return R.error("未查询到该彩种");
-        }
+        LotteryCurrQsBO currentQsData = lotteryClient.getCurrQs(request.getLotteryCode());
         // 当前期
         JSONObject nowQsJson = new JSONObject();
         String nowQs = (null == currentQsData) ? "" : currentQsData.getQs();
@@ -424,14 +384,6 @@ public class LotteryController {
         nowQsJson.put("closeTs", nowCloseSeconds);
         nowQsJson.put("openTs", nowOpenSeconds);
         nowQsJson.put("nowTs", System.currentTimeMillis());
-
-        // 上一期
-//        JSONObject lastQsJson = new JSONObject();
-//        String lastQs = (null == lastQsData) ? "" : lastQsData.getQs();
-//        String openResult = (null == lastQsData) ? "" : StringUtils.defaultString(lastQsData.getOpenResult());
-//        lastQsJson.put("qs", lastQs);
-//        lastQsJson.put("openResult", openResult);
-//        lastQsJson.put("openStatus", lastQsData.getOpenStatus());
 
         return R.ok().put("nowQs", nowQsJson);
     }
