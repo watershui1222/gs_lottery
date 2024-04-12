@@ -84,7 +84,7 @@ public class HgRecordServiceImpl extends ServiceImpl<HgRecordMapper, HgRecord>
                         recordSport.setGameName(GAME_NAME.getOrDefault(sub.getString("wtype"), sub.getString("wtype")));
                         recordSport.setOddsFormat(sub.getString("oddsFormat"));
                         String rtype = sub.getString("rtype");
-                        recordSport.setOpenResult(rtype.split("_")[1]);
+                        recordSport.setOpenResult(rtype.split("-")[1]);
                         recordSport.setOrderContent(sub.getString("order"));
                         sportDetailList.add(recordSport);
                     }

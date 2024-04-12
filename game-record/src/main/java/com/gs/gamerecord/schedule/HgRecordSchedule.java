@@ -151,7 +151,7 @@ public class HgRecordSchedule {
                             hgRecord.setParlaysub(wager.getString("parlaysub"));
                             hgRecord.setLeague(wager.getString("league"));
                             String rtype = wager.getString("rtype");
-                            hgRecord.setRtype(rtype.split("_")[1]);
+                            hgRecord.setRtype(rtype.split("-")[1]);
                             hgRecord.setOrderContent(wager.getString("order"));
                             hgRecord.setOddsFormat(wager.getString("oddsFormat"));
                             hgRecord.setWtype(wager.getString("wtype"));
