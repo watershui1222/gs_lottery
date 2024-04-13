@@ -418,67 +418,87 @@ public class LHCUtil {
         String betContent = order.getBetContent();
         int numInt = NumberUtils.toInt(num);
         if (StringUtils.equals(betContent, "大")) {
-            if (numInt >= 25) {
+            if (numInt == 49) {
+                order.setOrderStatus(4);
+            } else if (numInt >= 25 && numInt <= 48) {
                 order.setOrderStatus(1);
             } else {
                 order.setOrderStatus(2);
             }
         } else if (StringUtils.equals(betContent, "小")) {
-            if (numInt <= 24) {
+            if (numInt == 49) {
+                order.setOrderStatus(4);
+            } else if (numInt <= 24) {
                 order.setOrderStatus(1);
             } else {
                 order.setOrderStatus(2);
             }
         } else if (StringUtils.equals(betContent, "单")) {
-            if (numInt % 2 == 1) {
+            if (numInt == 49) {
+                order.setOrderStatus(4);
+            } else if (numInt % 2 == 1) {
                 order.setOrderStatus(1);
             } else {
                 order.setOrderStatus(2);
             }
         } else if (StringUtils.equals(betContent, "双")) {
-            if (numInt % 2 == 0) {
+            if (numInt == 49) {
+                order.setOrderStatus(4);
+            } else if (numInt % 2 == 0) {
                 order.setOrderStatus(1);
             } else {
                 order.setOrderStatus(2);
             }
         } else if (StringUtils.equals(betContent, "合大")) {
             int tmHeShu = getTmHeShu(num);
-            if (tmHeShu >= 7) {
+            if (numInt == 49) {
+                order.setOrderStatus(4);
+            } else if (tmHeShu >= 7) {
                 order.setOrderStatus(1);
             } else {
                 order.setOrderStatus(2);
             }
         } else if (StringUtils.equals(betContent, "合小")) {
             int tmHeShu = getTmHeShu(num);
-            if (tmHeShu <= 6) {
+            if (numInt == 49) {
+                order.setOrderStatus(4);
+            } else if (tmHeShu <= 6) {
                 order.setOrderStatus(1);
             } else {
                 order.setOrderStatus(2);
             }
         } else if (StringUtils.equals(betContent, "合单")) {
             int tmHeShu = getTmHeShu(num);
-            if (tmHeShu % 2 == 1) {
+            if (numInt == 49) {
+                order.setOrderStatus(4);
+            } else if (tmHeShu % 2 == 1) {
                 order.setOrderStatus(1);
             } else {
                 order.setOrderStatus(2);
             }
         } else if (StringUtils.equals(betContent, "合双")) {
             int tmHeShu = getTmHeShu(num);
-            if (tmHeShu % 2 == 0) {
+            if (numInt == 49) {
+                order.setOrderStatus(4);
+            } else if (tmHeShu % 2 == 0) {
                 order.setOrderStatus(1);
             } else {
                 order.setOrderStatus(2);
             }
         } else if (StringUtils.equals(betContent, "尾大")) {
             int weiShu = getWeiShu(num);
-            if (weiShu >= 5 && weiShu <= 9) {
+            if (numInt == 49) {
+                order.setOrderStatus(4);
+            } else if (weiShu >= 5 && weiShu <= 9) {
                 order.setOrderStatus(1);
             } else {
                 order.setOrderStatus(2);
             }
         } else if (StringUtils.equals(betContent, "尾小")) {
             int weiShu = getWeiShu(num);
-            if (weiShu >= 0 && weiShu <= 4) {
+            if (numInt == 49) {
+                order.setOrderStatus(4);
+            } else if (weiShu >= 0 && weiShu <= 4) {
                 order.setOrderStatus(1);
             } else {
                 order.setOrderStatus(2);
