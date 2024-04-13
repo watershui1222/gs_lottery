@@ -441,28 +441,28 @@ public class LHCUtil {
             } else {
                 order.setOrderStatus(2);
             }
-        } else if (StringUtils.equals(betContent, "和大")) {
+        } else if (StringUtils.equals(betContent, "合大")) {
             int tmHeShu = getTmHeShu(num);
             if (tmHeShu >= 7) {
                 order.setOrderStatus(1);
             } else {
                 order.setOrderStatus(2);
             }
-        } else if (StringUtils.equals(betContent, "和小")) {
+        } else if (StringUtils.equals(betContent, "合小")) {
             int tmHeShu = getTmHeShu(num);
             if (tmHeShu <= 6) {
                 order.setOrderStatus(1);
             } else {
                 order.setOrderStatus(2);
             }
-        } else if (StringUtils.equals(betContent, "和单")) {
+        } else if (StringUtils.equals(betContent, "合单")) {
             int tmHeShu = getTmHeShu(num);
             if (tmHeShu % 2 == 1) {
                 order.setOrderStatus(1);
             } else {
                 order.setOrderStatus(2);
             }
-        } else if (StringUtils.equals(betContent, "和双")) {
+        } else if (StringUtils.equals(betContent, "合双")) {
             int tmHeShu = getTmHeShu(num);
             if (tmHeShu % 2 == 0) {
                 order.setOrderStatus(1);
@@ -558,7 +558,7 @@ public class LHCUtil {
             } else {
                 order.setOrderStatus(2);
             }
-        } else if (StringUtils.equals(betContent, "和大")) {
+        } else if (StringUtils.equals(betContent, "合大")) {
             int tmHeShu = getTmHeShu(num);
             if (numInt == 49) {
                 order.setOrderStatus(4);
@@ -567,7 +567,7 @@ public class LHCUtil {
             } else {
                 order.setOrderStatus(2);
             }
-        } else if (StringUtils.equals(betContent, "和小")) {
+        } else if (StringUtils.equals(betContent, "合小")) {
             int tmHeShu = getTmHeShu(num);
             if (numInt == 49) {
                 order.setOrderStatus(4);
@@ -576,7 +576,7 @@ public class LHCUtil {
             } else {
                 order.setOrderStatus(2);
             }
-        } else if (StringUtils.equals(betContent, "和单")) {
+        } else if (StringUtils.equals(betContent, "合单")) {
             int tmHeShu = getTmHeShu(num);
             if (numInt == 49) {
                 order.setOrderStatus(4);
@@ -585,7 +585,7 @@ public class LHCUtil {
             } else {
                 order.setOrderStatus(2);
             }
-        } else if (StringUtils.equals(betContent, "和双")) {
+        } else if (StringUtils.equals(betContent, "合双")) {
             int tmHeShu = getTmHeShu(num);
             if (numInt == 49) {
                 order.setOrderStatus(4);
