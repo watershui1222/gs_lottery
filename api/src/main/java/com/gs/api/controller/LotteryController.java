@@ -417,11 +417,14 @@ public class LotteryController {
         if (currQs == null) {
             return R.error("已封盘");
         }
+        Date now = new Date();
+        if (now.getTime() > currQs.getCloseTime().getTime()) {
+            return R.error("已封盘");
+        }
         if (!StringUtils.equals(currQs.getQs(), qs)) {
             return R.error("当前最新期数为:[" + currQs.getQs() + "],请重新投注");
         }
 
-        Date now = new Date();
         // 投注内容
         List<LotteryOrder> orders = new ArrayList<>();
         String betContent = HtmlUtil.unescape(request.getBetContent());
