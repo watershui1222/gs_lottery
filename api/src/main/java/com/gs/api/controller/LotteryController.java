@@ -414,11 +414,8 @@ public class LotteryController {
         }
         // 获取当前期数信息
         LotteryCurrQsBO currQs = lotteryClient.getCurrQs(lottery.getLotteryCode());
-        if (currQs == null) {
-            return R.error("已封盘");
-        }
         Date now = new Date();
-        if (now.getTime() > currQs.getCloseTime().getTime()) {
+        if (currQs == null || now.getTime() > currQs.getCloseTime().getTime()) {
             return R.error("已封盘");
         }
         if (!StringUtils.equals(currQs.getQs(), qs)) {
