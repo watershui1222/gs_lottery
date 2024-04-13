@@ -17,9 +17,7 @@ public class UserRegisterRequest {
     @ApiModelProperty(value = "用户名", example = "dunaifen123", required = true)
     private String userName;
 
-    @NotNull(message = "validation.user.register.invitecode")
-    @Pattern(regexp = RegConstant.INVITE_CODE_REG, message = "validation.user.register.invitecode")
-    @ApiModelProperty(value = "邀请码", example = "888888", required = true)
+    @ApiModelProperty(value = "邀请码", example = "888888")
     private String inviteCode;
 
     @NotNull(message = "validation.user.register.loginpwd")

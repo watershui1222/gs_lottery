@@ -145,16 +145,19 @@ public class UserController {
             return R.error(MsgUtil.get("system.user.register.exist"));
         }
 
-        // 查询代理用户
-        UserInfo agent = userInfoService.getOne(
-                new LambdaQueryWrapper<UserInfo>()
-                        .eq(UserInfo::getReferralCode, request.getInviteCode())
-        );
-        if (agent == null) {
-            return R.error(MsgUtil.get("system.user.register.invitecode"));
-        }
-
         Map<String, String> allParamByMap = sysParamService.getAllParamByMap();
+        String userAgent = allParamByMap.get("default_code");
+
+        // 查询代理用户
+        if (StringUtils.isNotBlank(request.getInviteCode())) {
+            UserInfo agent = userInfoService.getOne(
+                    new LambdaQueryWrapper<UserInfo>()
+                            .eq(UserInfo::getReferralCode, request.getInviteCode())
+            );
+            if (agent != null) {
+                userAgent = agent.getUserName();
+            }
+        }
 
         Date now = new Date();
         String clientIP = ServletUtil.getClientIPByHeader(httpServletRequest, "x-original-forwarded-for");
@@ -186,7 +189,7 @@ public class UserController {
         user.setLoginStatus(0);
         user.setPayStatus(0);
         user.setUserPhone(null);
-        user.setUserAgent(agent.getUserName());
+        user.setUserAgent(userAgent);
         user.setReferralCode(RandomUtil.randomNumbers(6));
         user.setAvatarId(avatars.get(0).getId());
         user.setLevelId(1);
