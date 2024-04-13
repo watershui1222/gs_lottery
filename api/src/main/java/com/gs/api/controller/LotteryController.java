@@ -151,11 +151,11 @@ public class LotteryController {
 
         // 从缓存读取 缓存没有去数据库读取
         String redisKey = "lottery:plays:" + lotteryCode;
-        String redisValue = redisTemplate.opsForValue().get(redisKey);
-        if (StringUtils.isNotBlank(redisValue)) {
-            List<LotteryHandicapVo> lotteryHandicapVoList = JSONArray.parseArray(redisValue, LotteryHandicapVo.class);
-            return R.ok().put("plays", lotteryHandicapVoList).put("lotteryType", lottery.getLotteryType()).put("lotteryName", lottery.getLotteryName());
-        }
+//        String redisValue = redisTemplate.opsForValue().get(redisKey);
+//        if (StringUtils.isNotBlank(redisValue)) {
+//            List<LotteryHandicapVo> lotteryHandicapVoList = JSONArray.parseArray(redisValue, LotteryHandicapVo.class);
+//            return R.ok().put("plays", lotteryHandicapVoList).put("lotteryType", lottery.getLotteryType()).put("lotteryName", lottery.getLotteryName());
+//        }
 
         // 获取彩种下的所有盘口
         List<LotteryHandicap> handicaps = lotteryHandicapService.list(
@@ -219,11 +219,11 @@ public class LotteryController {
 
         // 从缓存读取 缓存没有去数据库读取
         String redisKey = "lottery:odds:" + lotteryCode;
-        String redisValue = redisTemplate.opsForValue().get(redisKey);
-        if (StringUtils.isNotBlank(redisValue)) {
-            List<LotteryOddsVo> lotteryHandicapVoList = JSONArray.parseArray(redisValue, LotteryOddsVo.class);
-            return R.ok().put("odds", lotteryHandicapVoList);
-        }
+//        String redisValue = redisTemplate.opsForValue().get(redisKey);
+//        if (StringUtils.isNotBlank(redisValue)) {
+//            List<LotteryOddsVo> lotteryHandicapVoList = JSONArray.parseArray(redisValue, LotteryOddsVo.class);
+//            return R.ok().put("odds", lotteryHandicapVoList);
+//        }
 
         List<LotteryOdds> oddsList = lotteryOddsService.list(
                 new LambdaQueryWrapper<LotteryOdds>()
