@@ -282,7 +282,7 @@ public class LotteryController {
 
         PageUtils pageUtils = lotteryClient.gethistoryByPage(request.getLotteryCode(), params);
 
-        return R.ok().put("page", pageUtils).put("lotteryType", lottery.getLotteryType());
+        return R.ok().put("page", pageUtils).put("lotteryType", lottery.getLotteryType()).put("lotteryName", lottery.getLotteryName());
 
     }
 

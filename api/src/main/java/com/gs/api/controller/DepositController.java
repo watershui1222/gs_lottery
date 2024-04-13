@@ -175,8 +175,8 @@ public class DepositController {
 
         CompanyVirtual companyVirtual = companyVirtualService.getById(request.getChannelId());
         // 计算汇率
-        BigDecimal amount = new BigDecimal(request.getAmount());
-        amount = NumberUtil.mul(amount, companyVirtual.getExchangeRate());
+        BigDecimal oriAmount = new BigDecimal(request.getAmount());
+        BigDecimal amount = NumberUtil.mul(oriAmount, companyVirtual.getExchangeRate());
         // 校验是否还有未充值订单
         List<Deposit> deposits = depositService.list(
                 new LambdaQueryWrapper<Deposit>()
@@ -205,7 +205,7 @@ public class DepositController {
                 + "|"
                 + companyVirtual.getAccountNo();
         deposit.setAccountDetail(accountDetail);
-        String depositDetail = "交易ID:[" + request.getTrxId() + "]";
+        String depositDetail = "充值金额:["+ oriAmount +"]USDT,交易ID:[" + request.getTrxId() + "]";
         deposit.setDepositDetail(depositDetail);
         deposit.setStatus(0);
         depositService.save(deposit);
