@@ -571,7 +571,7 @@ public class LotteryController {
                 recommendVo.setLotteryName(lottery.getLotteryName());
                 recommendVo.setLotteryCode(lottery.getLotteryCode());
                 recommendVo.setOpenResultStatus(lastQs.getOpenStatus());
-                recommendVo.setLastOpenReuslt(lastQs.getOpenResult());
+                recommendVo.setLastOpenReuslt(StringUtils.defaultString(lastQs.getOpenResult() , ""));
                 recommendVo.setPxh(lottery.getPxh());
                 recommendVo.setLotteryType(lottery.getLotteryType());
                 recommendVo.setImg(allParamByMap.get("resource_domain") + lottery.getImg());
