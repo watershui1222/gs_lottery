@@ -269,27 +269,27 @@ public class CQSSCUtil {
         int niu = (NumberUtils.toInt(resultArr[0]) + NumberUtils.toInt(resultArr[1]) + NumberUtils.toInt(resultArr[2]) + NumberUtils.toInt(resultArr[3]) + NumberUtils.toInt(resultArr[4])) %10;
         if(StringUtils.equals("牛单", betContent)) {
             if (hasNiu(resultArr) && (niu == 1 || niu == 3 || niu == 5 || niu == 7 || niu == 9)) {
-                order.setOrderStatus(2);
-            } else {
                 order.setOrderStatus(1);
+            } else {
+                order.setOrderStatus(2);
             }
         } else if (StringUtils.equals("牛双", betContent)) {
-            if (hasNiu(resultArr) && (niu == 2 || niu == 4 || niu == 6 || niu == 8 || niu == 10)) {
-                order.setOrderStatus(2);
-            } else {
+            if (hasNiu(resultArr) && (niu == 2 || niu == 4 || niu == 6 || niu == 8 || niu == 0)) {
                 order.setOrderStatus(1);
+            } else {
+                order.setOrderStatus(2);
             }
         } else if (StringUtils.equals("牛大", betContent)) {
             if (hasNiu(resultArr) && (niu == 6 || niu == 7 || niu == 8 || niu == 9 || niu == 0)) {
-                order.setOrderStatus(2);
-            } else {
                 order.setOrderStatus(1);
+            } else {
+                order.setOrderStatus(2);
             }
         } else if (StringUtils.equals("牛小", betContent)) {
             if (hasNiu(resultArr) && (niu == 1 || niu == 2 || niu == 3 || niu == 4 || niu == 5)) {
-                order.setOrderStatus(2);
-            } else {
                 order.setOrderStatus(1);
+            } else {
+                order.setOrderStatus(2);
             }
         }
     }
