@@ -154,7 +154,7 @@ public class LotteryController {
         String redisValue = redisTemplate.opsForValue().get(redisKey);
         if (StringUtils.isNotBlank(redisValue)) {
             List<LotteryHandicapVo> lotteryHandicapVoList = JSONArray.parseArray(redisValue, LotteryHandicapVo.class);
-            return R.ok().put("plays", lotteryHandicapVoList).put("lotteryType", lottery.getLotteryType());
+            return R.ok().put("plays", lotteryHandicapVoList).put("lotteryType", lottery.getLotteryType()).put("lotteryName", lottery.getLotteryName());
         }
 
         // 获取彩种下的所有盘口
