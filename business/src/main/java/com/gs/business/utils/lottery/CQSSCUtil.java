@@ -201,11 +201,8 @@ public class CQSSCUtil {
 
     private static boolean checkYidui(String[] resultArr) {
         Map<String, Integer> map = CollUtil.countMap(Arrays.asList(resultArr));
-        for (String key : map.keySet()) {
-            // 如果有一个数字出现了2次
-            if (map.get(key).intValue() == 2) {
-                return true;
-            }
+        if (map.size() == 4) {
+            return true;
         }
         return false;
     }
