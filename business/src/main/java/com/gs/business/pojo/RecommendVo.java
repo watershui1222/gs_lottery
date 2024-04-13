@@ -15,6 +15,8 @@ public class RecommendVo {
 
     private long closeTime;
 
+    private long openResultTime;
+
     private String lastOpenReuslt;
 
     private int openResultStatus;
