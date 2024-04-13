@@ -556,13 +556,15 @@ public class LotteryController {
                 LotteryCurrQsBO lastQs = lotteryClient.getLastQs(lottery.getLotteryCode());
 
                 long closeTime = -1;
+                String qs = "";
                 if (null != currQs) {
                     closeTime = currQs.getCloseTime().getTime();
+                    qs = currQs.getQs();
                 }
                 recommendVo.setCloseTime(closeTime);
                 recommendVo.setServerTime(System.currentTimeMillis());
 
-                recommendVo.setQs(currQs.getQs());
+                recommendVo.setQs(qs);
                 recommendVo.setLotteryName(lottery.getLotteryName());
                 recommendVo.setLotteryCode(lottery.getLotteryCode());
                 recommendVo.setOpenResultStatus(lastQs.getOpenStatus());
