@@ -2,6 +2,7 @@ package com.gs.settle.schedule;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.gs.business.client.LotteryClient;
+import com.gs.business.pojo.bo.LotteryCurrQsBO;
 import com.gs.business.service.LotterySettleService;
 import com.gs.commons.entity.LotteryOrder;
 import com.gs.commons.service.LotteryOrderService;
