@@ -97,9 +97,9 @@ public class CQSSCUtil {
         } else if (StringUtils.equals(order.getPlayCode(), "qzh_q3")) {
             checkSq(order, resultArr[0], resultArr[1], resultArr[2]);
         } else if (StringUtils.equals(order.getPlayCode(), "qzh_z3")) {
-            checkSq(order, resultArr[0], resultArr[1], resultArr[2]);
+            checkSq(order, resultArr[1], resultArr[2], resultArr[3]);
         } else if (StringUtils.equals(order.getPlayCode(), "qzh_h3")) {
-            checkSq(order, resultArr[0], resultArr[1], resultArr[2]);
+            checkSq(order, resultArr[2], resultArr[3], resultArr[4]);
         } else if (StringUtils.equals(order.getPlayCode(), "douniu_douniu")) {
             checkDn(order, resultArr);
         } else if (StringUtils.equals(order.getPlayCode(), "douniu_lm")) {
