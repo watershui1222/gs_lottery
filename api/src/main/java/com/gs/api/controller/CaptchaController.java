@@ -2,7 +2,7 @@ package com.gs.api.controller;
 
 
 import cn.hutool.captcha.GifCaptcha;
-import com.gs.api.controller.request.CaptchaRequest;
+import com.gs.business.pojo.dto.CaptchaRequest;
 import com.gs.commons.utils.R;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;

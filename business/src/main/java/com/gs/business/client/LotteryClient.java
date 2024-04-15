@@ -3,7 +3,7 @@ package com.gs.business.client;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.gs.business.pojo.LotteryCurrQsBO;
+import com.gs.business.pojo.bo.LotteryCurrQsBO;
 import com.gs.business.utils.lottery.*;
 import com.gs.commons.entity.*;
 import com.gs.commons.enums.LotteryCodeEnum;

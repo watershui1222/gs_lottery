@@ -1,11 +1,10 @@
 package com.gs.business.client;
 
-import com.gs.business.pojo.PlatLoginUrlBO;
+import com.gs.business.pojo.bo.PlatLoginUrlBO;
 import com.gs.business.service.PlatService;
 import com.gs.commons.entity.EduOrder;
 import com.gs.commons.entity.UserPlat;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

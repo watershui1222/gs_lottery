@@ -23,6 +23,7 @@
         <module>business</module>
         <module>lottery-settle</module>
         <module>pay-callback</module>
+        <module>inner-api</module>
     </modules>
 
     <properties>

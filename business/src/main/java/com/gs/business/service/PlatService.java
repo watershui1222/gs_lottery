@@ -1,6 +1,6 @@
 package com.gs.business.service;
 
-import com.gs.business.pojo.PlatLoginUrlBO;
+import com.gs.business.pojo.bo.PlatLoginUrlBO;
 import com.gs.commons.entity.UserPlat;
 
 import java.math.BigDecimal;

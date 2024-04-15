@@ -10,6 +10,7 @@
         <module name="pay-callback" />
         <module name="task" />
         <module name="business" />
+        <module name="inner-api" />
         <module name="settle" />
         <module name="api" />
         <module name="game-record" />
@@ -23,6 +24,7 @@
       <module name="business" options="-parameters" />
       <module name="commons" options="-parameters" />
       <module name="game-record" options="-parameters" />
+      <module name="inner-api" options="-parameters" />
       <module name="pay-callback" options="-parameters" />
       <module name="settle" options="-parameters" />
       <module name="task" options="-parameters" />
