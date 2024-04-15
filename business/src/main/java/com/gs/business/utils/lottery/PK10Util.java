@@ -29,7 +29,7 @@ public class PK10Util {
         } else if (StringUtils.equals(order.getPlayCode(), "smp_5th")) {
             // 第五名 龙/虎∶"第五名"之车号大于"第六名"之车号视为「龙」中奖、反之小于视为「虎」中奖，其馀情况视为不中奖。
             checkSmpDxds(order, resultArr[4]);
-            checkSmpLh(order, resultArr[4], resultArr[6]);
+            checkSmpLh(order, resultArr[4], resultArr[5]);
         } else if (StringUtils.equals(order.getPlayCode(), "smp_6th")) {
             checkSmpDxds(order, resultArr[5]);
         } else if (StringUtils.equals(order.getPlayCode(), "smp_7th")) {
