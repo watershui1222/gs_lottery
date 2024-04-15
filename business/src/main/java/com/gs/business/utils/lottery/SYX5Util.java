@@ -1,7 +1,9 @@
 package com.gs.business.utils.lottery;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.math.MathUtil;
 import com.gs.commons.entity.LotteryOrder;
+import icu.mhb.mybatisplus.plugln.tookit.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -275,20 +277,38 @@ public class SYX5Util {
     private static void checkQ2ZUX(LotteryOrder order, String[] resultArr) {
         String betContent = order.getBetContent();
         String[] betContentArr = betContent.split(",");
-        if (StringUtils.equals(betContentArr[0], resultArr[0])
-                && StringUtils.equals(betContentArr[1], resultArr[1])) {
+        // 前2开奖号码排列
+        List<String[]> q2Result = MathUtil.arrangementSelect(new String[]{resultArr[0], resultArr[1]});
+        boolean zhongjiang = false;
+        for (String[] rs : q2Result) {
+            zhongjiang = StringUtils.equals(betContentArr[0], rs[0]) && StringUtils.equals(betContentArr[1], rs[1]);
+            if (zhongjiang) {
+                break;
+            }
+        }
+        if (zhongjiang) {
             order.setOrderStatus(1);
         } else {
             order.setOrderStatus(2);
         }
+
     }
 
     private static void checkQ3ZUX(LotteryOrder order, String[] resultArr) {
         String betContent = order.getBetContent();
         String[] betContentArr = betContent.split(",");
-        if (StringUtils.equals(betContentArr[0], resultArr[0])
-                && StringUtils.equals(betContentArr[1], resultArr[1])
-                && StringUtils.equals(betContentArr[2], resultArr[2])) {
+        // 前2开奖号码排列
+        List<String[]> q2Result = MathUtil.arrangementSelect(new String[]{resultArr[0], resultArr[1], resultArr[2]});
+        boolean zhongjiang = false;
+        for (String[] rs : q2Result) {
+            zhongjiang = StringUtils.equals(betContentArr[0], rs[0])
+                    && StringUtils.equals(betContentArr[1], rs[1])
+                    && StringUtils.equals(betContentArr[2], rs[2]);
+            if (zhongjiang) {
+                break;
+            }
+        }
+        if (zhongjiang) {
             order.setOrderStatus(1);
         } else {
             order.setOrderStatus(2);

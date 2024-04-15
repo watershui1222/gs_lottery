@@ -16,28 +16,22 @@ public class PCDDUtil {
         if (StringUtils.equals(order.getPlayCode(), "hunhe_hunhe")) { // 混合
             if (StringUtils.equals(order.getBetContent(), "大")) {
                 // 大：三个位置的数值相加和大于15,16,17,18,19,20,21,22,23,24,25,26,27为大。注：买100元大开14退回本金。
-                if (sum == 14) {
-                    order.setOrderStatus(4);
-                } else if (sum >= 15) {
+               if (sum >= 14) {
                     order.setOrderStatus(1);
                 } else {
                     order.setOrderStatus(2);
                 }
             } else if (StringUtils.equals(order.getBetContent(), "小")) {
                 //小：三个位置的数值相加和小于00,01,02,03,04,05,06,07,08,09,10,11,12为小。注：买100元小开13退回本金。
-                if (sum == 13) {
-                    order.setOrderStatus(4);
-                } else if (sum <= 12) {
+                if (sum <= 13) {
                     order.setOrderStatus(1);
                 } else {
                     order.setOrderStatus(2);
                 }
             } else if (StringUtils.equals(order.getBetContent(), "单")) {
                 //单：三个位置的数值相加和尾数为单时就为单。注：买100元单开13退回本金。
-                if (sum == 13) {
-                    order.setOrderStatus(4);
-                } else if (sum == 1 || sum == 3 || sum == 5 || sum == 7 || sum == 9
-                        || sum == 11 || sum == 15 || sum == 17 || sum == 19 || sum == 21
+               if (sum == 1 || sum == 3 || sum == 5 || sum == 7 || sum == 9
+                        || sum == 11 || sum == 13 || sum == 15 || sum == 17 || sum == 19 || sum == 21
                         || sum == 23 || sum == 25 || sum == 27) {
                     order.setOrderStatus(1);
                 } else {
@@ -45,10 +39,8 @@ public class PCDDUtil {
                 }
             } else if (StringUtils.equals(order.getBetContent(), "双")) {
                 // 双：三个位置的数值相加和尾数为双时就为双。注：买100元双开14退回本金。
-                if (sum == 14) {
-                    order.setOrderStatus(4);
-                } else if (sum == 2 || sum == 4 || sum == 6 || sum == 8 || sum == 10
-                        || sum == 12 || sum == 16 || sum == 18 || sum == 20 || sum == 22
+                 if (sum == 0 || sum == 2 || sum == 4 || sum == 6 || sum == 8 || sum == 10
+                        || sum == 12 || sum == 14 || sum == 16 || sum == 18 || sum == 20 || sum == 22
                         || sum == 24 || sum == 26) {
                     order.setOrderStatus(1);
                 } else {
@@ -64,19 +56,15 @@ public class PCDDUtil {
                 }
             } else if (StringUtils.equals(order.getBetContent(), "小单")) {
                 // 小单（三个数值和）：01,03,05,07,09,11为小单。举例买100元小单开13退回本金。
-                if (sum == 13) {
-                    order.setOrderStatus(4);
-                } else if (sum == 1 || sum == 3 || sum == 5 || sum == 7 || sum == 9
-                        || sum == 11) {
+                if (sum == 1 || sum == 3 || sum == 5 || sum == 7 || sum == 9
+                        || sum == 11 || sum == 13) {
                     order.setOrderStatus(1);
                 } else {
                     order.setOrderStatus(2);
                 }
             } else if (StringUtils.equals(order.getBetContent(), "大双")) {
                 // 大双（三个数值和）：16,18,20,22,24,26为大双。举例买100元大双开14退回本金。
-                if (sum == 14) {
-                    order.setOrderStatus(4);
-                } else if (sum == 16 || sum == 18 || sum == 20 || sum == 22 || sum == 24
+               if (sum == 14 || sum == 16 || sum == 18 || sum == 20 || sum == 22 || sum == 24
                         || sum == 26) {
                     order.setOrderStatus(1);
                 } else {
