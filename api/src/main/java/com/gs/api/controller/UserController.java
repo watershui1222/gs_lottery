@@ -437,6 +437,7 @@ public class UserController {
             businessTypeMap.put(9, "后台入款");
             businessTypeMap.put(10, "后台扣款");
             businessTypeMap.put(11, "和局退款");
+            businessTypeMap.put(12, "提现拒绝返还");
             JSONArray arr = new JSONArray();
             for (TransactionRecord temp : list) {
                 JSONObject obj = new JSONObject();
