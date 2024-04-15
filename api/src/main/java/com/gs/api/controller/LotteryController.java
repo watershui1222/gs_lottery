@@ -267,8 +267,8 @@ public class LotteryController {
         Date endTime = new Date();
         if (StringUtils.isNotBlank(request.getDateStr())) {
             if (StringUtils.equals(request.getDateStr(), "2")) {
+                endTime = DateUtil.beginOfDay(startDate);
                 startDate = DateUtil.offsetDay(startDate, -1);
-                endTime = DateUtil.endOfDay(startDate);
             } else if (StringUtils.equals(request.getDateStr(), "3")) {
                 startDate = DateUtil.offsetWeek(startDate, -1);
             } else if (StringUtils.equals(request.getDateStr(), "4")) {
