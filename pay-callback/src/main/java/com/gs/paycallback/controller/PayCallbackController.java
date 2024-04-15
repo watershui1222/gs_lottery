@@ -81,10 +81,8 @@ public class PayCallbackController {
 
         // 查询商户
         PayMerchant payMerchant = payMerchantService.getOne(new LambdaQueryWrapper<PayMerchant>().eq(PayMerchant::getMerchantCode, payOrder.getMerchantCode()));
-        String merchantDetail = payMerchant.getMerchantDetail();
-        JSONObject object = JSON.parseObject(merchantDetail);
-        String key = object.getString("key");
-        Long merchantId = object.getLong("merchantId");
+        String key = payMerchant.getMerchantKey();
+        Long merchantId = Long.valueOf(payMerchant.getMerchantId());
 
         // 校验加密规则
         Map<String, Object> treeMap = new TreeMap<>();
@@ -141,9 +139,7 @@ public class PayCallbackController {
 
         // 查询商户
         PayMerchant payMerchant = payMerchantService.getOne(new LambdaQueryWrapper<PayMerchant>().eq(PayMerchant::getMerchantCode, payOrder.getMerchantCode()));
-        String merchantDetail = payMerchant.getMerchantDetail();
-        JSONObject object = JSON.parseObject(merchantDetail);
-        String key = object.getString("key");
+        String key = payMerchant.getMerchantKey();
 
         // 校验加密规则
         String stringSignTemp = StringUtils.join(sign, key);
@@ -191,9 +187,7 @@ public class PayCallbackController {
 
         // 查询商户
         PayMerchant payMerchant = payMerchantService.getOne(new LambdaQueryWrapper<PayMerchant>().eq(PayMerchant::getMerchantCode, payOrder.getMerchantCode()));
-        String merchantDetail = payMerchant.getMerchantDetail();
-        JSONObject object = JSON.parseObject(merchantDetail);
-        String key = object.getString("key");
+        String key = payMerchant.getMerchantKey();
 
         // 校验加密规则
         String stringSignTemp = StringUtils.join(sign, key);
@@ -243,9 +237,7 @@ public class PayCallbackController {
 
         // 查询商户
         PayMerchant payMerchant = payMerchantService.getOne(new LambdaQueryWrapper<PayMerchant>().eq(PayMerchant::getMerchantCode, payOrder.getMerchantCode()));
-        String merchantDetail = payMerchant.getMerchantDetail();
-        JSONObject object = JSON.parseObject(merchantDetail);
-        String key = object.getString("key");
+        String key = payMerchant.getMerchantKey();
 
         // 校验加密规则
         String stringSignTemp = StringUtils.join(outTradeNo
@@ -297,9 +289,7 @@ public class PayCallbackController {
 
         // 查询商户
         PayMerchant payMerchant = payMerchantService.getOne(new LambdaQueryWrapper<PayMerchant>().eq(PayMerchant::getMerchantCode, payOrder.getMerchantCode()));
-        String merchantDetail = payMerchant.getMerchantDetail();
-        JSONObject object = JSON.parseObject(merchantDetail);
-        String key = object.getString("key");
+        String key = payMerchant.getMerchantKey();
 
         // 校验加密规则
         String stringSignTemp = StringUtils.join(outTradeNo
@@ -351,9 +341,7 @@ public class PayCallbackController {
 
         // 查询商户
         PayMerchant payMerchant = payMerchantService.getOne(new LambdaQueryWrapper<PayMerchant>().eq(PayMerchant::getMerchantCode, payOrder.getMerchantCode()));
-        String merchantDetail = payMerchant.getMerchantDetail();
-        JSONObject object = JSON.parseObject(merchantDetail);
-        String key = object.getString("key");
+        String key = payMerchant.getMerchantKey();
 
         // 校验加密规则
         String stringSignTemp = StringUtils.join(outTradeNo
@@ -412,9 +400,7 @@ public class PayCallbackController {
 
         // 查询商户
         PayMerchant payMerchant = payMerchantService.getOne(new LambdaQueryWrapper<PayMerchant>().eq(PayMerchant::getMerchantCode, payOrder.getMerchantCode()));
-        String merchantDetail = payMerchant.getMerchantDetail();
-        JSONObject object = JSON.parseObject(merchantDetail);
-        String key = object.getString("key");
+        String key = payMerchant.getMerchantKey();
 
         // 校验加密规则
 
@@ -479,9 +465,7 @@ public class PayCallbackController {
 
         // 查询商户
         PayMerchant payMerchant = payMerchantService.getOne(new LambdaQueryWrapper<PayMerchant>().eq(PayMerchant::getMerchantCode, payOrder.getMerchantCode()));
-        String merchantDetail = payMerchant.getMerchantDetail();
-        JSONObject object = JSON.parseObject(merchantDetail);
-        String key = object.getString("key");
+        String key = payMerchant.getMerchantKey();
 
         // 校验加密规则
 
@@ -542,9 +526,7 @@ public class PayCallbackController {
 
         // 查询商户
         PayMerchant payMerchant = payMerchantService.getOne(new LambdaQueryWrapper<PayMerchant>().eq(PayMerchant::getMerchantCode, payOrder.getMerchantCode()));
-        String merchantDetail = payMerchant.getMerchantDetail();
-        JSONObject object = JSON.parseObject(merchantDetail);
-        String key = object.getString("key");
+        String key = payMerchant.getMerchantKey();
 
         // 校验加密规则
 

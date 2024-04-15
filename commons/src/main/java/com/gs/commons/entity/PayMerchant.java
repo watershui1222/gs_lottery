@@ -33,11 +33,11 @@ public class PayMerchant implements Serializable {
     @TableField(value = "merchant_name")
     private String merchantName;
 
-    /**
-     * 商户信息详情
-     */
-    @TableField(value = "merchant_detail")
-    private String merchantDetail;
+//    /**
+//     * 商户信息详情
+//     */
+//    @TableField(value = "merchant_detail")
+//    private String merchantDetail;
 
     /**
      * 创建时间
@@ -74,6 +74,12 @@ public class PayMerchant implements Serializable {
      */
     @TableField(value = "pay_url")
     private String payUrl;
+
+    @TableField(value = "merchant_key")
+    private String merchantKey;
+
+    @TableField(value = "merchant_id")
+    private String merchantId;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

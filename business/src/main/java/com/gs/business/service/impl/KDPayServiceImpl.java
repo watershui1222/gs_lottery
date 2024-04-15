@@ -23,10 +23,8 @@ import java.util.TreeMap;
 public class KDPayServiceImpl implements PayService {
     @Override
     public String getPayUrl(PayMerchant merchant, PayOrder order, PayChannel payChannel) {
-        String merchantDetail = merchant.getMerchantDetail();
-        JSONObject object = JSON.parseObject(merchantDetail);
-        String key = object.getString("key");
-        Long merchantId = object.getLong("merchantId");
+        String key = merchant.getMerchantKey();
+        Long merchantId = Long.valueOf(merchant.getMerchantId());
 
         Map<String, Object> treeMap = new TreeMap<>();
         treeMap.put("userCode", merchantId);
