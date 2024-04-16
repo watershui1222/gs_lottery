@@ -88,6 +88,18 @@ public class Withdraw implements Serializable {
     @TableField(value = "account_detail")
     private String accountDetail;
 
+    /**
+     * 用户IP
+     */
+    @TableField(value = "user_ip")
+    private String userIp;
+
+    /**
+     * IP详情
+     */
+    @TableField(value = "ip_detail")
+    private String ipDetail;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

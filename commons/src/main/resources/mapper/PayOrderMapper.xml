@@ -19,6 +19,9 @@
             <result property="channelCode" column="channel_code" jdbcType="VARCHAR"/>
             <result property="merchantName" column="merchant_name" jdbcType="VARCHAR"/>
             <result property="channelName" column="channel_name" jdbcType="VARCHAR"/>
+            <result property="sign" column="sign" jdbcType="VARCHAR"/>
+            <result property="userIp" column="user_ip" jdbcType="VARCHAR"/>
+            <result property="ipDetail" column="ip_detail" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -26,6 +29,7 @@
         pay_order_no,amount,create_time,
         update_time,status,remark,
         error_msg,merchant_code,channel_code,
-        merchant_name,channel_name
+        merchant_name,channel_name,sign,
+        user_ip,ip_detail
     </sql>
 </mapper>

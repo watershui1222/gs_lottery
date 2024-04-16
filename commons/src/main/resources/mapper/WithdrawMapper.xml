@@ -17,12 +17,15 @@
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="accountType" column="account_type" jdbcType="INTEGER"/>
             <result property="accountDetail" column="account_detail" jdbcType="VARCHAR"/>
+            <result property="userIp" column="user_ip" jdbcType="VARCHAR"/>
+            <result property="ipDetail" column="ip_detail" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,user_name,order_no,
         amount,create_time,check_time,
         status,remark,oper_name,
-        update_time,account_type,account_detail
+        update_time,account_type,account_detail,
+        user_ip,ip_detail
     </sql>
 </mapper>

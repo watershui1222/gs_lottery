@@ -71,7 +71,7 @@ public class UserInfo implements Serializable {
     private String payPwd;
 
     /**
-     * 状态(0:正常 1:停用 2:密码输入错误上限锁定)
+     * 状态(0:正常 1:停用)
      */
     @TableField(value = "login_status")
     private Integer loginStatus;
@@ -153,6 +153,12 @@ public class UserInfo implements Serializable {
      */
     @TableField(value = "register_ip")
     private String registerIp;
+
+    /**
+     * IP详情
+     */
+    @TableField(value = "ip_detail")
+    private String ipDetail;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
