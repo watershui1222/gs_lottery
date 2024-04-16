@@ -57,6 +57,8 @@ public class LotteryClient {
     private OpenresultGs1mpcddService openresultGs1mpcddService;
     @Autowired
     private OpenresultHklhcService openresultHklhcService;
+    @Autowired
+    private OpenresultPl3Service openresultPl3Service;
 
     /**
      * 校验订单输赢
@@ -77,6 +79,8 @@ public class LotteryClient {
             SYX5Util.checkWin(order);
         } else if (order.getLotteryType().intValue() == 4) {
             LHCUtil.checkWin(order);
+        } else if (order.getLotteryType().intValue() == 7) {
+            Fc3dUtil.checkWin(order);
         }
     }
 
@@ -285,6 +289,17 @@ public class LotteryClient {
                 BeanUtil.copyPropertiesIgnoreNull(list.get(0), lotteryCurrQsBO);
                 return lotteryCurrQsBO;
             }
+        } else if (StringUtils.equals(lotteryCode, LotteryCodeEnum.PL3.getLotteryCode())) {
+            LambdaQueryWrapper<OpenresultPl3> wrapper = new LambdaQueryWrapper<OpenresultPl3>()
+                    .le(OpenresultPl3::getOpenTime, now)
+                    .gt(OpenresultPl3::getOpenResultTime, now)
+                    .orderByDesc(OpenresultPl3::getOpenResultTime);
+            List<OpenresultPl3> list = openresultPl3Service.list(wrapper);
+            if (CollUtil.isNotEmpty(list)) {
+                LotteryCurrQsBO lotteryCurrQsBO = new LotteryCurrQsBO();
+                BeanUtil.copyPropertiesIgnoreNull(list.get(0), lotteryCurrQsBO);
+                return lotteryCurrQsBO;
+            }
         }
         return null;
     }
@@ -476,6 +491,16 @@ public class LotteryClient {
                 BeanUtil.copyPropertiesIgnoreNull(page.getRecords().get(0), lotteryCurrQsBO);
                 return lotteryCurrQsBO;
             }
+        } else if (StringUtils.equals(lotteryCode, LotteryCodeEnum.PL3.getLotteryCode())) {
+            LambdaQueryWrapper<OpenresultPl3> wrapper = new LambdaQueryWrapper<OpenresultPl3>()
+                    .le(OpenresultPl3::getOpenResultTime, now)
+                    .orderByDesc(OpenresultPl3::getOpenResultTime);
+            Page<OpenresultPl3> page = openresultPl3Service.page(new Page<>(1, 1), wrapper);
+            if (CollUtil.isNotEmpty(page.getRecords())) {
+                LotteryCurrQsBO lotteryCurrQsBO = new LotteryCurrQsBO();
+                BeanUtil.copyPropertiesIgnoreNull(page.getRecords().get(0), lotteryCurrQsBO);
+                return lotteryCurrQsBO;
+            }
         }
         return null;
     }
@@ -649,6 +674,15 @@ public class LotteryClient {
                 BeanUtil.copyPropertiesIgnoreNull(list.get(0), lotteryCurrQsBO);
                 return lotteryCurrQsBO;
             }
+        } else if (StringUtils.equals(lotteryCode, LotteryCodeEnum.PL3.getLotteryCode())) {
+            LambdaQueryWrapper<OpenresultPl3> wrapper = new LambdaQueryWrapper<OpenresultPl3>()
+                    .eq(OpenresultPl3::getQs, qs);
+            List<OpenresultPl3> list = openresultPl3Service.list(wrapper);
+            if (CollUtil.isNotEmpty(list)) {
+                LotteryCurrQsBO lotteryCurrQsBO = new LotteryCurrQsBO();
+                BeanUtil.copyPropertiesIgnoreNull(list.get(0), lotteryCurrQsBO);
+                return lotteryCurrQsBO;
+            }
         }
         return null;
     }
@@ -708,6 +742,9 @@ public class LotteryClient {
 
         } else if (StringUtils.equals(LotteryCodeEnum.HKLHC.getLotteryCode(), lotteryCode)) {
             pageUtils = openresultHklhcService.queryPage(params);
+
+        } else if (StringUtils.equals(LotteryCodeEnum.PL3.getLotteryCode(), lotteryCode)) {
+            pageUtils = openresultPl3Service.queryPage(params);
 
         }
         return pageUtils;
