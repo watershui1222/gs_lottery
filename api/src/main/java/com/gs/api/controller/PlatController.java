@@ -194,6 +194,9 @@ public class PlatController {
         String userName = JwtUtils.getUserName(httpServletRequest);
         // 校验余额是否充足
         UserInfo userInfo = userInfoService.getUserByName(userName);
+        if (userInfo.getPayStatus().intValue() != 0) {
+            return R.error("资金账户被限制,请联系客服");
+        }
         BigDecimal amount = new BigDecimal(request.getAmount());
         if (amount.doubleValue() < 1) {
             return R.error("请输入大于1的金额");

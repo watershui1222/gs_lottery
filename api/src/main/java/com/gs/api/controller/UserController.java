@@ -575,7 +575,9 @@ public class UserController {
 
         String userName = JwtUtils.getUserName(httpServletRequest);
         UserInfo userInf = userInfoService.getUserByName(userName);
-
+        if (userInf.getPayStatus().intValue() != 0) {
+            return R.error("资金账户被限制,请联系客服");
+        }
         Date now = new Date();
         Map<String, String> params = sysParamService.getAllParamByMap();
         // 验证时间段
