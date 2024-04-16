@@ -75,10 +75,17 @@ public class HgRecordSchedule {
             log.info("皇冠---拉单完成[{}]-[{}]", DateUtil.formatDateTime(hg.getBeginTime()), DateUtil.formatDateTime(hg.getEndTime()));
             // 如果当前时间大于结束时间，更新拉取时间范围
             if (DateUtil.compare(now, hg.getEndTime()) == 1) {
+                Date newBegin = hg.getEndTime();
+                Date newEnd = DateUtil.offsetHour(hg.getEndTime(), 24);
+                //如果更新后的时间大于当前时间则取当前时间
+                if(DateUtil.compare(newEnd, now) == 1){
+                    newEnd = now;
+                    newBegin = DateUtil.offsetHour(newEnd, -24);
+                }
                 platRecordControlService.update(
                         new LambdaUpdateWrapper<PlatRecordControl>()
-                                .set(PlatRecordControl::getBeginTime, hg.getEndTime())
-                                .set(PlatRecordControl::getEndTime, DateUtil.offsetMinute(hg.getEndTime(), 1560))
+                                .set(PlatRecordControl::getBeginTime, newBegin)
+                                .set(PlatRecordControl::getEndTime, newEnd)
                                 .eq(PlatRecordControl::getPlatCode, "hg")
                 );
             }
@@ -139,7 +146,7 @@ public class HgRecordSchedule {
                             hgRecord.setUpdateTime(DateUtil.date());
                             hgRecord.setGameName(HgConstants.GAME_NAME.getOrDefault(wager.getString("gtype"), wager.getString("gtype")));
                             hgRecord.setAllBet(wager.getBigDecimal("gold"));
-                            hgRecord.setEffectiveBet(wager.getBigDecimal("members_vgold"));
+                            hgRecord.setEffectiveBet(wager.getBigDecimal("degold"));
                             hgRecord.setIoratio(wager.getBigDecimal("ioratio"));
                             hgRecord.setLeague(wager.getString("league"));
                             hgRecord.setOrderNo(wager.getString("id"));
