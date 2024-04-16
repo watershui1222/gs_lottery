@@ -77,6 +77,8 @@ public class LotteryClient {
             SYX5Util.checkWin(order);
         } else if (order.getLotteryType().intValue() == 4) {
             LHCUtil.checkWin(order);
+        } else if (order.getLotteryType().intValue() == 7) {
+            Fc3dUtil.checkWin(order);
         }
     }
 
