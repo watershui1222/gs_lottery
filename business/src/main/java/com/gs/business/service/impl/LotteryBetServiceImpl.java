@@ -46,7 +46,7 @@ public class LotteryBetServiceImpl implements LotteryBetService {
         TransactionRecord transactionRecord = new TransactionRecord();
         transactionRecord.setTrxId(IdUtils.getTransactionOrderNo());
         transactionRecord.setUserName(info.getUserName());
-        transactionRecord.setAmount(amount);
+        transactionRecord.setAmount(amount.negate());
         transactionRecord.setBeforeAmount(info.getBalance());
         transactionRecord.setAfterAmount(NumberUtil.sub(info.getBalance(), amount));
         transactionRecord.setPayType(1);

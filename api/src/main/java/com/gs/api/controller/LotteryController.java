@@ -24,6 +24,7 @@ import com.gs.business.utils.lottery.LHCBetVerifyUtil;
 import com.gs.business.utils.lottery.SYX5BetVerifyUtil;
 import com.gs.commons.constants.Constant;
 import com.gs.commons.entity.*;
+import com.gs.commons.excption.BusinessException;
 import com.gs.commons.service.*;
 import com.gs.commons.utils.IdUtils;
 import com.gs.commons.utils.PageUtils;
@@ -436,7 +437,7 @@ public class LotteryController {
                         .eq(LotteryOdds::getLotteryCode, lotterCode)
         );
         if (CollUtil.isEmpty(lotteryOddsList)) {
-            throw new Exception("获取投注项内容失败");
+            throw new BusinessException("获取投注项内容失败");
         }
         Map<String, LotteryOdds> lotteryOddsMap = lotteryOddsList.stream().collect(Collectors.toMap(item -> String.valueOf(item.getId()), item -> item));
 
@@ -446,11 +447,14 @@ public class LotteryController {
             String hm = betContentObj.getString("hm");
             String oddsId = betContentObj.getString("oddsId");
             BigDecimal amount = betContentObj.getBigDecimal("amount");
+            if (amount.doubleValue() <= 0) {
+                throw new BusinessException("非法参数");
+            }
             betAmount = NumberUtil.add(betAmount, amount);
 
             LotteryOdds lotteryOdds = lotteryOddsMap.get(oddsId);
             if (lotteryOdds == null || !StringUtils.equals(lotteryOdds.getPlayCode(), playCode)) {
-                throw new Exception("非法参数");
+                throw new BusinessException("非法参数");
             }
 
             // 校验组选、直选规则
