@@ -151,7 +151,7 @@ public class HgRecordSchedule {
                             hgRecord.setParlaysub(wager.getString("parlaysub"));
                             hgRecord.setLeague(wager.getString("league"));
                             String rtype = wager.getString("rtype");
-                            hgRecord.setRtype(rtype.split("-")[1]);
+                            hgRecord.setRtype(rtype);
                             hgRecord.setOrderContent(wager.getString("order"));
                             hgRecord.setOddsFormat(wager.getString("oddsFormat"));
                             hgRecord.setWtype(wager.getString("wtype"));
@@ -159,6 +159,7 @@ public class HgRecordSchedule {
                             hgRecord.setTnameHome(wager.getString("tname_home"));
                             hgRecord.setPlatUserName(wager.getString("username"));
                             hgRecord.setStrong(wager.getString("strong"));
+                            hgRecord.setScore(wager.getString("score"));
                             hgRecord.setResultScore(wager.getString("result_score"));
                             hgRecord.setResultStatus(wager.getString("result"));
                             hgRecord.setSettleTime(DateUtil.parse(wager.getString("resultdate")));

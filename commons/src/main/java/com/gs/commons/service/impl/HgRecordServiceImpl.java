@@ -79,12 +79,13 @@ public class HgRecordServiceImpl extends ServiceImpl<HgRecordMapper, HgRecord>
                         recordSport.setOdds(sub.getBigDecimal("ioratio"));
                         recordSport.setTnameHome(sub.getString("tname_home"));
                         recordSport.setTnameAway(sub.getString("tname_away"));
-                        recordSport.setResultScore(sub.getString("score"));
+                        recordSport.setScore(sub.getString("score"));
+                        recordSport.setResultScore(sub.getString("result_score"));
                         recordSport.setLeague(sub.getString("league"));
                         recordSport.setGameName(GAME_NAME.getOrDefault(sub.getString("wtype"), sub.getString("wtype")));
                         recordSport.setOddsFormat(sub.getString("oddsFormat"));
                         String rtype = sub.getString("rtype");
-                        recordSport.setOpenResult(rtype.split("-")[1]);
+                        recordSport.setOpenResult(rtype);
                         recordSport.setOrderContent(sub.getString("order"));
                         sportDetailList.add(recordSport);
                     }
@@ -97,6 +98,7 @@ public class HgRecordServiceImpl extends ServiceImpl<HgRecordMapper, HgRecord>
                     recordSport.setOdds(hgRecord.getIoratio());
                     recordSport.setTnameHome(hgRecord.getTnameHome());
                     recordSport.setTnameAway(hgRecord.getTnameAway());
+                    recordSport.setScore(hgRecord.getScore());
                     recordSport.setResultScore(hgRecord.getResultScore());
                     recordSport.setLeague(hgRecord.getLeague());
                     recordSport.setGameName(hgRecord.getGameName());

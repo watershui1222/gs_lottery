@@ -2,6 +2,7 @@ package com.gs.api.controller;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.extra.servlet.ServletUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -139,7 +140,7 @@ public class DepositController {
         if (CollUtil.isNotEmpty(deposits)) {
             return R.error(MsgUtil.get("system.deposit.company.err1"));
         }
-
+        String clientIP = ServletUtil.getClientIPByHeader(httpServletRequest, "x-original-forwarded-for");
         Date now = new Date();
         Deposit deposit = new Deposit();
         deposit.setUserName(user.getUserName());
@@ -162,6 +163,8 @@ public class DepositController {
         String depositDetail = "存款人姓名:[" + request.getName() + "],转账备注:" + request.getRemark();
         deposit.setDepositDetail(depositDetail);
         deposit.setStatus(0);
+        deposit.setUserIp(clientIP);
+        deposit.setIpDetail(clientIP);
         depositService.save(deposit);
         return R.ok(MsgUtil.get("system.deposit.company.success"));
     }
@@ -186,7 +189,7 @@ public class DepositController {
         if (CollUtil.isNotEmpty(deposits)) {
             return R.error(MsgUtil.get("system.deposit.company.err1"));
         }
-
+        String clientIP = ServletUtil.getClientIPByHeader(httpServletRequest, "x-original-forwarded-for");
         Date now = new Date();
         Deposit deposit = new Deposit();
         deposit.setUserName(user.getUserName());
@@ -207,6 +210,8 @@ public class DepositController {
         deposit.setAccountDetail(accountDetail);
         String depositDetail = "充值金额:["+ oriAmount +"]USDT,交易ID:[" + request.getTrxId() + "]";
         deposit.setDepositDetail(depositDetail);
+        deposit.setUserIp(clientIP);
+        deposit.setIpDetail(clientIP);
         deposit.setStatus(0);
         depositService.save(deposit);
         return R.ok(MsgUtil.get("system.deposit.company.success"));

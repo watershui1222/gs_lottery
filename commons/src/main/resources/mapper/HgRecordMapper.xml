@@ -25,6 +25,7 @@
             <result property="settleTime" column="settle_time" jdbcType="TIMESTAMP"/>
             <result property="settleStatus" column="settle_status" jdbcType="INTEGER"/>
             <result property="resultStatus" column="result_status" jdbcType="VARCHAR"/>
+            <result property="score" column="score" jdbcType="VARCHAR"/>
             <result property="resultScore" column="result_score" jdbcType="VARCHAR"/>
             <result property="oddsFormat" column="odds_format" jdbcType="VARCHAR"/>
             <result property="parlaynum" column="parlaynum" jdbcType="INTEGER"/>
@@ -41,7 +42,7 @@
         league,strong,ioratio,
         effective_bet,all_bet,profit,
         bet_time,settle_time,settle_status,
-        result_status,result_score,odds_format,
+        result_status,score,result_score,odds_format,
         parlaynum,parlaysub,raw_data,create_time,
         update_time
     </sql>
@@ -54,7 +55,7 @@
         league,strong,ioratio,
         effective_bet,all_bet,profit,
         bet_time,settle_time,settle_status,
-        result_status,result_score,odds_format,
+        result_status,score,result_score,odds_format,
         parlaynum,parlaysub,raw_data,create_time,
         update_time
         )
@@ -63,7 +64,7 @@
             (
             #{i.userName}, #{i.platUserName}, #{i.orderNo}, #{i.gameName}, #{i.wtype}, #{i.rtype}, #{i.orderContent}, #{i.tnameHome}, #{i.tnameAway}, #{i.league}, #{i.strong}, #{i.ioratio},
             #{i.effectiveBet}, #{i.allBet}, #{i.profit}, #{i.betTime}, #{i.settleTime},#{i.settleStatus},
-            #{i.resultStatus},#{i.resultScore},#{i.oddsFormat}, #{i.parlaynum},#{i.parlaysub},#{i.rawData}, #{i.createTime},#{i.updateTime}
+            #{i.resultStatus},#{i.score},#{i.resultScore},#{i.oddsFormat}, #{i.parlaynum},#{i.parlaysub},#{i.rawData}, #{i.createTime},#{i.updateTime}
             )
         </foreach>
         ON DUPLICATE KEY UPDATE

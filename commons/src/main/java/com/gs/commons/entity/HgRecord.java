@@ -137,6 +137,12 @@ public class HgRecord implements Serializable {
     private String resultStatus;
 
     /**
+     * 下注时比分
+     */
+    @TableField(value = "score")
+    private String score;
+
+    /**
      * 比分结果
      */
     @TableField(value = "result_score")

@@ -18,6 +18,8 @@
             <result property="accountDetail" column="account_detail" jdbcType="VARCHAR"/>
             <result property="depositDetail" column="deposit_detail" jdbcType="VARCHAR"/>
             <result property="status" column="status" jdbcType="INTEGER"/>
+            <result property="userIp" column="user_ip" jdbcType="VARCHAR"/>
+            <result property="ipDetail" column="ip_detail" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -25,6 +27,6 @@
         amount,deposit_type,create_time,
         check_time,update_time,oper_name,
         remark,account_detail,deposit_detail,
-        status
+        status,user_ip,ip_detail
     </sql>
 </mapper>
