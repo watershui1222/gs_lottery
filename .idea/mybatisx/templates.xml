@@ -68,16 +68,8 @@
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="OpenresultGs1mkl8" />
-                  <option name="tableName" value="t_openresult_gs1mkl8" />
-                </TableUIInfo>
-                <TableUIInfo>
-                  <option name="className" value="OpenresultGs1m11x5" />
-                  <option name="tableName" value="t_openresult_gs1m11x5" />
-                </TableUIInfo>
-                <TableUIInfo>
-                  <option name="className" value="OpenresultGs1mpcdd" />
-                  <option name="tableName" value="t_openresult_gs1mpcdd" />
+                  <option name="className" value="OpenresultHklhc" />
+                  <option name="tableName" value="t_openresult_hklhc" />
                 </TableUIInfo>
               </list>
             </option>
