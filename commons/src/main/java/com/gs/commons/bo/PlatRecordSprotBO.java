@@ -50,6 +50,10 @@ public class PlatRecordSprotBO {
      */
     private BigDecimal Odds;
 
+    /**
+     * 下注时比分
+     */
+    private String score;
 
     /**
      * 比分

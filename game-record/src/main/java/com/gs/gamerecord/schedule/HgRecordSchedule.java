@@ -159,6 +159,7 @@ public class HgRecordSchedule {
                             hgRecord.setTnameHome(wager.getString("tname_home"));
                             hgRecord.setPlatUserName(wager.getString("username"));
                             hgRecord.setStrong(wager.getString("strong"));
+                            hgRecord.setScore(wager.getString("score"));
                             hgRecord.setResultScore(wager.getString("result_score"));
                             hgRecord.setResultStatus(wager.getString("result"));
                             hgRecord.setSettleTime(DateUtil.parse(wager.getString("resultdate")));
