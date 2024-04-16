@@ -41,7 +41,7 @@ public class Deposit implements Serializable {
     private BigDecimal amount;
 
     /**
-     * 1:银行卡 2:微信 3:支付宝 4:虚拟货币 5:在线支付
+     * 1:银行卡 2:微信 3:支付宝 4:虚拟货币 5:在线支付 6:后台充值
      */
     @TableField(value = "deposit_type")
     private Integer depositType;
@@ -93,6 +93,18 @@ public class Deposit implements Serializable {
      */
     @TableField(value = "status")
     private Integer status;
+
+    /**
+     * 用户IP
+     */
+    @TableField(value = "user_ip")
+    private String userIp;
+
+    /**
+     * IP详情
+     */
+    @TableField(value = "ip_detail")
+    private String ipDetail;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

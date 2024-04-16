@@ -18,10 +18,10 @@ lottery:
   source:
     merchants:
       duocai:
-        key: K2653601ec5af9f
+        key: K2661dff7c77d2b
         name: 多彩网
         fetch-count: 5
-        url: https://vip.manycai.com/K2653601ec5af9f/p/5.json
+        url: https://vip.manycai.com/K2661dff7c77d2b/p/5.json
         code: duocai
 
 

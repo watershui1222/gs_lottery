@@ -100,6 +100,24 @@ public class PayOrder implements Serializable {
     @TableField(value = "channel_name")
     private String channelName;
 
+    /**
+     * 签名
+     */
+    @TableField(value = "sign")
+    private String sign;
+
+    /**
+     * 用户IP
+     */
+    @TableField(value = "user_ip")
+    private String userIp;
+
+    /**
+     * IP详情
+     */
+    @TableField(value = "ip_detail")
+    private String ipDetail;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

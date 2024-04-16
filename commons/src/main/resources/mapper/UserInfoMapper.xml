@@ -28,6 +28,7 @@
             <result property="lastIp" column="last_ip" jdbcType="VARCHAR"/>
             <result property="remark" column="remark" jdbcType="VARCHAR"/>
             <result property="registerIp" column="register_ip" jdbcType="VARCHAR"/>
+            <result property="ipDetail" column="ip_detail" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -38,8 +39,9 @@
         user_agent,referral_code,avatar_id,
         level_id,group_id,create_time,
         update_time,last_time,last_ip,
-        remark,register_ip
+        remark,register_ip,ip_detail
     </sql>
+
 
     <!-- 修改用户余额 -->
     <update id="updateUserBalance">

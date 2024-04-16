@@ -1,6 +1,7 @@
 package com.gs.api.controller;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.servlet.ServletUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -105,6 +106,8 @@ public class PayController {
             return R.error(StrUtil.format("通道支持金额:{}-{}", payChannel.getMinAmount(), payChannel.getMaxAmount()));
         }
 
+        String clientIP = ServletUtil.getClientIPByHeader(httpServletRequest, "x-original-forwarded-for");
+
         // 组装订单信息
         Date now = new Date();
         PayOrder payOrder = new PayOrder();
@@ -121,6 +124,8 @@ public class PayController {
         payOrder.setChannelCode(payChannel.getChannelCode());
         payOrder.setMerchantName(payMerchant.getMerchantName());
         payOrder.setChannelName(payChannel.getChannelName());
+        payOrder.setUserIp(clientIP);
+        payOrder.setIpDetail(clientIP);
         // 调用获取URL接口
         String url = payClient.getUrl(payMerchant, payOrder, payChannel);
         if (StringUtils.isNotBlank(url)) {

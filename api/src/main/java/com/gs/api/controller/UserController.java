@@ -265,6 +265,7 @@ public class UserController {
             return R.error(MsgUtil.get("system.login.pwderror"));
         }
 
+        String ipDetail = IpUtil.getIpDetail(clientIP);
         Date now = new Date();
         /** 更新最后登录时间 **/
         userInfoService.update(
@@ -272,13 +273,14 @@ public class UserController {
                         .eq(UserInfo::getId, user.getId())
                         .set(UserInfo::getLastIp, clientIP)
                         .set(UserInfo::getLastTime, now)
+                        .set(UserInfo::getIpDetail, ipDetail)
         );
 
         // 登录日志
         UserLoginLog loginLog = new UserLoginLog();
         loginLog.setUserName(request.getUserName());
         loginLog.setLoginIp(clientIP);
-        loginLog.setAddrDetail(null);
+        loginLog.setAddrDetail(ipDetail);
         loginLog.setLoginDomain(null);
         loginLog.setCreateTime(now);
         userLoginLogService.save(loginLog);
@@ -575,7 +577,9 @@ public class UserController {
 
         String userName = JwtUtils.getUserName(httpServletRequest);
         UserInfo userInf = userInfoService.getUserByName(userName);
-
+        if (userInf.getPayStatus().intValue() != 0) {
+            return R.error("资金账户被限制,请联系客服");
+        }
         Date now = new Date();
         Map<String, String> params = sysParamService.getAllParamByMap();
         // 验证时间段
@@ -629,6 +633,7 @@ public class UserController {
 
         // 扣除用户金额
         userInfoService.updateUserBalance(userName, amount.negate());
+        String clientIP = ServletUtil.getClientIPByHeader(httpServletRequest, "x-original-forwarded-for");
 
         // 提现记录
         String withdrawOrderNo = IdUtils.getWithdrawOrderNo();
@@ -643,6 +648,8 @@ public class UserController {
         withdraw.setOperName(null);
         withdraw.setUpdateTime(null);
         withdraw.setAccountType(userAccount.getAccountType());
+        withdraw.setUserIp(clientIP);
+        withdraw.setIpDetail(clientIP);
         String accountDetail = "";
         if (userAccount.getAccountType().intValue() == 1) {
             accountDetail = StrUtil.format("银行名称:{}|银行卡号:{}|持卡人:{}|开户网点:{}", userAccount.getChannelName(), userAccount.getAccountNo(), userAccount.getRealName(), userAccount.getAddress());

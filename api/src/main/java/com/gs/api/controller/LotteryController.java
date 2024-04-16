@@ -491,6 +491,9 @@ public class LotteryController {
         if (betAmount.doubleValue() > user.getBalance().doubleValue()) {
             return R.error("账户余额不足");
         }
+        if (user.getPayStatus().intValue() != 0) {
+            return R.error("资金账户被限制,请联系客服");
+        }
 
         lotteryBetService.bet(user, betAmount, orders);
         redisTemplate.delete(redisKey);
