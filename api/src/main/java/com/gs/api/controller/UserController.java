@@ -278,7 +278,7 @@ public class UserController {
         UserLoginLog loginLog = new UserLoginLog();
         loginLog.setUserName(request.getUserName());
         loginLog.setLoginIp(clientIP);
-        loginLog.setAddrDetail(null);
+        loginLog.setAddrDetail(IpUtil.getIpDetail(clientIP));
         loginLog.setLoginDomain(null);
         loginLog.setCreateTime(now);
         userLoginLogService.save(loginLog);
