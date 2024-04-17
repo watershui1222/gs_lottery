@@ -136,6 +136,7 @@ public class LyRecordSchedule {
                 lyRecords.add(lyRecord);
             }
             if (CollUtil.isNotEmpty(lyRecords)) {
+                log.info("LY---注单[{}]个", lyRecords.size());
                 lyRecordService.batchInsertOrUpdate(lyRecords);
             }
         }

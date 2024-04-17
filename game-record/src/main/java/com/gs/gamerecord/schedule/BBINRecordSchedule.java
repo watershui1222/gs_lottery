@@ -155,6 +155,7 @@ public class BBINRecordSchedule {
                 list.add(record);
             }
             if(CollUtil.isNotEmpty(list)){
+                log.info("BBIN---注单[{}]个", list.size());
                 bbinRecordService.batchInsertOrUpdate(list);
             }
         }

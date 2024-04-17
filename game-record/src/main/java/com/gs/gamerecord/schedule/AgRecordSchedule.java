@@ -255,6 +255,7 @@ public class AgRecordSchedule {
             page++;
         }while(page <= totalpage);
         if(CollUtil.isNotEmpty(list)){
+            log.info("AG---注单[{}]个", list.size());
             agRecordService.batchInsertOrUpdate(list);
         }
     }

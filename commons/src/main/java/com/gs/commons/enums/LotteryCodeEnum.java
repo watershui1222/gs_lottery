@@ -29,7 +29,9 @@ public enum LotteryCodeEnum {
     GS1M11X5("GS1M11X5", "一分11选5"),
     GS1MKL8("GS1MKL8", "一分快乐8"),
     HKLHC("HKLHC", "、香港六合彩"),
-    PL3("PL3", "、排列3"),
+    PL3("PL3", "排列3"),
+    GS1MPL3("GS1MPL3", "一分排列3"),
+    GS1MFC3D("GS1MFC3D", "一分福彩3D"),
     ;
     private String lotteryCode;
     private String name;

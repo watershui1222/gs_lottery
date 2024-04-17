@@ -140,6 +140,7 @@ public class KyRecordSchedule {
                 kyRecords.add(kyRecord);
             }
             if (CollUtil.isNotEmpty(kyRecords)) {
+                log.info("KY---注单[{}]个", kyRecords.size());
                 kyRecordService.batchInsertOrUpdate(kyRecords);
             }
         }

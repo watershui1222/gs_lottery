@@ -1,15 +1,13 @@
 package com.gs.task.service.impl;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.gs.commons.entity.Lottery;
-import com.gs.commons.entity.OpenresultGs1mft;
+import com.gs.commons.entity.OpenresultGs1mfc3d;
 import com.gs.commons.enums.LotteryCodeEnum;
-import com.gs.commons.service.OpenresultGs1mftService;
+import com.gs.commons.service.OpenresultGs1mfc3dService;
 import com.gs.commons.utils.RedisKeyUtil;
 import com.gs.task.config.LotterySourceProperties;
 import com.gs.task.service.LotteryDataService;
@@ -19,31 +17,29 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class Gs1mFtLotteryDataServiceImpl extends LotteryDataService {
+public class Gs1mfc3dLotteryDataServiceImpl extends LotteryDataService {
 
     @Autowired
-    private OpenresultGs1mftService openresultGs1mftService;
+    private OpenresultGs1mfc3dService openresultGs1mfc3dService;
 
     @Autowired
     private StringRedisTemplate redisTemplate;
-    private List<Integer> numbers = ListUtil.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
     @Override
     public LotteryCodeEnum lotteryKindCode() {
-        return LotteryCodeEnum.GS1MFT;
+        return LotteryCodeEnum.GS1MFC3D;
     }
 
     @Override
     public String getPaiqiQs(Date todayDate, Integer currCount) {
-        String todayDateStr = DateUtil.format(todayDate, "yyyyMMdd");
-        String qs = todayDateStr + "-" + String.format("%04d", currCount);
+        String todayDateStr = DateUtil.format(todayDate, "YYMMdd");
+        String qs = todayDateStr + String.format("%04d", currCount);
         return qs;
     }
 
@@ -63,19 +59,18 @@ public class Gs1mFtLotteryDataServiceImpl extends LotteryDataService {
             return;
         }
 
+
         Date now = new Date();
         String todayDateStr = DateUtil.format(today, "YYMMdd");
 
         DateTime firstOpenResult = DateUtil.parseDateTime(DateUtil.formatDate(today) + " " + lottery.getFirstQsTime());
-        List<OpenresultGs1mft> paiqiList = new ArrayList<>();
+        List<OpenresultGs1mfc3d> paiqiList = new ArrayList<>();
         for (Integer i = 1; i <= lottery.getDayCount(); i++) {
-            OpenresultGs1mft open = new OpenresultGs1mft();
+            OpenresultGs1mfc3d open = new OpenresultGs1mfc3d();
             String qs = getPaiqiQs(today, i);
             open.setQs(qs);
             open.setPlatQs(qs);
-            List<Integer> collect = Arrays.stream(RandomUtil.randomInts(10)).map(operand -> numbers.get(operand)).boxed().collect(Collectors.toList());
-            String result = CollUtil.join(collect, ",");
-            open.setOpenResult(result);
+            open.setOpenResult(RandomUtil.randomInt(0, 10) + "," + RandomUtil.randomInt(0, 10) + "," + RandomUtil.randomInt(0, 10));
             open.setOpenStatus(0);
             open.setCurrCount(i);
             open.setCloseTime(DateUtil.offsetSecond(firstOpenResult, -lottery.getCloseTime()));
@@ -87,14 +82,14 @@ public class Gs1mFtLotteryDataServiceImpl extends LotteryDataService {
             // 下一期开奖时间
             firstOpenResult = DateUtil.offsetMinute(open.getOpenResultTime(), lottery.getQsTime());
         }
-        openresultGs1mftService.saveBatch(paiqiList);
+        openresultGs1mfc3dService.saveBatch(paiqiList);
         redisTemplate.opsForValue().set(paiqiKey, "true", 2, TimeUnit.DAYS);
     }
 
     @Override
     public void openResult(LotterySourceProperties.SourceMerchants merchants, JSONObject jsonObject) {
 
-//        List<OpenresultFt> list = new ArrayList<>();
+//        List<OpenresultJsk3> list = new ArrayList<>();
 //
 //        // 获取对应上游彩种代码
 //        LotterySourceCodeEnum sourceCodeEnum = LotterySourceCodeEnum.getLotterySourceCode(merchants.getCode(), lotteryKindCode().getLotteryCode());
@@ -109,7 +104,7 @@ public class Gs1mFtLotteryDataServiceImpl extends LotteryDataService {
 //        JSONArray jsks = jsonObject.getJSONArray(lotterySourceLotteryCode);
 //        for (int i = 0; i < jsks.size(); i++) {
 //            JSONObject openObj = jsks.getJSONObject(i);
-//            OpenresultFt openresultJsk3 = new OpenresultFt();
+//            OpenresultJsk3 openresultJsk3 = new OpenresultJsk3();
 //            openresultJsk3.setPlatQs(openObj.getString("issue"));
 //            openresultJsk3.setOpenResult(openObj.getString("code"));
 //            openresultJsk3.setOpenStatus(0);
@@ -117,6 +112,6 @@ public class Gs1mFtLotteryDataServiceImpl extends LotteryDataService {
 //            openresultJsk3.setUpdateTime(new Date());
 //            list.add(openresultJsk3);
 //        }
-//        openresultFtService.batchOpenResult(list);
+//        openresultJsk3Service.batchOpenResult(list);
     }
 }
