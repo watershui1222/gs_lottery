@@ -810,6 +810,12 @@ public class LotteryClient {
         } else if (StringUtils.equals(LotteryCodeEnum.PL3.getLotteryCode(), lotteryCode)) {
             pageUtils = openresultPl3Service.queryPage(params);
 
+        } else if (StringUtils.equals(LotteryCodeEnum.GS1MPL3.getLotteryCode(), lotteryCode)) {
+            pageUtils = openresultGs1mpl3Service.queryPage(params);
+
+        } else if (StringUtils.equals(LotteryCodeEnum.GS1MFC3D.getLotteryCode(), lotteryCode)) {
+            pageUtils = openresultGs1mfc3dService.queryPage(params);
+
         }
         return pageUtils;
     }
