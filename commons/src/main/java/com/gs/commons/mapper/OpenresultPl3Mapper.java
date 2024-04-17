@@ -1,7 +1,9 @@
 package com.gs.commons.mapper;
 
-import com.gs.commons.entity.OpenresultPl3;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.gs.commons.entity.OpenresultPl3;
+
+import java.util.List;
 
 /**
 * @author tommm
@@ -10,7 +12,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @Entity com.gs.commons.entity.OpenresultPl3
 */
 public interface OpenresultPl3Mapper extends BaseMapper<OpenresultPl3> {
-
+    int batchOpenResult(List<OpenresultPl3> list);
 }
 
 

@@ -7,12 +7,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gs.commons.bo.OpenResultBO;
+import com.gs.commons.entity.OpenresultPcdd;
 import com.gs.commons.entity.OpenresultPl3;
 import com.gs.commons.mapper.OpenresultPl3Mapper;
 import com.gs.commons.service.OpenresultPl3Service;
 import com.gs.commons.utils.PageUtils;
 import com.gs.commons.utils.Query;
 import icu.mhb.mybatisplus.plugln.tookit.Lists;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -27,6 +29,13 @@ import java.util.Map;
 @Service
 public class OpenresultPl3ServiceImpl extends ServiceImpl<OpenresultPl3Mapper, OpenresultPl3>
     implements OpenresultPl3Service{
+
+    @Autowired
+    private OpenresultPl3Mapper openresultPl3Mapper;
+    @Override
+    public int batchOpenResult(List<OpenresultPl3> list) {
+        return openresultPl3Mapper.batchOpenResult(list);
+    }
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
