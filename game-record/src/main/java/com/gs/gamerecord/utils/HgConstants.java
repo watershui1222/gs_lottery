@@ -63,7 +63,7 @@ public class HgConstants {
             hgRecord.setScore(wager.getString("score"));
             hgRecord.setResultScore(wager.getString("result_score"));
             hgRecord.setResultStatus(wager.getString("result"));
-            hgRecord.setSettleTime(DateUtil.parse(wager.getString("resultdate")));
+            hgRecord.setSettleTime(DateUtil.offsetHour(wager.getDate("resultdate"), 12));
             hgRecord.setSettleStatus(wager.getIntValue("settle"));
             hgRecord.setRawData(wager.toJSONString());
             recordList.add(hgRecord);
