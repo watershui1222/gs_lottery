@@ -87,6 +87,10 @@ public class HgRecordServiceImpl extends ServiceImpl<HgRecordMapper, HgRecord>
                         String rtype = sub.getString("rtype");
                         recordSport.setOpenResult(rtype);
                         recordSport.setOrderContent(sub.getString("order"));
+                        String strong = sub.getString("strong");
+                        String strong1 = StrUtil.equals(strong, "H") ? recordSport.getTnameHome() :
+                                StrUtil.equals(strong, "C") ? recordSport.getTnameAway(): "";
+                        recordSport.setStrong(strong1);
                         sportDetailList.add(recordSport);
                     }
                     bo.setSportDetailList(sportDetailList);
@@ -105,6 +109,9 @@ public class HgRecordServiceImpl extends ServiceImpl<HgRecordMapper, HgRecord>
                     recordSport.setOddsFormat(hgRecord.getOddsFormat());
                     recordSport.setOrderContent(hgRecord.getOrderContent());
                     recordSport.setOpenResult(hgRecord.getRtype());
+                    String strong = StrUtil.equals(hgRecord.getStrong(), "H") ? hgRecord.getTnameHome() :
+                            StrUtil.equals(hgRecord.getStrong(), "C") ? hgRecord.getTnameAway(): "";
+                    recordSport.setStrong(strong);
                     bo.setSportDetail(recordSport);
                 }
                 platRecordBOList.add(bo);

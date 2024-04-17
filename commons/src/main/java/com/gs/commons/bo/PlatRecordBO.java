@@ -46,6 +46,8 @@ public class PlatRecordBO {
      */
     private Integer isSport = 0;
 
+    private String resultStatus;
+
     private PlatRecordSprotBO sportDetail;
 
     private List<PlatRecordSprotBO> sportDetailList;

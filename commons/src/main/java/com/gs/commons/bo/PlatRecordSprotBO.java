@@ -62,4 +62,8 @@ public class PlatRecordSprotBO {
 
     private String oddsFormat;
 
+    private String strong;
+
+    private String resultStatus;
+
 }
