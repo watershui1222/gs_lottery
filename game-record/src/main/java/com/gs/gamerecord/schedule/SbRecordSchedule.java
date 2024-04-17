@@ -13,14 +13,15 @@ import com.gs.commons.entity.SbRecord;
 import com.gs.commons.service.PlatRecordControlService;
 import com.gs.commons.service.SbRecordService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 皇冠定时任务
@@ -60,20 +61,8 @@ public class SbRecordSchedule {
 
         if (sb != null) {
             log.info("沙巴---拉单开始[{}]-[{}]", DateUtil.formatDateTime(sb.getBeginTime()), DateUtil.formatDateTime(sb.getEndTime()));
-            /**
-             * 昨天的  只能一天一天的查询 为防止每天的最后一段时间的单漏掉 这里只能获取昨天 和 今天的
-             */
-            Date yesterday = DateUtil.offsetHour(sb.getEndTime(), -36);//美东时间
-            Date beginYes = DateUtil.beginOfDay(yesterday);
-            Date endYes = DateUtil.endOfDay(yesterday);
-            getRecord(beginYes, endYes);
-
-            /**
-             * 今天的
-             */
-            Date today = DateUtil.offsetHour(sb.getEndTime(), -12);
-            Date beginToday = DateUtil.beginOfDay(today);
-            Date endToday = DateUtil.endOfDay(today);
+            Date beginToday = DateUtil.beginOfDay(sb.getBeginTime());
+            Date endToday = DateUtil.endOfDay(sb.getEndTime());
             getRecord(beginToday, endToday);
 
             log.info("沙巴---拉单完成[{}]-[{}]", DateUtil.formatDateTime(sb.getBeginTime()), DateUtil.formatDateTime(sb.getEndTime()));
@@ -81,8 +70,8 @@ public class SbRecordSchedule {
             if (DateUtil.compare(now, sb.getEndTime()) == 1) {
                 platRecordControlService.update(
                         new LambdaUpdateWrapper<PlatRecordControl>()
-                                .set(PlatRecordControl::getBeginTime, sb.getEndTime())
-                                .set(PlatRecordControl::getEndTime, DateUtil.offsetMinute(sb.getEndTime(), 60))
+                                .set(PlatRecordControl::getBeginTime, DateUtil.beginOfDay(now))
+                                .set(PlatRecordControl::getEndTime, DateUtil.endOfDay(now))
                                 .eq(PlatRecordControl::getPlatCode, "sb")
                 );
             }
@@ -91,14 +80,15 @@ public class SbRecordSchedule {
 
     /**
      * 拉取注单
+     *
      * @return
      */
-    public void getRecord(Date beginTime, Date endTime){
+    public void getRecord(Date beginTime, Date endTime) {
         String apiUrlStr = this.apiUrl + "/GetBetDetailByTimeframe";
         String vendor_id = this.vendorID;//厂商标识符
         String end_date = DateUtil.format(endTime, "yyyy-MM-dd'T'HH:mm:ss");
         String start_date = DateUtil.format(beginTime, "yyyy-MM-dd'T'HH:mm:ss");
-        int time_type = 2;
+        int time_type = 1;
         JSONObject param = new JSONObject();
         param.put("vendor_id", vendor_id);
         param.put("start_date", start_date);
@@ -107,18 +97,18 @@ public class SbRecordSchedule {
         String result = HttpUtil.post(apiUrlStr, param);
         JSONObject resJSON = JSONObject.parseObject(result);
         int error_code = resJSON.getIntValue("error_code");
-        if(error_code == 0){
+        if (error_code == 0) {
             JSONObject data = resJSON.getJSONObject("Data");
             JSONArray betDetails = data.getJSONArray("BetDetails");
-            if(CollUtil.isNotEmpty(betDetails)){
+            if (CollUtil.isNotEmpty(betDetails)) {
                 List<SbRecord> list = new ArrayList<>();
-                for (Object obj:betDetails) {
-                    JSONObject recordJSON = (JSONObject) obj;
+                for (int i = 0; i < betDetails.size(); i++) {
+                    JSONObject recordJSON = betDetails.getJSONObject(i);
                     SbRecord record = new SbRecord();
                     //判断是不是本平台用户
                     String ownerUsername = recordJSON.getString("vendor_member_id");
                     String subOwnerStr = ownerUsername.substring(0, 2);
-                    if(!StrUtil.equals(subOwnerStr, this.owner)){
+                    if (!StrUtil.equals(subOwnerStr, this.owner)) {
                         continue;
                     }
                     String username = ownerUsername.substring(2);
@@ -127,26 +117,24 @@ public class SbRecordSchedule {
                     record.setOrderNo(recordJSON.getString("trans_id"));
                     record.setIsLive(recordJSON.getInteger("islive"));
                     JSONArray bettypename = recordJSON.getJSONArray("bettypename");
-                    String bettypenameCN = bettypename.stream().filter(t -> ((JSONObject) t).getString("lang").equals("cs")).map(t -> ((JSONObject) t).getString("name")).distinct().collect(Collectors.joining());
-                    if(!StrUtil.equals(bettypenameCN, "串关")){
+                    String bettypenameCN = getCnName(bettypename);
+                    String betType = recordJSON.getString("bet_type");
+                    // 29=串关
+                    if (!StringUtils.equals("29", betType)) {
                         JSONArray sportName = recordJSON.getJSONArray("sportname");
-                        String sportNameCN = sportName.stream().filter(t -> ((JSONObject) t).getString("lang").equals("cs")).map(t -> ((JSONObject) t).getString("name")).distinct().collect(Collectors.joining());
-                        record.setGameName(sportNameCN);
+                        record.setGameName(getCnName(sportName));
                         JSONArray hometeamname = recordJSON.getJSONArray("hometeamname");
-                        String hometeamnameCN = hometeamname.stream().filter(t -> ((JSONObject) t).getString("lang").equals("cs")).map(t -> ((JSONObject) t).getString("name")).distinct().collect(Collectors.joining());
-                        record.setTnameHome(hometeamnameCN);
+                        record.setTnameHome(getCnName(hometeamname));
                         JSONArray awayteamname = recordJSON.getJSONArray("awayteamname");
-                        String awayteamnameCN = awayteamname.stream().filter(t -> ((JSONObject) t).getString("lang").equals("cs")).map(t -> ((JSONObject) t).getString("name")).distinct().collect(Collectors.joining());
-                        record.setTnameAway(awayteamnameCN);
+                        record.setTnameAway(getCnName(awayteamname));
                         JSONArray leaguename = recordJSON.getJSONArray("leaguename");
-                        String leaguenameCN = leaguename.stream().filter(t -> ((JSONObject) t).getString("lang").equals("cs")).map(t -> ((JSONObject) t).getString("name")).distinct().collect(Collectors.joining());
-                        record.setLeague(leaguenameCN);
+                        record.setLeague(getCnName(leaguename));
                         String home_score = recordJSON.getString("home_score");
                         String away_score = recordJSON.getString("away_score");
                         record.setResultScore(home_score + ":" + away_score);
-                        record.setWtype(record.getIsLive() == 1?"滚球":"其他" + bettypenameCN);
+                        record.setWtype(record.getIsLive() == 1 ? "滚球" : "其他" + bettypenameCN);
                         record.setRtype(bettypenameCN);
-                    }else{
+                    } else {
                         record.setGameName(bettypenameCN);
                         record.setWtype(bettypenameCN);
                     }
@@ -158,11 +146,11 @@ public class SbRecordSchedule {
                     record.setBetTime(DateUtil.offsetHour(transaction_time, 12));
                     record.setSettleStatus(0);//默认未结算
                     String settle = recordJSON.getString("settlement_time");
-                    if(StrUtil.isNotBlank(settle) && !StrUtil.equals("settle", "null")){
+                    if (StrUtil.isNotBlank(settle) && !StrUtil.equals("settle", "null")) {
                         Date settlement_time = DateUtil.parse(settle, "yyyy-MM-dd'T'HH:mm:ss.SSS");
                         record.setSettleTime(DateUtil.offsetHour(settlement_time, 12));
                         record.setSettleStatus(1);
-                    }else{
+                    } else {
                         continue;
                     }
                     record.setResultStatus(recordJSON.getString("ticket_status"));
@@ -173,10 +161,22 @@ public class SbRecordSchedule {
                     record.setUpdateTime(new Date());
                     list.add(record);
                 }
-                if(CollUtil.isNotEmpty(list)){
+                if (CollUtil.isNotEmpty(list)) {
                     sbRecordService.batchInsertOrUpdate(list);
                 }
             }
         }
+    }
+
+
+    private String getCnName(JSONArray array) {
+        for (int i = 0; i < array.size(); i++) {
+            JSONObject jsonObject = array.getJSONObject(i);
+            String lang = jsonObject.getString("lang");
+            if (StringUtils.equals(lang, "cs")) {
+                return jsonObject.getString("name");
+            }
+        }
+        return "未知";
     }
 }
