@@ -34,6 +34,7 @@
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="matchDatetime" column="match_datetime" jdbcType="TIMESTAMP"/>
             <result property="betContent" column="bet_content" jdbcType="VARCHAR"/>
+            <result property="score" column="score" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -46,7 +47,7 @@
         result_score,odds_format,parlaynum,
         parlaysub,raw_data,resettlementinfo,
         is_live,create_time,update_time,
-        match_datetime,bet_content
+        match_datetime,bet_content,score
     </sql>
 
     <insert id="batchInsertOrUpdate" parameterType="java.util.List">
@@ -59,7 +60,7 @@
         settle_status,result_status,result_score,
         odds_format,parlaynum,parlaysub,
         raw_data,resettlementinfo,is_live,
-        create_time,update_time,match_datetime,bet_content
+        create_time,update_time,match_datetime,bet_content,score
         )
         values
         <foreach collection="list" item="i" separator=",">
@@ -67,7 +68,7 @@
             #{i.userName}, #{i.platUserName}, #{i.orderNo}, #{i.gameName}, #{i.wtype}, #{i.rtype}, #{i.tnameHome}, #{i.tnameAway}, #{i.league}, #{i.ioratio},
             #{i.effectiveBet}, #{i.allBet}, #{i.profit}, #{i.betTime}, #{i.settleTime},#{i.settleStatus},
             #{i.resultStatus},#{i.resultScore},#{i.oddsFormat}, #{i.parlaynum},#{i.parlaysub},#{i.rawData},#{i.resettlementinfo},#{i.isLive},#{i.createTime},#{i.updateTime},
-            #{i.matchDatetime},#{i.betContent}
+            #{i.matchDatetime},#{i.betContent},#{i.score}
             )
         </foreach>
         ON DUPLICATE KEY UPDATE
@@ -85,6 +86,7 @@
         resettlementinfo = values(resettlementinfo),
         update_time = values(update_time),
         match_datetime = values(match_datetime),
-        bet_content = values(bet_content)
+        bet_content = values(bet_content),
+        score = values(score)
     </insert>
 </mapper>

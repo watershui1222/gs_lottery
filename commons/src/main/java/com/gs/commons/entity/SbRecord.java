@@ -190,6 +190,12 @@ public class SbRecord implements Serializable {
     @TableField(value = "bet_content")
     private String betContent;
 
+    /**
+     * 下注时比分
+     */
+    @TableField(value = "score")
+    private String score;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

@@ -149,7 +149,7 @@ public class SbRecordSchedule {
                         String home_score = recordJSON.getString("home_score");
                         String away_score = recordJSON.getString("away_score");
                         if (StringUtils.isNotBlank(home_score) && StringUtils.isNotBlank(away_score)) {
-                            record.setResultScore(home_score + ":" + away_score);
+                            record.setScore(home_score + ":" + away_score);
                         }
                         record.setWtype(record.getIsLive() == 1 ? "滚球" : "");
                         record.setRtype(bettypenameCN);
