@@ -85,11 +85,11 @@ public class Fc3dUtil {
         }  else if (StringUtils.equals(order.getPlayCode(), "2dhz_bsh")) {
             check2dhz(order, NumberUtil.add(resultArr[0], resultArr[1]).intValue());
         } else if (StringUtils.equals(order.getPlayCode(), "2dhz_sghw")) {
-            checksghw(order, NumberUtil.add(resultArr[1], resultArr[2]).intValue());
+            checksghwNum(order, NumberUtil.add(resultArr[1], resultArr[2]).intValue());
         } else if (StringUtils.equals(order.getPlayCode(), "2dhz_bghw")) {
-            checksghw(order, NumberUtil.add(resultArr[0], resultArr[2]).intValue());
+            checksghwNum(order, NumberUtil.add(resultArr[0], resultArr[2]).intValue());
         } else if (StringUtils.equals(order.getPlayCode(), "2dhz_bshw")) {
-            checksghw(order, NumberUtil.add(resultArr[0], resultArr[1]).intValue());
+            checksghwNum(order, NumberUtil.add(resultArr[0], resultArr[1]).intValue());
         } else if (StringUtils.equals(order.getPlayCode(), "3dhz_3dhz")) {
             check3dhz(order, NumberUtil.add(resultArr[0], resultArr[1], resultArr[2]).intValue());
         } else if (StringUtils.equals(order.getPlayCode(), "3dhz_3dhzw")) {
@@ -172,13 +172,79 @@ public class Fc3dUtil {
 
     }
 
-    private static void checksghw(LotteryOrder order, int sum) {
+    private static void checksghwNum(LotteryOrder order, int sum) {
         int weiShu = getWeiShu(String.valueOf(sum));
         if (StringUtils.equals(order.getBetContent(), String.valueOf(weiShu))) {
             order.setOrderStatus(1);
         } else {
             order.setOrderStatus(2);
         }
+    }
+
+    private static void checksghw(LotteryOrder order, int sum) {
+        int weiShu = getWeiShu(String.valueOf(sum));
+        if (StringUtils.equals(order.getBetContent(), "0点")) {
+            if (weiShu == 0) {
+                order.setOrderStatus(1);
+            } else {
+                order.setOrderStatus(2);
+            }
+        } else if (StringUtils.equals(order.getBetContent(), "1点")) {
+            if (weiShu == 1) {
+                order.setOrderStatus(1);
+            } else {
+                order.setOrderStatus(2);
+            }
+        } else if (StringUtils.equals(order.getBetContent(), "2点")) {
+            if (weiShu == 2) {
+                order.setOrderStatus(1);
+            } else {
+                order.setOrderStatus(2);
+            }
+        } else if (StringUtils.equals(order.getBetContent(), "3点")) {
+            if (weiShu == 3) {
+                order.setOrderStatus(1);
+            } else {
+                order.setOrderStatus(2);
+            }
+        } else if (StringUtils.equals(order.getBetContent(), "4点")) {
+            if (weiShu == 4) {
+                order.setOrderStatus(1);
+            } else {
+                order.setOrderStatus(2);
+            }
+        } else if (StringUtils.equals(order.getBetContent(), "5点")) {
+            if (weiShu == 5) {
+                order.setOrderStatus(1);
+            } else {
+                order.setOrderStatus(2);
+            }
+        } else if (StringUtils.equals(order.getBetContent(), "6点")) {
+            if (weiShu == 6) {
+                order.setOrderStatus(1);
+            } else {
+                order.setOrderStatus(2);
+            }
+        } else if (StringUtils.equals(order.getBetContent(), "7点")) {
+            if (weiShu == 7) {
+                order.setOrderStatus(1);
+            } else {
+                order.setOrderStatus(2);
+            }
+        } else if (StringUtils.equals(order.getBetContent(), "8点")) {
+            if (weiShu == 8) {
+                order.setOrderStatus(1);
+            } else {
+                order.setOrderStatus(2);
+            }
+        } else if (StringUtils.equals(order.getBetContent(), "9点")) {
+            if (weiShu == 9) {
+                order.setOrderStatus(1);
+            } else {
+                order.setOrderStatus(2);
+            }
+        }
+
     }
 
 
