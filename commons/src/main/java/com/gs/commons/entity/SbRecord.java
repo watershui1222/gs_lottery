@@ -47,13 +47,13 @@ public class SbRecord implements Serializable {
     private String gameName;
 
     /**
-     * 玩法
+     * 滚球 非滚球
      */
     @TableField(value = "wtype")
     private String wtype;
 
     /**
-     * 玩法结果
+     * 玩法结果bettypename
      */
     @TableField(value = "rtype")
     private String rtype;
@@ -177,6 +177,18 @@ public class SbRecord implements Serializable {
      */
     @TableField(value = "update_time")
     private Date updateTime;
+
+    /**
+     * 开赛时间
+     */
+    @TableField(value = "match_datetime")
+    private Date matchDatetime;
+
+    /**
+     * 下注内容
+     */
+    @TableField(value = "bet_content")
+    private String betContent;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

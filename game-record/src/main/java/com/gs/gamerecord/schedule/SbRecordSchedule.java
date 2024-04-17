@@ -2,6 +2,7 @@ package com.gs.gamerecord.schedule;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSONArray;
@@ -12,6 +13,7 @@ import com.gs.commons.entity.PlatRecordControl;
 import com.gs.commons.entity.SbRecord;
 import com.gs.commons.service.PlatRecordControlService;
 import com.gs.commons.service.SbRecordService;
+import com.gs.gamerecord.utils.SbConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +52,7 @@ public class SbRecordSchedule {
     private SbRecordService sbRecordService;
 
 
-    @Scheduled(cron = "0 0/1 * * * ?")
+    @Scheduled(cron = "0/30 * * * * ?")
     public void sbRecord() throws Exception {
         Date now = new Date();
         PlatRecordControl sb = platRecordControlService.getOne(
@@ -68,6 +70,13 @@ public class SbRecordSchedule {
             log.info("沙巴---拉单完成[{}]-[{}]", DateUtil.formatDateTime(sb.getBeginTime()), DateUtil.formatDateTime(sb.getEndTime()));
             // 如果当前时间大于结束时间，更新拉取时间范围
             if (DateUtil.compare(now, sb.getEndTime()) == 1) {
+//                platRecordControlService.update(
+//                        new LambdaUpdateWrapper<PlatRecordControl>()
+//                                .set(PlatRecordControl::getBeginTime, sb.getEndTime())
+//                                .set(PlatRecordControl::getEndTime, DateUtil.offsetHour(sb.getEndTime(), 1))
+//                                .eq(PlatRecordControl::getPlatCode, "sb")
+//                );
+
                 platRecordControlService.update(
                         new LambdaUpdateWrapper<PlatRecordControl>()
                                 .set(PlatRecordControl::getBeginTime, DateUtil.beginOfDay(now))
@@ -116,45 +125,51 @@ public class SbRecordSchedule {
                     record.setPlatUserName(ownerUsername);
                     record.setOrderNo(recordJSON.getString("trans_id"));
                     record.setIsLive(recordJSON.getInteger("islive"));
+                    record.setMatchDatetime(recordJSON.getDate("match_datetime"));
+                    record.setBetContent(SbConstants.getBetContent(recordJSON));
                     JSONArray bettypename = recordJSON.getJSONArray("bettypename");
-                    String bettypenameCN = getCnName(bettypename);
+                    String bettypenameCN = SbConstants.getCnName(bettypename);
                     String betType = recordJSON.getString("bet_type");
                     // 29=串关
-                    if (!StringUtils.equals("29", betType)) {
-                        JSONArray sportName = recordJSON.getJSONArray("sportname");
-                        record.setGameName(getCnName(sportName));
-                        JSONArray hometeamname = recordJSON.getJSONArray("hometeamname");
-                        record.setTnameHome(getCnName(hometeamname));
-                        JSONArray awayteamname = recordJSON.getJSONArray("awayteamname");
-                        record.setTnameAway(getCnName(awayteamname));
-                        JSONArray leaguename = recordJSON.getJSONArray("leaguename");
-                        record.setLeague(getCnName(leaguename));
-                        String home_score = recordJSON.getString("home_score");
-                        String away_score = recordJSON.getString("away_score");
-                        record.setResultScore(home_score + ":" + away_score);
-                        record.setWtype(record.getIsLive() == 1 ? "滚球" : "其他" + bettypenameCN);
-                        record.setRtype(bettypenameCN);
-                    } else {
+                    if (StringUtils.equals("29", betType)) {
                         record.setGameName(bettypenameCN);
                         record.setWtype(bettypenameCN);
+                        JSONArray parlayData = recordJSON.getJSONArray("ParlayData");
+                        record.setParlaynum(parlayData.size());
+                        record.setParlaysub(parlayData.toString());
+                    } else {
+                        JSONArray sportName = recordJSON.getJSONArray("sportname");
+                        record.setGameName(SbConstants.getCnName(sportName));
+                        JSONArray hometeamname = recordJSON.getJSONArray("hometeamname");
+                        record.setTnameHome(SbConstants.getCnName(hometeamname));
+                        JSONArray awayteamname = recordJSON.getJSONArray("awayteamname");
+                        record.setTnameAway(SbConstants.getCnName(awayteamname));
+                        JSONArray leaguename = recordJSON.getJSONArray("leaguename");
+                        record.setLeague(SbConstants.getCnName(leaguename));
+                        String home_score = recordJSON.getString("home_score");
+                        String away_score = recordJSON.getString("away_score");
+                        if (StringUtils.isNotBlank(home_score) && StringUtils.isNotBlank(away_score)) {
+                            record.setResultScore(home_score + ":" + away_score);
+                        }
+                        record.setWtype(record.getIsLive() == 1 ? "滚球" : "");
+                        record.setRtype(bettypenameCN);
+                        record.setOddsFormat(recordJSON.getString("hdp"));
                     }
                     record.setIoratio(recordJSON.getBigDecimal("odds"));
                     record.setEffectiveBet(recordJSON.getBigDecimal("stake"));
-                    record.setAllBet(record.getEffectiveBet());
+                    record.setAllBet(recordJSON.getBigDecimal("stake"));
                     record.setProfit(recordJSON.getBigDecimal("winlost_amount"));
-                    Date transaction_time = DateUtil.parse(recordJSON.getString("transaction_time"), "yyyy-MM-dd'T'HH:mm:ss.SSS");
+                    Date transaction_time = DateUtil.parse(recordJSON.getString("transaction_time"), "yyyy-MM-dd'T'HH:mm:ss");
                     record.setBetTime(DateUtil.offsetHour(transaction_time, 12));
-                    record.setSettleStatus(0);//默认未结算
                     String settle = recordJSON.getString("settlement_time");
-                    if (StrUtil.isNotBlank(settle) && !StrUtil.equals("settle", "null")) {
-                        Date settlement_time = DateUtil.parse(settle, "yyyy-MM-dd'T'HH:mm:ss.SSS");
+                    if (StrUtil.isNotBlank(settle)) {
+                        // 已结算
+                        Date settlement_time = DateUtil.parse(settle, "yyyy-MM-dd'T'HH:mm:ss");
                         record.setSettleTime(DateUtil.offsetHour(settlement_time, 12));
-                        record.setSettleStatus(1);
                     } else {
-                        continue;
+
                     }
                     record.setResultStatus(recordJSON.getString("ticket_status"));
-                    record.setParlaysub(recordJSON.getString("ParlayData"));
                     record.setRawData(recordJSON.toJSONString());
                     record.setResettlementinfo(recordJSON.getString("resettlementinfo"));
                     record.setCreateTime(new Date());
@@ -166,17 +181,5 @@ public class SbRecordSchedule {
                 }
             }
         }
-    }
-
-
-    private String getCnName(JSONArray array) {
-        for (int i = 0; i < array.size(); i++) {
-            JSONObject jsonObject = array.getJSONObject(i);
-            String lang = jsonObject.getString("lang");
-            if (StringUtils.equals(lang, "cs")) {
-                return jsonObject.getString("name");
-            }
-        }
-        return "未知";
     }
 }
