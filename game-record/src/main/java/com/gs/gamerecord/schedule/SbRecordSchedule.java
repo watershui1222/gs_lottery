@@ -70,19 +70,19 @@ public class SbRecordSchedule {
             log.info("沙巴---拉单完成[{}]-[{}]", DateUtil.formatDateTime(sb.getBeginTime()), DateUtil.formatDateTime(sb.getEndTime()));
             // 如果当前时间大于结束时间，更新拉取时间范围
             if (DateUtil.compare(now, sb.getEndTime()) == 1) {
-//                platRecordControlService.update(
-//                        new LambdaUpdateWrapper<PlatRecordControl>()
-//                                .set(PlatRecordControl::getBeginTime, sb.getEndTime())
-//                                .set(PlatRecordControl::getEndTime, DateUtil.offsetHour(sb.getEndTime(), 1))
-//                                .eq(PlatRecordControl::getPlatCode, "sb")
-//                );
-
                 platRecordControlService.update(
                         new LambdaUpdateWrapper<PlatRecordControl>()
-                                .set(PlatRecordControl::getBeginTime, DateUtil.beginOfDay(now))
-                                .set(PlatRecordControl::getEndTime, DateUtil.endOfDay(now))
+                                .set(PlatRecordControl::getBeginTime, sb.getEndTime())
+                                .set(PlatRecordControl::getEndTime, DateUtil.offsetHour(sb.getEndTime(), 1))
                                 .eq(PlatRecordControl::getPlatCode, "sb")
                 );
+
+//                platRecordControlService.update(
+//                        new LambdaUpdateWrapper<PlatRecordControl>()
+//                                .set(PlatRecordControl::getBeginTime, DateUtil.beginOfDay(now))
+//                                .set(PlatRecordControl::getEndTime, DateUtil.endOfDay(now))
+//                                .eq(PlatRecordControl::getPlatCode, "sb")
+//                );
             }
         }
     }
@@ -125,7 +125,8 @@ public class SbRecordSchedule {
                     record.setPlatUserName(ownerUsername);
                     record.setOrderNo(recordJSON.getString("trans_id"));
                     record.setIsLive(recordJSON.getInteger("islive"));
-                    record.setMatchDatetime(recordJSON.getDate("match_datetime"));
+                    Date matchDatetime = recordJSON.getDate("match_datetime");
+                    record.setMatchDatetime(DateUtil.offsetHour(matchDatetime, 12));
                     record.setBetContent(SbConstants.getBetContent(recordJSON));
                     JSONArray bettypename = recordJSON.getJSONArray("bettypename");
                     String bettypenameCN = SbConstants.getCnName(bettypename);
