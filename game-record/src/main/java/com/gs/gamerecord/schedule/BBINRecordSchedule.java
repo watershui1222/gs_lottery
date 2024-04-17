@@ -68,7 +68,7 @@ public class BBINRecordSchedule {
             //需要将时间转换成美东时间
             Date mdBegin = DateUtil.offsetHour(bbinlive.getBeginTime(), -12);
             Date mdEnd = DateUtil.offsetHour(bbinlive.getEndTime(), -12);
-            mdEnd = DateUtil.offsetMinute(mdEnd, -5);
+            mdEnd = DateUtil.offsetMinute(mdEnd, -10);
             getLiveRecord(mdBegin, mdEnd);
             log.info("BBIN视讯---拉单完成[{}]-[{}]", DateUtil.formatDateTime(bbinlive.getBeginTime()), DateUtil.formatDateTime(bbinlive.getEndTime()));
             // 如果当前时间大于结束时间，更新拉取时间范围
@@ -181,7 +181,7 @@ public class BBINRecordSchedule {
             log.info("BBIN电子---拉单开始[{}]-[{}]", DateUtil.formatDateTime(bbinele.getBeginTime()), DateUtil.formatDateTime(bbinele.getEndTime()));
             Date mdBegin = DateUtil.offsetHour(bbinele.getBeginTime(), -12);
             Date mdEnd = DateUtil.offsetHour(bbinele.getEndTime(), -12);
-            mdEnd = DateUtil.offsetMinute(mdEnd, -5);
+            mdEnd = DateUtil.offsetMinute(mdEnd, -10);
             getEleGameRecord(mdBegin, mdEnd);
             log.info("BBIN电子---拉单完成[{}]-[{}]", DateUtil.formatDateTime(bbinele.getBeginTime()), DateUtil.formatDateTime(bbinele.getEndTime()));
             // 如果当前时间大于结束时间，更新拉取时间范围

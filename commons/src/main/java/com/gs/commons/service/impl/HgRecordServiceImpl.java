@@ -49,12 +49,12 @@ public class HgRecordServiceImpl extends ServiceImpl<HgRecordMapper, HgRecord>
         wrapper.eq(StringUtils.isNotBlank(userName), HgRecord::getUserName, userName);
 
         Date startTime = MapUtil.getDate(params, "startTime");
-        wrapper.ge(startTime != null, HgRecord::getSettleTime, startTime);
+        wrapper.ge(startTime != null, HgRecord::getBetTime, startTime);
 
         Date endTime = MapUtil.getDate(params, "endTime");
-        wrapper.le(endTime != null, HgRecord::getSettleTime, endTime);
+        wrapper.le(endTime != null, HgRecord::getBetTime, endTime);
 
-        wrapper.orderByDesc(HgRecord::getSettleTime);
+        wrapper.orderByDesc(HgRecord::getBetTime);
         IPage<HgRecord> page = this.page(
                 new Query<HgRecord>().getPage(params),
                 wrapper);
