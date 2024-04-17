@@ -130,6 +130,7 @@ public class HgRecordSchedule {
                 page++;
             }while(page <= wagerTotalpage);
             if (CollUtil.isNotEmpty(recordList)) {
+                log.info("皇冠未结算---注单[{}]个", recordList.size());
                 hgRecordService.batchInsertOrUpdate(recordList);
             }
         }

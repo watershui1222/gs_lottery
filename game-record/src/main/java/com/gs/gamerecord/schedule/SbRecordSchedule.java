@@ -182,6 +182,7 @@ public class SbRecordSchedule {
                     list.add(record);
                 }
                 if (CollUtil.isNotEmpty(list)) {
+                    log.info("SB---注单[{}]个", list.size());
                     sbRecordService.batchInsertOrUpdate(list);
                 }
             }

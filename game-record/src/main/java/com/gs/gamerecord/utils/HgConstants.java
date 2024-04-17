@@ -7,6 +7,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.gs.commons.entity.HgRecord;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +64,10 @@ public class HgConstants {
             hgRecord.setScore(wager.getString("score"));
             hgRecord.setResultScore(wager.getString("result_score"));
             hgRecord.setResultStatus(wager.getString("result"));
-            hgRecord.setSettleTime(DateUtil.offsetHour(wager.getDate("resultdate"), 12));
+            Date resultdate = wager.getDate("resultdate");
+            if (resultdate != null) {
+                hgRecord.setSettleTime(DateUtil.offsetHour(resultdate, 12));
+            }
             hgRecord.setSettleStatus(wager.getIntValue("settle"));
             hgRecord.setRawData(wager.toJSONString());
             recordList.add(hgRecord);
