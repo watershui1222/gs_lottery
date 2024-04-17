@@ -54,7 +54,7 @@ public class Fc3dUtil {
         } else if (StringUtils.equals(order.getPlayCode(), "zsp_bs")) {
             checkBo(order, sum);
         } else if (StringUtils.equals(order.getPlayCode(), "zsp_lhh")) {
-            checklhh(order, NumberUtils.toInt(resultArr[0]), NumberUtils.toInt(resultArr[1]));
+            checklhh(order, NumberUtils.toInt(resultArr[0]), NumberUtils.toInt(resultArr[2]));
         } else if (StringUtils.equals(order.getPlayCode(), "zsp_zjh")) {
             checkzjh(order, resultArr);
         }else if (StringUtils.equals(order.getPlayCode(), "dwdd_b")) {
