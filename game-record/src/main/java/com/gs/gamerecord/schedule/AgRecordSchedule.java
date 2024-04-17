@@ -16,6 +16,7 @@ import com.gs.gamerecord.utils.AgConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
@@ -53,6 +54,7 @@ public class AgRecordSchedule {
      * BBIN视讯拉单任务
      * @throws Exception
      */
+    @Async
     @Scheduled(cron = "0/50 * * * * ?")
     public void agliveRecord() throws Exception {
         Date now = new Date();
@@ -85,6 +87,7 @@ public class AgRecordSchedule {
      * ag xin电子拉单任务
      * @throws Exception
      */
+    @Async
     @Scheduled(cron = "0/20 * * * * ?")
     public void agxingameRecord() throws Exception {
         Date now = new Date();
@@ -117,6 +120,7 @@ public class AgRecordSchedule {
      * ag yoplay电子拉单任务
      * @throws Exception
      */
+    @Async
     @Scheduled(cron = "0/30 * * * * ?")
     public void agyoplaygameRecord() throws Exception {
         Date now = new Date();
@@ -149,6 +153,7 @@ public class AgRecordSchedule {
      * AG捕鱼拉单任务
      * @throws Exception
      */
+    @Async
     @Scheduled(cron = "0/40 * * * * ?")
     public void agfishgameRecord() throws Exception {
         Date now = new Date();

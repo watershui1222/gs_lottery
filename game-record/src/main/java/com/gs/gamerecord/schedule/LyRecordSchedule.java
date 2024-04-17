@@ -18,6 +18,7 @@ import com.gs.gamerecord.utils.LyConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import java.util.ArrayList;
@@ -52,6 +53,7 @@ public class LyRecordSchedule {
     @Autowired
     private LyRecordService lyRecordService;
 
+    @Async
     @Scheduled(cron = "0/30 * * * * ?")
     public void lyRecord() throws Exception {
         Date now = new Date();
