@@ -17,7 +17,7 @@ public class PlatRecordSprotBO {
     /**
      * 开奖结果
      */
-    private String openResult;
+//    private String openResult;
 
     /**
      * 下注内容
@@ -61,5 +61,9 @@ public class PlatRecordSprotBO {
     private String resultScore;
 
     private String oddsFormat;
+
+    private String strong;
+
+    private String resultStatus;
 
 }

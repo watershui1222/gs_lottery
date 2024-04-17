@@ -84,16 +84,17 @@ public class SbRecordServiceImpl extends ServiceImpl<SbRecordMapper, SbRecord>
                         recordSport.setTnameAway(awayteamnameCN);
                         String home_score = sub.getString("home_score");
                         String away_score = sub.getString("away_score");
-                        recordSport.setResultScore(home_score + ":" + away_score);
+                        if (StrUtil.isAllNotBlank(home_score, away_score)){
+                            recordSport.setScore(home_score + ":" + away_score);
+                        }
                         JSONArray leaguename = sub.getJSONArray("leaguename");
                         String leaguenameCN = leaguename.stream().filter(t -> ((JSONObject) t).getString("lang").equals("cs")).map(t -> ((JSONObject) t).getString("name")).distinct().collect(Collectors.joining());
                         recordSport.setLeague(leaguenameCN);
                         JSONArray sportname = sub.getJSONArray("sportname");
                         String sportnameCN = sportname.stream().filter(t -> ((JSONObject) t).getString("lang").equals("cs")).map(t -> ((JSONObject) t).getString("name")).distinct().collect(Collectors.joining());
                         recordSport.setGameName(sportnameCN);
-//                        recordSport.setOddsFormat(sub.getString("oddsFormat"));
-//                        recordSport.setOpenResult();
-//                        recordSport.setOrderContent();
+                        recordSport.setOddsFormat(sub.getString("hdp"));
+                        recordSport.setOrderContent(sub.getString("betContent"));
                         sportDetailList.add(recordSport);
                     }
                     bo.setSportDetailList(sportDetailList);
@@ -105,10 +106,12 @@ public class SbRecordServiceImpl extends ServiceImpl<SbRecordMapper, SbRecord>
                     recordSport.setOdds(sbRecord.getIoratio());
                     recordSport.setTnameHome(sbRecord.getTnameHome());
                     recordSport.setTnameAway(sbRecord.getTnameAway());
-                    recordSport.setResultScore(sbRecord.getResultScore());
+//                    recordSport.setResultScore(sbRecord.getResultScore());
                     recordSport.setLeague(sbRecord.getLeague());
                     recordSport.setGameName(sbRecord.getGameName());
                     recordSport.setOddsFormat(sbRecord.getOddsFormat());
+                    recordSport.setScore(sbRecord.getScore());
+                    recordSport.setOrderContent(sbRecord.getBetContent());
                     bo.setSportDetail(recordSport);
                 }
                 platRecordBOList.add(bo);
