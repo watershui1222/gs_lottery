@@ -59,6 +59,10 @@ public class LotteryClient {
     private OpenresultHklhcService openresultHklhcService;
     @Autowired
     private OpenresultPl3Service openresultPl3Service;
+    @Autowired
+    private OpenresultGs1mfc3dService openresultGs1mfc3dService;
+    @Autowired
+    private OpenresultGs1mpl3Service openresultGs1mpl3Service;
 
     /**
      * 校验订单输赢
@@ -300,6 +304,28 @@ public class LotteryClient {
                 BeanUtil.copyPropertiesIgnoreNull(list.get(0), lotteryCurrQsBO);
                 return lotteryCurrQsBO;
             }
+        } else if (StringUtils.equals(lotteryCode, LotteryCodeEnum.GS1MPL3.getLotteryCode())) {
+            LambdaQueryWrapper<OpenresultGs1mpl3> wrapper = new LambdaQueryWrapper<OpenresultGs1mpl3>()
+                    .le(OpenresultGs1mpl3::getOpenTime, now)
+                    .gt(OpenresultGs1mpl3::getOpenResultTime, now)
+                    .orderByDesc(OpenresultGs1mpl3::getOpenResultTime);
+            List<OpenresultGs1mpl3> list = openresultGs1mpl3Service.list(wrapper);
+            if (CollUtil.isNotEmpty(list)) {
+                LotteryCurrQsBO lotteryCurrQsBO = new LotteryCurrQsBO();
+                BeanUtil.copyPropertiesIgnoreNull(list.get(0), lotteryCurrQsBO);
+                return lotteryCurrQsBO;
+            }
+        } else if (StringUtils.equals(lotteryCode, LotteryCodeEnum.GS1MFC3D.getLotteryCode())) {
+            LambdaQueryWrapper<OpenresultGs1mfc3d> wrapper = new LambdaQueryWrapper<OpenresultGs1mfc3d>()
+                    .le(OpenresultGs1mfc3d::getOpenTime, now)
+                    .gt(OpenresultGs1mfc3d::getOpenResultTime, now)
+                    .orderByDesc(OpenresultGs1mfc3d::getOpenResultTime);
+            List<OpenresultGs1mfc3d> list = openresultGs1mfc3dService.list(wrapper);
+            if (CollUtil.isNotEmpty(list)) {
+                LotteryCurrQsBO lotteryCurrQsBO = new LotteryCurrQsBO();
+                BeanUtil.copyPropertiesIgnoreNull(list.get(0), lotteryCurrQsBO);
+                return lotteryCurrQsBO;
+            }
         }
         return null;
     }
@@ -501,6 +527,26 @@ public class LotteryClient {
                 BeanUtil.copyPropertiesIgnoreNull(page.getRecords().get(0), lotteryCurrQsBO);
                 return lotteryCurrQsBO;
             }
+        } else if (StringUtils.equals(lotteryCode, LotteryCodeEnum.GS1MPL3.getLotteryCode())) {
+            LambdaQueryWrapper<OpenresultGs1mpl3> wrapper = new LambdaQueryWrapper<OpenresultGs1mpl3>()
+                    .le(OpenresultGs1mpl3::getOpenResultTime, now)
+                    .orderByDesc(OpenresultGs1mpl3::getOpenResultTime);
+            Page<OpenresultGs1mpl3> page = openresultGs1mpl3Service.page(new Page<>(1, 1), wrapper);
+            if (CollUtil.isNotEmpty(page.getRecords())) {
+                LotteryCurrQsBO lotteryCurrQsBO = new LotteryCurrQsBO();
+                BeanUtil.copyPropertiesIgnoreNull(page.getRecords().get(0), lotteryCurrQsBO);
+                return lotteryCurrQsBO;
+            }
+        } else if (StringUtils.equals(lotteryCode, LotteryCodeEnum.GS1MFC3D.getLotteryCode())) {
+            LambdaQueryWrapper<OpenresultGs1mfc3d> wrapper = new LambdaQueryWrapper<OpenresultGs1mfc3d>()
+                    .le(OpenresultGs1mfc3d::getOpenResultTime, now)
+                    .orderByDesc(OpenresultGs1mfc3d::getOpenResultTime);
+            Page<OpenresultGs1mfc3d> page = openresultGs1mfc3dService.page(new Page<>(1, 1), wrapper);
+            if (CollUtil.isNotEmpty(page.getRecords())) {
+                LotteryCurrQsBO lotteryCurrQsBO = new LotteryCurrQsBO();
+                BeanUtil.copyPropertiesIgnoreNull(page.getRecords().get(0), lotteryCurrQsBO);
+                return lotteryCurrQsBO;
+            }
         }
         return null;
     }
@@ -678,6 +724,24 @@ public class LotteryClient {
             LambdaQueryWrapper<OpenresultPl3> wrapper = new LambdaQueryWrapper<OpenresultPl3>()
                     .eq(OpenresultPl3::getQs, qs);
             List<OpenresultPl3> list = openresultPl3Service.list(wrapper);
+            if (CollUtil.isNotEmpty(list)) {
+                LotteryCurrQsBO lotteryCurrQsBO = new LotteryCurrQsBO();
+                BeanUtil.copyPropertiesIgnoreNull(list.get(0), lotteryCurrQsBO);
+                return lotteryCurrQsBO;
+            }
+        } else if (StringUtils.equals(lotteryCode, LotteryCodeEnum.GS1MPL3.getLotteryCode())) {
+            LambdaQueryWrapper<OpenresultGs1mpl3> wrapper = new LambdaQueryWrapper<OpenresultGs1mpl3>()
+                    .eq(OpenresultGs1mpl3::getQs, qs);
+            List<OpenresultGs1mpl3> list = openresultGs1mpl3Service.list(wrapper);
+            if (CollUtil.isNotEmpty(list)) {
+                LotteryCurrQsBO lotteryCurrQsBO = new LotteryCurrQsBO();
+                BeanUtil.copyPropertiesIgnoreNull(list.get(0), lotteryCurrQsBO);
+                return lotteryCurrQsBO;
+            }
+        } else if (StringUtils.equals(lotteryCode, LotteryCodeEnum.GS1MFC3D.getLotteryCode())) {
+            LambdaQueryWrapper<OpenresultGs1mfc3d> wrapper = new LambdaQueryWrapper<OpenresultGs1mfc3d>()
+                    .eq(OpenresultGs1mfc3d::getQs, qs);
+            List<OpenresultGs1mfc3d> list = openresultGs1mfc3dService.list(wrapper);
             if (CollUtil.isNotEmpty(list)) {
                 LotteryCurrQsBO lotteryCurrQsBO = new LotteryCurrQsBO();
                 BeanUtil.copyPropertiesIgnoreNull(list.get(0), lotteryCurrQsBO);
