@@ -11,6 +11,102 @@ public class SbConstants {
     public static final Map<String, String> BET_CONTENT = new HashMap<>();
 
     static {
+        BET_CONTENT.put("2_h", "单");
+        BET_CONTENT.put("2_c", "双");
+        BET_CONTENT.put("3_h", "大");
+        BET_CONTENT.put("3_a", "小");
+        BET_CONTENT.put("8_h", "大");
+        BET_CONTENT.put("8_a", "小");
+        BET_CONTENT.put("12_h", "单");
+        BET_CONTENT.put("12_a", "双");
+        BET_CONTENT.put("13_hy", "主队没失球");
+        BET_CONTENT.put("13_hn", "主队有失球");
+        BET_CONTENT.put("13_ay", "客队没失球");
+        BET_CONTENT.put("13_an", "客队有失球");
+        BET_CONTENT.put("18_o", "大");
+        BET_CONTENT.put("18_u", "小");
+        BET_CONTENT.put("24_1x", "主队赢/和局");
+        BET_CONTENT.put("24_12", "主队赢/客队赢");
+        BET_CONTENT.put("24_2x", "客队赢/和局");
+        BET_CONTENT.put("26_o", "一方得分");
+        BET_CONTENT.put("26_n", "都没得分");
+        BET_CONTENT.put("26_b", "双方都得分");
+        BET_CONTENT.put("85_h", "大");
+        BET_CONTENT.put("85_a", "小");
+        BET_CONTENT.put("86_h", "单");
+        BET_CONTENT.put("86_a", "双");
+        BET_CONTENT.put("89_1:1", "大,单");
+        BET_CONTENT.put("89_1:2", "大,双");
+        BET_CONTENT.put("89_2:1", "小,单");
+        BET_CONTENT.put("89_2:2", "小,双");
+        BET_CONTENT.put("91_r", "红");
+        BET_CONTENT.put("91_b", "蓝");
+        BET_CONTENT.put("123_h", "和局");
+        BET_CONTENT.put("123_a", "不是和局");
+        BET_CONTENT.put("127_1:1", "主队最先进球");
+        BET_CONTENT.put("127_1:2", "主队最后进球");
+        BET_CONTENT.put("127_2:1", "客队最先进球");
+        BET_CONTENT.put("127_2:2", "客队最后进球");
+        BET_CONTENT.put("127_0:0", "没有任何进球");
+        BET_CONTENT.put("128_oo", "半场单, 全场单");
+        BET_CONTENT.put("128_oe", "半场单, 全场双");
+        BET_CONTENT.put("128_eo", "半场双, 全场单");
+        BET_CONTENT.put("128_ee", "半场双, 全场双");
+        BET_CONTENT.put("133_y", "是");
+        BET_CONTENT.put("133_n", "否");
+        BET_CONTENT.put("438_y", "是");
+        BET_CONTENT.put("438_n", "否");
+        BET_CONTENT.put("134_y", "是");
+        BET_CONTENT.put("134_n", "否");
+        BET_CONTENT.put("439_y", "是");
+        BET_CONTENT.put("439_n", "否");
+        BET_CONTENT.put("135_y", "是");
+        BET_CONTENT.put("135_n", "否");
+        BET_CONTENT.put("140_1h", "上半场");
+        BET_CONTENT.put("140_2n", "下半场");
+        BET_CONTENT.put("140_tie", "一样多");
+        BET_CONTENT.put("442_1h", "上半场");
+        BET_CONTENT.put("442_2n", "下半场");
+        BET_CONTENT.put("442_tie", "一样多");
+        BET_CONTENT.put("141_1h", "上半场");
+        BET_CONTENT.put("141_2n", "下半场");
+        BET_CONTENT.put("141_tie", "一样多");
+        BET_CONTENT.put("143_1h", "上半场");
+        BET_CONTENT.put("143_2n", "下半场");
+        BET_CONTENT.put("143_tie", "一样多");
+        BET_CONTENT.put("142_1h", "上半场");
+        BET_CONTENT.put("142_2n", "下半场");
+        BET_CONTENT.put("142_tie", "一样多");
+        BET_CONTENT.put("444_1h", "上半场");
+        BET_CONTENT.put("444_2n", "下半场");
+        BET_CONTENT.put("444_tie", "一样多");
+        BET_CONTENT.put("1203_h", "大");
+        BET_CONTENT.put("1203_a", "小");
+        BET_CONTENT.put("1206_0", "零进球");
+        BET_CONTENT.put("1206_1", "进 1 球");
+        BET_CONTENT.put("1206_2", "进 2 球");
+        BET_CONTENT.put("1206_3", "进 3 球");
+        BET_CONTENT.put("1206_4", "进 4 球");
+        BET_CONTENT.put("1235_1", "左边球员拿下局数 : 右边球员得 0 分");
+        BET_CONTENT.put("1235_2", "左边球员拿下局数 : 右边球员得 15 分");
+        BET_CONTENT.put("1235_3", "左边球员拿下局数 : 右边球员得 30 分");
+        BET_CONTENT.put("1235_4", "左边球员拿下局数 : 右边球员得 40 分");
+        BET_CONTENT.put("1235_5", "左边球员得 0 分 : 右边球员拿下局数");
+        BET_CONTENT.put("1235_6", "左边球员得 15 分 : 右边球员拿下局数");
+        BET_CONTENT.put("1235_7", "左边球员得 30 分 : 右边球员拿下局数");
+        BET_CONTENT.put("1235_8", "左边球员得 40 分 : 右边球员拿下局数");
+        BET_CONTENT.put("156_o", "大");
+        BET_CONTENT.put("156_u", "小");
+        BET_CONTENT.put("1305_h", "单");
+        BET_CONTENT.put("1305_a", "双");
+        BET_CONTENT.put("1306_o", "大");
+        BET_CONTENT.put("1306_u", "小");
+        BET_CONTENT.put("1312_o", "大");
+        BET_CONTENT.put("1312_u", "小");
+        BET_CONTENT.put("1318_h", "单");
+        BET_CONTENT.put("1318_a", "双");
+        BET_CONTENT.put("157_h", "单");
+        BET_CONTENT.put("157_a", "双");
     }
 
     
@@ -624,7 +720,7 @@ public class SbConstants {
                 betContent = "无进球";
             }
         } else {
-            betContent = betTeam;
+            betContent = BET_CONTENT.getOrDefault(betType + "_" + betTeam, betTeam);
         }
         return betContent;
     }
