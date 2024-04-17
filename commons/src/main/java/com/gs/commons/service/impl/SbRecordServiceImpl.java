@@ -47,12 +47,12 @@ public class SbRecordServiceImpl extends ServiceImpl<SbRecordMapper, SbRecord>
         wrapper.eq(StringUtils.isNotBlank(userName), SbRecord::getUserName, userName);
 
         Date startTime = MapUtil.getDate(params, "startTime");
-        wrapper.ge(startTime != null, SbRecord::getSettleTime, startTime);
+        wrapper.ge(startTime != null, SbRecord::getBetTime, startTime);
 
         Date endTime = MapUtil.getDate(params, "endTime");
-        wrapper.le(endTime != null, SbRecord::getSettleTime, endTime);
+        wrapper.le(endTime != null, SbRecord::getBetTime, endTime);
 
-        wrapper.orderByDesc(SbRecord::getSettleTime);
+        wrapper.orderByDesc(SbRecord::getBetTime);
         IPage<SbRecord> page = this.page(
                 new Query<SbRecord>().getPage(params),
                 wrapper);
