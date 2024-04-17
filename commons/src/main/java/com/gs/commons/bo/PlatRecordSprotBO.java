@@ -17,7 +17,7 @@ public class PlatRecordSprotBO {
     /**
      * 开奖结果
      */
-    private String openResult;
+//    private String openResult;
 
     /**
      * 下注内容

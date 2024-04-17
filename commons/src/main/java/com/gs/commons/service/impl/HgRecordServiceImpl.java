@@ -84,8 +84,8 @@ public class HgRecordServiceImpl extends ServiceImpl<HgRecordMapper, HgRecord>
                         recordSport.setLeague(sub.getString("league"));
                         recordSport.setGameName(GAME_NAME.getOrDefault(sub.getString("wtype"), sub.getString("wtype")));
                         recordSport.setOddsFormat(sub.getString("oddsFormat"));
-                        String rtype = sub.getString("rtype");
-                        recordSport.setOpenResult(rtype);
+//                        String rtype = sub.getString("rtype");
+//                        recordSport.setOpenResult(rtype);
                         recordSport.setOrderContent(sub.getString("order"));
                         String strong = sub.getString("strong");
                         String strong1 = StrUtil.equals(strong, "H") ? recordSport.getTnameHome() :
@@ -108,7 +108,7 @@ public class HgRecordServiceImpl extends ServiceImpl<HgRecordMapper, HgRecord>
                     recordSport.setGameName(hgRecord.getGameName());
                     recordSport.setOddsFormat(hgRecord.getOddsFormat());
                     recordSport.setOrderContent(hgRecord.getOrderContent());
-                    recordSport.setOpenResult(hgRecord.getRtype());
+//                    recordSport.setOpenResult(hgRecord.getRtype());
                     String strong = StrUtil.equals(hgRecord.getStrong(), "H") ? hgRecord.getTnameHome() :
                             StrUtil.equals(hgRecord.getStrong(), "C") ? hgRecord.getTnameAway(): "";
                     recordSport.setStrong(strong);
