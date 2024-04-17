@@ -155,8 +155,14 @@ public class Fc3dUtil {
                     .map(Map.Entry::getKey).distinct()
                     .findFirst();
 
+
+            Optional<String> secondOptional = countMap.entrySet().stream()
+                    .filter(entry -> entry.getValue() == 1)
+                    .map(Map.Entry::getKey).distinct()
+                    .findFirst();
+
             List<String> betList = Arrays.asList(order.getBetContent().split(","));
-            if (firstOptional.isPresent() && CollUtil.contains(betList, firstOptional.get())) {
+            if (firstOptional.isPresent() && CollUtil.contains(betList, firstOptional.get()) && secondOptional.isPresent() && CollUtil.contains(betList, secondOptional.get())) {
                 order.setOrderStatus(1);
             } else {
                 order.setOrderStatus(2);
