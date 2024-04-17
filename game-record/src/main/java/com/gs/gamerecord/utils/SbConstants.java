@@ -54,7 +54,7 @@ public class SbConstants {
             } else if (StringUtils.equals(betTeam, "x")) {
                 betContent = "没有任何进球";
             }
-        } else if (StringUtils.equalsAny(betType,betType,"121")) {
+        } else if (StringUtils.equalsAny(betType,"121")) {
             if (StringUtils.equals(betTeam, "a")) {
                 betContent = getCnName(awayteamname);
             } else if (StringUtils.equals(betTeam, "x")) {
