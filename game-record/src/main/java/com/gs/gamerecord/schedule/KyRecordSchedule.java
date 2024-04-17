@@ -18,6 +18,7 @@ import com.gs.gamerecord.utils.KyConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import javax.crypto.Cipher;
@@ -55,6 +56,7 @@ public class KyRecordSchedule {
     @Autowired
     private KyRecordService kyRecordService;
 
+    @Async
     @Scheduled(cron = "0/20 * * * * ?")
     public void kyRecord() throws Exception {
         Date now = new Date();
@@ -140,6 +142,7 @@ public class KyRecordSchedule {
                 kyRecords.add(kyRecord);
             }
             if (CollUtil.isNotEmpty(kyRecords)) {
+                log.info("KY---注单[{}]个", kyRecords.size());
                 kyRecordService.batchInsertOrUpdate(kyRecords);
             }
         }

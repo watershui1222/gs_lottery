@@ -2,9 +2,9 @@ package com.gs.gamerecord.schedule;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
+import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -52,6 +53,7 @@ public class SbRecordSchedule {
     private SbRecordService sbRecordService;
 
 
+    @Async
     @Scheduled(cron = "0/30 * * * * ?")
     public void sbRecord() throws Exception {
         Date now = new Date();
@@ -136,8 +138,12 @@ public class SbRecordSchedule {
                         record.setGameName(bettypenameCN);
                         record.setWtype(bettypenameCN);
                         JSONArray parlayData = recordJSON.getJSONArray("ParlayData");
+                        for (int i1 = 0; i1 < parlayData.size(); i1++) {
+                            JSONObject jsonObject = parlayData.getJSONObject(i1);
+                            jsonObject.put("betContent", SbConstants.getBetContent(jsonObject));
+                        }
                         record.setParlaynum(parlayData.size());
-                        record.setParlaysub(parlayData.toString());
+                        record.setParlaysub(JSON.toJSONString(parlayData));
                     } else {
                         JSONArray sportName = recordJSON.getJSONArray("sportname");
                         record.setGameName(SbConstants.getCnName(sportName));
@@ -178,6 +184,7 @@ public class SbRecordSchedule {
                     list.add(record);
                 }
                 if (CollUtil.isNotEmpty(list)) {
+                    log.info("SB---注单[{}]个", list.size());
                     sbRecordService.batchInsertOrUpdate(list);
                 }
             }

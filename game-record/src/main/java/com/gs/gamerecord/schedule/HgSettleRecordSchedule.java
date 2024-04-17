@@ -31,13 +31,13 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 皇冠定时任务
+ * 皇冠已结算定时任务
  *
  * @author Administrator
  */
 @Slf4j
 @Component
-public class HgRecordSchedule {
+public class HgSettleRecordSchedule {
 
     @Value("${platform.HuangGuan.agId}")
     public String agId;
@@ -68,20 +68,20 @@ public class HgRecordSchedule {
         PlatRecordControl hg = platRecordControlService.getOne(
                 new LambdaQueryWrapper<PlatRecordControl>()
                         .eq(PlatRecordControl::getStatus, 0)
-                        .eq(PlatRecordControl::getPlatCode, "hg")
+                        .eq(PlatRecordControl::getPlatCode, "hgsettle")
         );
 
         if (hg != null) {
-            log.info("皇冠未结算---拉单开始[{}]-[{}]", DateUtil.formatDateTime(hg.getBeginTime()), DateUtil.formatDateTime(hg.getEndTime()));
+            log.info("皇冠已结算---拉单开始[{}]-[{}]", DateUtil.formatDateTime(hg.getBeginTime()), DateUtil.formatDateTime(hg.getEndTime()));
             getRecord(hg.getBeginTime(), hg.getEndTime());
-            log.info("皇冠未结算---拉单完成[{}]-[{}]", DateUtil.formatDateTime(hg.getBeginTime()), DateUtil.formatDateTime(hg.getEndTime()));
+            log.info("皇冠已结算---拉单完成[{}]-[{}]", DateUtil.formatDateTime(hg.getBeginTime()), DateUtil.formatDateTime(hg.getEndTime()));
             // 如果当前时间大于结束时间，更新拉取时间范围
             if (DateUtil.compare(now, hg.getEndTime()) == 1) {
                 platRecordControlService.update(
                         new LambdaUpdateWrapper<PlatRecordControl>()
                                 .set(PlatRecordControl::getBeginTime, hg.getEndTime())
                                 .set(PlatRecordControl::getEndTime, DateUtil.offsetHour(hg.getEndTime(), 1))
-                                .eq(PlatRecordControl::getPlatCode, "hg")
+                                .eq(PlatRecordControl::getPlatCode, "hgsettle")
                 );
             }
         }
@@ -106,7 +106,7 @@ public class HgRecordSchedule {
                 JSONObject param = new JSONObject();
                 JSONObject request = new JSONObject();
                 request.put("method", "ALLWager");
-                request.put("settle", "0");
+                request.put("settle", "1");
                 request.put("dateStart", dateStart);
                 request.put("dateEnd", dateEnd);
                 request.put("page", page);
@@ -132,7 +132,7 @@ public class HgRecordSchedule {
                 page++;
             }while(page <= wagerTotalpage);
             if (CollUtil.isNotEmpty(recordList)) {
-                log.info("皇冠未结算---注单[{}]个", recordList.size());
+                log.info("皇冠已结算---注单[{}]个", recordList.size());
                 hgRecordService.batchInsertOrUpdate(recordList);
             }
         }

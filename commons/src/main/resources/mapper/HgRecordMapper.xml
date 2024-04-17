@@ -68,6 +68,20 @@
             )
         </foreach>
         ON DUPLICATE KEY UPDATE
+        ioratio = VALUES(ioratio),
+        effective_bet = VALUES(effective_bet),
+        all_bet = VALUES(all_bet),
+        profit = VALUES(profit),
+        bet_time = VALUES(bet_time),
+        settle_time = VALUES(settle_time),
+        settle_status = VALUES(settle_status),
+        result_status = VALUES(result_status),
+        score = VALUES(score),
+        result_score = VALUES(result_score),
+        odds_format = VALUES(odds_format),
+        parlaynum = VALUES(parlaynum),
+        parlaysub = VALUES(parlaysub),
+        raw_data = VALUES(raw_data),
         update_time = VALUES(update_time)
     </insert>
 </mapper>

@@ -18,6 +18,7 @@ import com.gs.gamerecord.utils.BBINConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import java.util.ArrayList;
@@ -52,6 +53,7 @@ public class BBINRecordSchedule {
      * BBIN视讯拉单任务
      * @throws Exception
      */
+    @Async
     @Scheduled(cron = "0/15 * * * * ?")
     public void bbinliveRecord() throws Exception {
         Date now = new Date();
@@ -155,6 +157,7 @@ public class BBINRecordSchedule {
                 list.add(record);
             }
             if(CollUtil.isNotEmpty(list)){
+                log.info("BBIN---注单[{}]个", list.size());
                 bbinRecordService.batchInsertOrUpdate(list);
             }
         }
@@ -164,6 +167,7 @@ public class BBINRecordSchedule {
      * bbin电子拉单任务
      * @throws Exception
      */
+    @Async
     @Scheduled(cron = "0/30 * * * * ?")
     public void bbinelegameRecord() throws Exception {
         Date now = new Date();
@@ -299,6 +303,7 @@ public class BBINRecordSchedule {
      * bbin捕鱼拉单任务
      * @throws Exception
      */
+    @Async
     @Scheduled(cron = "0/20 * * * * ?")
     public void bbinfishgameRecord() throws Exception {
         Date now = new Date();
