@@ -66,9 +66,13 @@ public class Fc3dUtil {
         } else if (StringUtils.equals(order.getPlayCode(), "bddd_bddd")) {
             checkbddd_bddd(order, resultArr);
         } else if (StringUtils.equals(order.getPlayCode(), "2ddw_bs")) {
-            check2ddw_bs(order, resultArr);
-        } else if (StringUtils.equals(order.getPlayCode(), "3ddw_bsg")) {
-            check2ddw_bsg(order, resultArr);
+            check2ddw(order, resultArr[0], resultArr[1]);
+        }else if (StringUtils.equals(order.getPlayCode(), "2ddw_bg")) {
+            check2ddw(order, resultArr[0], resultArr[2]);
+        }else if (StringUtils.equals(order.getPlayCode(), "2ddw_gs")) {
+            check2ddw(order, resultArr[1], resultArr[2]);
+        }   else if (StringUtils.equals(order.getPlayCode(), "3ddw_bsg")) {
+            check3ddw_bsg(order, resultArr);
         } else if (StringUtils.equals(order.getPlayCode(), "2dzh_2dzh")) {
             checkzux2(order, resultArr);
         } else if (StringUtils.equals(order.getPlayCode(), "3dzh_3dzh")) {
@@ -393,11 +397,9 @@ public class Fc3dUtil {
 
     }
 
-    private static void check2ddw_bs(LotteryOrder lotteryOrder, String[] resultArr) {
+    private static void check2ddw(LotteryOrder lotteryOrder, String resNum1, String resNum2) {
         String betNum1 = StringUtils.split(lotteryOrder.getBetContent(), ",")[0];
         String betNum2 = StringUtils.split(lotteryOrder.getBetContent(), ",")[1];
-        String resNum1 = resultArr[0];
-        String resNum2 = resultArr[1];
 
         if (StringUtils.equals(betNum1, resNum1) && StringUtils.equals(betNum2, resNum2)) {
             lotteryOrder.setOrderStatus(1);
@@ -407,7 +409,7 @@ public class Fc3dUtil {
 
     }
 
-    private static void check2ddw_bsg(LotteryOrder lotteryOrder, String[] resultArr) {
+    private static void check3ddw_bsg(LotteryOrder lotteryOrder, String[] resultArr) {
         String betNum1 = StringUtils.split(lotteryOrder.getBetContent(), ",")[0];
         String betNum2 = StringUtils.split(lotteryOrder.getBetContent(), ",")[1];
         String betNum3 = StringUtils.split(lotteryOrder.getBetContent(), ",")[2];
