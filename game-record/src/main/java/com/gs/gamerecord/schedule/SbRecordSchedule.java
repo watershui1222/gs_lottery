@@ -165,6 +165,7 @@ public class SbRecordSchedule {
                     }else{
                         continue;
                     }
+                    record.setResultStatus(recordJSON.getString("ticket_status"));
                     record.setParlaysub(recordJSON.getString("ParlayData"));
                     record.setRawData(recordJSON.toJSONString());
                     record.setResettlementinfo(recordJSON.getString("resettlementinfo"));
