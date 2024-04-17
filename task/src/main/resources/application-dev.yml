@@ -51,6 +51,8 @@ paiqiTask:
     gs1mkl8: 0/10 * * * * ?
     gs1m11x5: 0/10 * * * * ?
     gs1mpcdd: 0/10 * * * * ?
+    gs1mfc3d: 0/10 * * * * ?
+    gs1mpl3: 0/10 * * * * ?
 
 
 

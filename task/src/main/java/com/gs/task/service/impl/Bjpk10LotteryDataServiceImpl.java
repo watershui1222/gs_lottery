@@ -49,6 +49,14 @@ public class Bjpk10LotteryDataServiceImpl extends LotteryDataService {
 
     @Override
     public void generatePaiqi(Date today) {
+        // 判断当前日期是否进行排期
+        String paiqiKey = RedisKeyUtil.PaiqiGenerateKey(lotteryKindCode().getLotteryCode(), today);
+        Boolean hasKey = redisTemplate.hasKey(paiqiKey);
+        if (hasKey) {
+            log.info("彩种代码[{}]已完成[{}]排期", lotteryKindCode().getLotteryCode(), DateUtil.formatDate(today));
+            return;
+        }
+
         Lottery lottery = getLottery();
         if (null == lottery) {
             log.info("彩种代码[{}]未开启", lotteryKindCode().getLotteryCode());
@@ -68,14 +76,6 @@ public class Bjpk10LotteryDataServiceImpl extends LotteryDataService {
             return;
         }
         Integer qsValue = Integer.valueOf(records.get(0).getPlatQs());
-
-        // 判断当前日期是否进行排期
-        String paiqiKey = RedisKeyUtil.PaiqiGenerateKey(lottery.getLotteryCode(), today);
-        Boolean hasKey = redisTemplate.hasKey(paiqiKey);
-        if (hasKey) {
-            log.info("彩种代码[{}]已完成[{}]排期", lottery.getLotteryCode(), DateUtil.formatDate(today));
-            return;
-        }
 
         Date now = new Date();
         String todayDateStr = DateUtil.format(today, "YYMMdd");
