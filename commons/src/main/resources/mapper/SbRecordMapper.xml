@@ -32,19 +32,24 @@
             <result property="isLive" column="is_live" jdbcType="INTEGER"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="matchDatetime" column="match_datetime" jdbcType="TIMESTAMP"/>
+            <result property="betContent" column="bet_content" jdbcType="VARCHAR"/>
+            <result property="score" column="score" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,user_name,plat_user_name,
-        order_no,game_name,wtype,rtype,
-        tname_home,tname_away,league,
-        ioratio,effective_bet,all_bet,
-        profit,bet_time,settle_time,
-        settle_status,result_status,result_score,
-        odds_format,parlaynum,parlaysub,
-        raw_data,resettlementinfo,is_live,
-        create_time,update_time
+        order_no,game_name,wtype,
+        rtype,tname_home,tname_away,
+        league,ioratio,effective_bet,
+        all_bet,profit,bet_time,
+        settle_time,settle_status,result_status,
+        result_score,odds_format,parlaynum,
+        parlaysub,raw_data,resettlementinfo,
+        is_live,create_time,update_time,
+        match_datetime,bet_content,score
     </sql>
+
     <insert id="batchInsertOrUpdate" parameterType="java.util.List">
         INSERT INTO t_sb_record(
         user_name,plat_user_name,
@@ -55,17 +60,33 @@
         settle_status,result_status,result_score,
         odds_format,parlaynum,parlaysub,
         raw_data,resettlementinfo,is_live,
-        create_time,update_time
+        create_time,update_time,match_datetime,bet_content,score
         )
         values
         <foreach collection="list" item="i" separator=",">
             (
             #{i.userName}, #{i.platUserName}, #{i.orderNo}, #{i.gameName}, #{i.wtype}, #{i.rtype}, #{i.tnameHome}, #{i.tnameAway}, #{i.league}, #{i.ioratio},
             #{i.effectiveBet}, #{i.allBet}, #{i.profit}, #{i.betTime}, #{i.settleTime},#{i.settleStatus},
-            #{i.resultStatus},#{i.resultScore},#{i.oddsFormat}, #{i.parlaynum},#{i.parlaysub},#{i.rawData},#{i.resettlementinfo},#{i.isLive},#{i.createTime},#{i.updateTime}
+            #{i.resultStatus},#{i.resultScore},#{i.oddsFormat}, #{i.parlaynum},#{i.parlaysub},#{i.rawData},#{i.resettlementinfo},#{i.isLive},#{i.createTime},#{i.updateTime},
+            #{i.matchDatetime},#{i.betContent},#{i.score}
             )
         </foreach>
         ON DUPLICATE KEY UPDATE
-        update_time = VALUES(update_time)
+        ioratio = VALUES(ioratio),
+        effective_bet = values(effective_bet),
+        all_bet = values(all_bet),
+        profit = values(profit),
+        bet_time = values(bet_time),
+        settle_time = values(settle_time),
+        result_status = values(result_status),
+        result_score = values(result_score),
+        parlaynum = values(parlaynum),
+        parlaysub = values(parlaysub),
+        raw_data = values(raw_data),
+        resettlementinfo = values(resettlementinfo),
+        update_time = values(update_time),
+        match_datetime = values(match_datetime),
+        bet_content = values(bet_content),
+        score = values(score)
     </insert>
 </mapper>
