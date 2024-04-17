@@ -1,6 +1,7 @@
 package com.gs.business.utils.lottery;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.math.MathUtil;
 import cn.hutool.core.util.NumberUtil;
 import com.gs.commons.entity.LotteryOrder;
 import org.apache.commons.lang3.StringUtils;
@@ -76,7 +77,7 @@ public class Fc3dUtil {
         } else if (StringUtils.equals(order.getPlayCode(), "2dzh_2dzh")) {
             checkzux2(order, resultArr);
         } else if (StringUtils.equals(order.getPlayCode(), "3dzh_3dzh")) {
-            checkzux2(order, resultArr);
+            checkzux3(order, resultArr);
         } else if (StringUtils.equals(order.getPlayCode(), "2dhz_sgh")) {
             check2dhz(order, NumberUtil.add(resultArr[1], resultArr[2]).intValue());
         }  else if (StringUtils.equals(order.getPlayCode(), "2dhz_bgh")) {
@@ -374,8 +375,16 @@ public class Fc3dUtil {
 
     private static void checkzux2(LotteryOrder order, String[] resultArr) {
         char[] chars = order.getBetContent().toCharArray();
-        ArrayList<String> strings = CollUtil.newArrayList(String.valueOf(chars[0]), String.valueOf(chars[1]));
-        boolean b = CollUtil.containsAll(Arrays.asList(resultArr), strings);
+        ArrayList<String> betStrings = CollUtil.newArrayList(String.valueOf(chars[0]), String.valueOf(chars[1]));
+        // 所有组合
+        List<String[]> combinationSelect = MathUtil.combinationSelect(resultArr, 2);
+
+        Boolean b = false;
+        for (String[] resArr : combinationSelect) {
+            if (CollUtil.containsAll(Arrays.asList(resArr), betStrings) && CollUtil.containsAll(betStrings, Arrays.asList(resArr))) {
+                b = true;
+            }
+        }
         if (b) {
             order.setOrderStatus(1);
         } else {
@@ -385,10 +394,19 @@ public class Fc3dUtil {
     }
 
 
+
     private static void checkzux3(LotteryOrder order, String[] resultArr) {
         char[] chars = order.getBetContent().toCharArray();
-        ArrayList<String> strings = CollUtil.newArrayList(String.valueOf(chars[0]), String.valueOf(chars[1]), String.valueOf(chars[2]));
-        boolean b = CollUtil.containsAll(Arrays.asList(resultArr), strings);
+        ArrayList<String> betStrings = CollUtil.newArrayList(String.valueOf(chars[0]), String.valueOf(chars[1]), String.valueOf(chars[2]));
+        // 所有组合
+        List<String[]> combinationSelect = MathUtil.combinationSelect(resultArr, 3);
+
+        Boolean b = false;
+        for (String[] resArr : combinationSelect) {
+            if (CollUtil.containsAll(Arrays.asList(resArr), betStrings) && CollUtil.containsAll(betStrings, Arrays.asList(resArr))) {
+                b = true;
+            }
+        }
         if (b) {
             order.setOrderStatus(1);
         } else {
