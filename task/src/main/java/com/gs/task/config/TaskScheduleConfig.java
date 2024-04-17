@@ -11,7 +11,7 @@ public class TaskScheduleConfig {
     @Bean
     public ThreadPoolTaskScheduler threadPoolTaskScheduler() {
         ThreadPoolTaskScheduler executor = new ThreadPoolTaskScheduler();
-        executor.setPoolSize(20);
+        executor.setPoolSize(30);
         executor.setThreadNamePrefix("threadPoolTaskScheduler-");
         executor.setWaitForTasksToCompleteOnShutdown(true);
         executor.setAwaitTerminationSeconds(60);
