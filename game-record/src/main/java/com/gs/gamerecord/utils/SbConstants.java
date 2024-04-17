@@ -29,7 +29,7 @@ public class SbConstants {
                 betContent = getCnName(awayteamname);
             }
         } else if (StringUtils.equalsAny(betType,"5", "15", "28", "124", "125",
-                "1205", "167", "176", "177", "430", "630")) {
+                "1205", "167", "176", "177", "430", "630", "2701", "2702", "458", "459")) {
             if (StringUtils.equals(betTeam, "1")) {
                 betContent = getCnName(hometeamname);
             } else if (StringUtils.equals(betTeam, "2")) {
@@ -40,7 +40,7 @@ public class SbConstants {
         } else if (StringUtils.equalsAny(betType,"7", "17", "20", "21", "25", "27", "1201",
                 "1220", "153", "154", "155", "1301", "1303", "1308", "1311",
                 "1316", "1324", "168", "185", "432", "191", "411", "229", "501", "425", "603", "604",
-                "605", "606", "607", "609", "612", "613", "617")) {
+                "605", "606", "607", "609", "612", "613", "617", "635", "636", "637", "2705", "2706", "460")) {
             if (StringUtils.equals(betTeam, "h")) {
                 betContent = getCnName(hometeamname);
             } else if (StringUtils.equals(betTeam, "a")) {
@@ -83,7 +83,7 @@ public class SbConstants {
             } else if (StringUtils.equals(betTeam, "12")) {
                 betContent = "主队或客队";
             }
-        } else if (StringUtils.equalsAny(betType,"160", "164", "180")) {
+        } else if (StringUtils.equalsAny(betType,"160", "164", "180", "453")) {
             if (StringUtils.equals(betTeam, "1")) {
                 betContent = getCnName(hometeamname);
             } else if (StringUtils.equals(betTeam, "2")) {
@@ -99,7 +99,7 @@ public class SbConstants {
             } else if (StringUtils.equals(betTeam, "n")) {
                 betContent = "无";
             }
-        } else if (StringUtils.equalsAny(betType,"163", "144")) {
+        } else if (StringUtils.equalsAny(betType,"163", "144", "646")) {
             if (StringUtils.equals(betTeam, "hu")) {
                 betContent = "主队 / 小";
             } else if (StringUtils.equals(betTeam, "ho")) {
@@ -113,7 +113,7 @@ public class SbConstants {
             } else if (StringUtils.equals(betTeam, "ao")) {
                 betContent = "客队 / 大";
             }
-        } else if (StringUtils.equalsAny(betType,"170")) {
+        } else if (StringUtils.equalsAny(betType,"170", "448")) {
             if (StringUtils.equals(betTeam, "h")) {
                 betContent = "主队";
             } else if (StringUtils.equals(betTeam, "a")) {
@@ -122,6 +122,8 @@ public class SbConstants {
                 betContent = "都有";
             } else if (StringUtils.equals(betTeam, "n")) {
                 betContent = "都无";
+            } else if (StringUtils.equals(betTeam, "ng")) {
+                betContent = "两者皆不";
             }
         } else if (StringUtils.equalsAny(betType,"171", "408")) {
             if (StringUtils.equals(betTeam, "h1")) {
@@ -141,7 +143,7 @@ public class SbConstants {
             } else if (StringUtils.equals(betTeam, "ng")) {
                 betContent = "无进球";
             }
-        } else if (StringUtils.equalsAny(betType,"172", "415")) {
+        } else if (StringUtils.equalsAny(betType,"172", "415", "633", "634", "645")) {
             if (StringUtils.equals(betTeam, "hh")) {
                 betContent = "主队 / 主队";
             } else if (StringUtils.equals(betTeam, "dh")) {
@@ -185,7 +187,7 @@ public class SbConstants {
                 betContent = "客队 / 点球决胜";
             }
         } else if (StringUtils.equalsAny(betType,"178", "197", "198", "204", "205", "228", "401", "402", "403", "404", "610",
-                "615", "616")) {
+                "615", "616", "638", "639", "641", "2703", "2704", "461", "462", "463", "464")) {
             if (StringUtils.equals(betTeam, "o")) {
                 betContent = "大";
             } else if (StringUtils.equals(betTeam, "u")) {
@@ -269,7 +271,7 @@ public class SbConstants {
             } else if (StringUtils.equals(betTeam, "1")) {
                 betContent = "无";
             }
-        } else if (StringUtils.equalsAny(betType,"417")) {
+        } else if (StringUtils.equalsAny(betType,"417", "456")) {
             if (StringUtils.equals(betTeam, "yh")) {
                 betContent = "对/主队";
             } else if (StringUtils.equals(betTeam, "ya")) {
@@ -283,7 +285,7 @@ public class SbConstants {
             } else if (StringUtils.equals(betTeam, "nd")) {
                 betContent = "否/和局";
             }
-        } else if (StringUtils.equalsAny(betType,"418")) {
+        } else if (StringUtils.equalsAny(betType,"418", "457")) {
             if (StringUtils.equals(betTeam, "yo")) {
                 betContent = "对&大于";
             } else if (StringUtils.equals(betTeam, "yu")) {
@@ -293,7 +295,7 @@ public class SbConstants {
             } else if (StringUtils.equals(betTeam, "nu")) {
                 betContent = "否&小于";
             }
-        } else if (StringUtils.equalsAny(betType,"419", "420","421")) {
+        } else if (StringUtils.equalsAny(betType,"419", "420","421", "452")) {
             if (StringUtils.equals(betTeam, "1h")) {
                 betContent = "上半场";
             } else if (StringUtils.equals(betTeam, "2h")) {
@@ -483,8 +485,146 @@ public class SbConstants {
             } else if (StringUtils.equals(betTeam, "oeeo")) {
                 betContent = "单/双/双/单";
             }
-        }else {
-            betContent = BET_CONTENT.getOrDefault(betType + "_" + betTeam, betTeam);
+        } else if (StringUtils.equalsAny(betType,"640")) {
+            if (StringUtils.equals(betTeam, "0")) {
+                betContent = "无和局赛节数";
+            } else if (StringUtils.equals(betTeam, "1")) {
+                betContent = "有 1 以上的和局赛节数(包含 1)";
+            }
+        } else if (StringUtils.equalsAny(betType,"642")) {
+            if (StringUtils.equals(betTeam, "h12")) {
+                betContent = "第 1 节和第 2 节由主队获胜";
+            } else if (StringUtils.equals(betTeam, "h13")) {
+                betContent = "第 1 节和第 3 节由主队获胜";
+            } else if (StringUtils.equals(betTeam, "h14")) {
+                betContent = "第 1 节和第 4 节由主队获胜";
+            } else if (StringUtils.equals(betTeam, "h23")) {
+                betContent = "第 2 节和第 3 节由主队获胜";
+            } else if (StringUtils.equals(betTeam, "h24")) {
+                betContent = "第 2 节和第 4 节由主队获胜";
+            } else if (StringUtils.equals(betTeam, "h34")) {
+                betContent = "第 3 节和第 4 节由主队获胜";
+            } else if (StringUtils.equals(betTeam, "a12")) {
+                betContent = "第 1 节和第 2 节由客队获胜";
+            } else if (StringUtils.equals(betTeam, "a13")) {
+                betContent = "第 1 节和第 3 节由客队获胜";
+            } else if (StringUtils.equals(betTeam, "a14")) {
+                betContent = "第 1 节和第 4 节由客队获胜";
+            } else if (StringUtils.equals(betTeam, "a23")) {
+                betContent = "第 2 节和第 3 节由客队获胜";
+            } else if (StringUtils.equals(betTeam, "a24")) {
+                betContent = "第 2 节和第 4 节由客队获胜";
+            } else if (StringUtils.equals(betTeam, "a34")) {
+                betContent = "第 3 节和第 4 节由客队获胜";
+            } else if (StringUtils.equals(betTeam, "aos12")) {
+                betContent = "第 1 节和第 2 节出现和局或二队各赢一节";
+            } else if (StringUtils.equals(betTeam, "aos13")) {
+                betContent = "第 1 节和第 3 节出现和局或二队各赢一节";
+            } else if (StringUtils.equals(betTeam, "aos14")) {
+                betContent = "第 1 节和第 4 节出现和局或二队各赢一节";
+            } else if (StringUtils.equals(betTeam, "aos23")) {
+                betContent = "第 2 节和第 3 节出现和局或二队各赢一节";
+            } else if (StringUtils.equals(betTeam, "aos24")) {
+                betContent = "第 2 节和第 4 节出现和局或二队各赢一节";
+            } else if (StringUtils.equals(betTeam, "aos34")) {
+                betContent = " 第 3 节和第 4 节出现和局或二队各赢一节";
+            }
+        } else if (StringUtils.equalsAny(betType,"643")) {
+            if (StringUtils.equals(betTeam, "1q")) {
+                betContent = "第 1 赛节";
+            } else if (StringUtils.equals(betTeam, "2q")) {
+                betContent = "第 2 赛节";
+            } else if (StringUtils.equals(betTeam, "3q")) {
+                betContent = "第 3 赛节";
+            } else if (StringUtils.equals(betTeam, "4q")) {
+                betContent = "第 4 赛节";
+            } else if (StringUtils.equals(betTeam, "tie")) {
+                betContent = "一样多";
+            }
+        } else if (StringUtils.equalsAny(betType,"449")) {
+            if (StringUtils.equals(betTeam, "1xo")) {
+                betContent = "主/和局 & 大";
+            } else if (StringUtils.equals(betTeam, "1xu")) {
+                betContent = "主/和局 & 小";
+            } else if (StringUtils.equals(betTeam, "12o")) {
+                betContent = "主/客 & 大";
+            } else if (StringUtils.equals(betTeam, "12u")) {
+                betContent = "主/客 & 小";
+            } else if (StringUtils.equals(betTeam, "2xo")) {
+                betContent = "客/和局 & 大";
+            } else if (StringUtils.equals(betTeam, "2xu")) {
+                betContent = "客/和局 & 小";
+            }
+        } else if (StringUtils.equalsAny(betType,"450")) {
+            if (StringUtils.equals(betTeam, "oo")) {
+                betContent = "单 & 大";
+            } else if (StringUtils.equals(betTeam, "ou")) {
+                betContent = "单 & 小";
+            } else if (StringUtils.equals(betTeam, "eo")) {
+                betContent = "双 & 大";
+            } else if (StringUtils.equals(betTeam, "eu")) {
+                betContent = "双 & 小";
+            }
+        } else if (StringUtils.equalsAny(betType,"451")) {
+            if (StringUtils.equals(betTeam, "y1x")) {
+                betContent = "是 & 主/和局";
+            } else if (StringUtils.equals(betTeam, "y12")) {
+                betContent = "是 & 主/客";
+            } else if (StringUtils.equals(betTeam, "y2x")) {
+                betContent = "是 & 客/和局";
+            } else if (StringUtils.equals(betTeam, "n1x")) {
+                betContent = "否 & 主/和局";
+            } else if (StringUtils.equals(betTeam, "n12")) {
+                betContent = "否 & 主/客";
+            } else if (StringUtils.equals(betTeam, "n2x")) {
+                betContent = "否 & 客/和局";
+            }
+        } else if (StringUtils.equalsAny(betType,"644", "2707")) {
+            if (StringUtils.equals(betTeam, "aos")) {
+                betContent = "其他比分";
+            } else {
+                betContent = betTeam;
+            }
+        } else if (StringUtils.equalsAny(betType,"454")) {
+            if (StringUtils.equals(betTeam, "1xh")) {
+                betContent = "主/和局 & 主";
+            } else if (StringUtils.equals(betTeam, "12h")) {
+                betContent = "主/客 & 主";
+            } else if (StringUtils.equals(betTeam, "2xh")) {
+                betContent = "客/和局 & 主";
+            } else if (StringUtils.equals(betTeam, "1xa")) {
+                betContent = "主/和局 & 客";
+            } else if (StringUtils.equals(betTeam, "12a")) {
+                betContent = "主/客 & 客";
+            } else if (StringUtils.equals(betTeam, "2xa")) {
+                betContent = "客/和局 & 客";
+            } else if (StringUtils.equals(betTeam, "ng")) {
+                betContent = "无进球";
+            }
+        } else if (StringUtils.equalsAny(betType,"455")) {
+            if (StringUtils.equals(betTeam, "1-10")) {
+                betContent = "00:01-10:00";
+            } else if (StringUtils.equals(betTeam, "11-20")) {
+                betContent = "10:01-20:00";
+            } else if (StringUtils.equals(betTeam, "21-30")) {
+                betContent = "20:01-30:00";
+            } else if (StringUtils.equals(betTeam, "31-40")) {
+                betContent = "30:01-40:00";
+            } else if (StringUtils.equals(betTeam, "41-50")) {
+                betContent = "40:01-50:00";
+            } else if (StringUtils.equals(betTeam, "51-60")) {
+                betContent = "50:01-60:00";
+            } else if (StringUtils.equals(betTeam, "61-70")) {
+                betContent = "60:01-70:00";
+            } else if (StringUtils.equals(betTeam, "71-80")) {
+                betContent = "70:01-80:00";
+            } else if (StringUtils.equals(betTeam, "81-90")) {
+                betContent = "80:01-90:00";
+            } else if (StringUtils.equals(betTeam, "ng")) {
+                betContent = "无进球";
+            }
+        } else {
+            betContent = betTeam;
         }
         return betContent;
     }
