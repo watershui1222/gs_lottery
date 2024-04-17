@@ -430,7 +430,7 @@ public class Fc3dUtil {
 
     private static int getWeiShu(String num) {
         int weishu = NumberUtils.toInt(num);
-        if (weishu >= 1 && weishu <= 9) {
+        if (weishu >= 0 && weishu <= 9) {
             return weishu;
         }
         char[] chars = num.toCharArray();
