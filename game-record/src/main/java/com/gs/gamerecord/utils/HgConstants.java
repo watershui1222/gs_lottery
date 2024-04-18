@@ -52,11 +52,12 @@ public class HgConstants {
             hgRecord.setBetTime(DateUtil.offsetHour(wager.getDate("adddate"), 12));
             hgRecord.setParlaysub(wager.getString("parlaysub"));
             hgRecord.setLeague(wager.getString("league"));
-            String rtype = wager.getString("rtype");
-            hgRecord.setRtype(wager.getString("wtype"));
+            String wtype = wager.getString("wtype");
+            hgRecord.setRtype(wtype);
             hgRecord.setOrderContent(wager.getString("order"));
             hgRecord.setOddsFormat(wager.getString("oddsFormat"));
-            hgRecord.setWtype(wager.getString("wtype"));
+            wtype = StrUtil.contains(wtype,"滚球") ? "滚球" : "";
+            hgRecord.setWtype(wtype);
             hgRecord.setTnameAway(wager.getString("tname_away"));
             hgRecord.setTnameHome(wager.getString("tname_home"));
             hgRecord.setPlatUserName(wager.getString("username"));
