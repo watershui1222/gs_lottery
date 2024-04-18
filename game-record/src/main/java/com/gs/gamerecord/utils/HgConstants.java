@@ -53,7 +53,7 @@ public class HgConstants {
             hgRecord.setParlaysub(wager.getString("parlaysub"));
             hgRecord.setLeague(wager.getString("league"));
             String rtype = wager.getString("rtype");
-            hgRecord.setRtype(rtype);
+            hgRecord.setRtype(wager.getString("wtype"));
             hgRecord.setOrderContent(wager.getString("order"));
             hgRecord.setOddsFormat(wager.getString("oddsFormat"));
             hgRecord.setWtype(wager.getString("wtype"));
@@ -70,6 +70,11 @@ public class HgConstants {
             }
             hgRecord.setSettleStatus(wager.getIntValue("settle"));
             hgRecord.setRawData(wager.toJSONString());
+            if(StrUtil.isBlank(hgRecord.getParlaysub())){
+                String matchDatetimeStr = wager.getString("orderdate") + " " + wager.getString("ordertime");
+                Date matchDatetime = DateUtil.parseDateTime(matchDatetimeStr);
+                hgRecord.setMatchDatetime(matchDatetime);
+            }
             recordList.add(hgRecord);
         }
     }

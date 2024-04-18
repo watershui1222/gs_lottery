@@ -31,6 +31,7 @@
             <result property="parlaynum" column="parlaynum" jdbcType="INTEGER"/>
             <result property="parlaysub" column="parlaysub" jdbcType="VARCHAR"/>
             <result property="rawData" column="raw_data" jdbcType="VARCHAR"/>
+            <result property="matchDatetime" column="match_datetime" jdbcType="TIMESTAMP"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
@@ -43,7 +44,7 @@
         effective_bet,all_bet,profit,
         bet_time,settle_time,settle_status,
         result_status,score,result_score,odds_format,
-        parlaynum,parlaysub,raw_data,create_time,
+        parlaynum,parlaysub,raw_data, match_datetime,create_time,
         update_time
     </sql>
 
@@ -56,7 +57,7 @@
         effective_bet,all_bet,profit,
         bet_time,settle_time,settle_status,
         result_status,score,result_score,odds_format,
-        parlaynum,parlaysub,raw_data,create_time,
+        parlaynum,parlaysub,raw_data,match_datetime,create_time,
         update_time
         )
         values
@@ -64,7 +65,7 @@
             (
             #{i.userName}, #{i.platUserName}, #{i.orderNo}, #{i.gameName}, #{i.wtype}, #{i.rtype}, #{i.orderContent}, #{i.tnameHome}, #{i.tnameAway}, #{i.league}, #{i.strong}, #{i.ioratio},
             #{i.effectiveBet}, #{i.allBet}, #{i.profit}, #{i.betTime}, #{i.settleTime},#{i.settleStatus},
-            #{i.resultStatus},#{i.score},#{i.resultScore},#{i.oddsFormat}, #{i.parlaynum},#{i.parlaysub},#{i.rawData}, #{i.createTime},#{i.updateTime}
+            #{i.resultStatus},#{i.score},#{i.resultScore},#{i.oddsFormat}, #{i.parlaynum},#{i.parlaysub},#{i.rawData}, #{i.matchDatetime}, #{i.createTime},#{i.updateTime}
             )
         </foreach>
         ON DUPLICATE KEY UPDATE
@@ -82,6 +83,7 @@
         parlaynum = VALUES(parlaynum),
         parlaysub = VALUES(parlaysub),
         raw_data = VALUES(raw_data),
+        match_datetime = VALUES(match_datetime),
         update_time = VALUES(update_time)
     </insert>
 </mapper>

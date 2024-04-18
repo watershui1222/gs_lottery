@@ -173,6 +173,12 @@ public class HgRecord implements Serializable {
     private String rawData;
 
     /**
+     * 开赛时间
+     */
+    @TableField(value = "match_datetime")
+    private Date matchDatetime;
+
+    /**
      * 创建时间
      */
     @TableField(value = "create_time")

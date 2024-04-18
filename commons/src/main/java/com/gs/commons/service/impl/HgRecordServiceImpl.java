@@ -1,6 +1,7 @@
 package com.gs.commons.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSONObject;
@@ -91,6 +92,9 @@ public class HgRecordServiceImpl extends ServiceImpl<HgRecordMapper, HgRecord>
                         String strong1 = StrUtil.equals(strong, "H") ? recordSport.getTnameHome() :
                                 StrUtil.equals(strong, "C") ? recordSport.getTnameAway(): "";
                         recordSport.setStrong(strong1);
+                        String matchDatetimeStr = sub.getString("orderdate") + " " + sub.getString("ordertime");
+                        Date matchDatetime = DateUtil.parseDateTime(matchDatetimeStr);
+                        recordSport.setMatchDatetime(matchDatetime);
                         sportDetailList.add(recordSport);
                     }
                     bo.setSportDetailList(sportDetailList);
@@ -98,7 +102,7 @@ public class HgRecordServiceImpl extends ServiceImpl<HgRecordMapper, HgRecord>
                     //普通下注
                     bo.setIsSport(1);
                     PlatRecordSprotBO recordSport = new PlatRecordSprotBO();
-                    recordSport.setWf(hgRecord.getWtype());
+                    recordSport.setWf(hgRecord.getRtype());
                     recordSport.setOdds(hgRecord.getIoratio());
                     recordSport.setTnameHome(hgRecord.getTnameHome());
                     recordSport.setTnameAway(hgRecord.getTnameAway());
@@ -112,6 +116,7 @@ public class HgRecordServiceImpl extends ServiceImpl<HgRecordMapper, HgRecord>
                     String strong = StrUtil.equals(hgRecord.getStrong(), "H") ? hgRecord.getTnameHome() :
                             StrUtil.equals(hgRecord.getStrong(), "C") ? hgRecord.getTnameAway(): "";
                     recordSport.setStrong(strong);
+                    recordSport.setMatchDatetime(hgRecord.getMatchDatetime());
                     bo.setSportDetail(recordSport);
                 }
                 platRecordBOList.add(bo);

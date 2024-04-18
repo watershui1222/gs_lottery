@@ -66,4 +66,6 @@ public class PlatRecordSprotBO {
 
     private String resultStatus;
 
+    private Date matchDatetime;
+
 }

@@ -1,6 +1,7 @@
 package com.gs.commons.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSONArray;
@@ -95,6 +96,8 @@ public class SbRecordServiceImpl extends ServiceImpl<SbRecordMapper, SbRecord>
                         recordSport.setGameName(sportnameCN);
                         recordSport.setOddsFormat(sub.getString("hdp"));
                         recordSport.setOrderContent(sub.getString("betContent"));
+                        Date match_datetime = DateUtil.parse(sub.getString("match_datetime"), "yyyy-MM-dd'T'HH:mm:ss");
+                        recordSport.setMatchDatetime(match_datetime);
                         sportDetailList.add(recordSport);
                     }
                     bo.setSportDetailList(sportDetailList);
@@ -112,6 +115,7 @@ public class SbRecordServiceImpl extends ServiceImpl<SbRecordMapper, SbRecord>
                     recordSport.setOddsFormat(sbRecord.getOddsFormat());
                     recordSport.setScore(sbRecord.getScore());
                     recordSport.setOrderContent(sbRecord.getBetContent());
+                    recordSport.setMatchDatetime(sbRecord.getMatchDatetime());
                     bo.setSportDetail(recordSport);
                 }
                 platRecordBOList.add(bo);
