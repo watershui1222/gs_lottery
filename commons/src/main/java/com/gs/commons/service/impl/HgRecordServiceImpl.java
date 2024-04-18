@@ -69,14 +69,17 @@ public class HgRecordServiceImpl extends ServiceImpl<HgRecordMapper, HgRecord>
                 BeanUtil.copyPropertiesIgnoreNull(hgRecord, bo);
                 if(StrUtil.isNotBlank(hgRecord.getParlaysub())){
                     //串关
-                    bo.setIsSport(2);
+                    bo.setIsSport(hgRecord.getParlaynum());
                     List<PlatRecordSprotBO> sportDetailList = new ArrayList<>();
                     JSONObject parlaySub = JSONObject.parse(hgRecord.getParlaysub());
                     for(int i = 1; i <= hgRecord.getParlaynum(); i++){
                         String key = i + "";
                         JSONObject sub = parlaySub.getJSONObject(key);
                         PlatRecordSprotBO recordSport = new PlatRecordSprotBO();
-                        recordSport.setWf(sub.getString("wtype"));
+                        String wtype = sub.getString("wtype");
+                        recordSport.setWf(wtype);
+                        String pk = StrUtil.contains(wtype,"滚球") ? "滚球" : "";
+                        recordSport.setPk(pk);
                         recordSport.setOdds(sub.getBigDecimal("ioratio"));
                         recordSport.setTnameHome(sub.getString("tname_home"));
                         recordSport.setTnameAway(sub.getString("tname_away"));
@@ -103,6 +106,7 @@ public class HgRecordServiceImpl extends ServiceImpl<HgRecordMapper, HgRecord>
                     bo.setIsSport(1);
                     PlatRecordSprotBO recordSport = new PlatRecordSprotBO();
                     recordSport.setWf(hgRecord.getRtype());
+                    recordSport.setPk(hgRecord.getWtype());
                     recordSport.setOdds(hgRecord.getIoratio());
                     recordSport.setTnameHome(hgRecord.getTnameHome());
                     recordSport.setTnameAway(hgRecord.getTnameAway());

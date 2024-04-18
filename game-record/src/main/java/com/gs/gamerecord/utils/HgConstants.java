@@ -56,7 +56,7 @@ public class HgConstants {
             hgRecord.setRtype(wtype);
             hgRecord.setOrderContent(wager.getString("order"));
             hgRecord.setOddsFormat(wager.getString("oddsFormat"));
-            wtype = StrUtil.contains(wtype,"滚球") ? "滚球" : "";
+            wtype = StrUtil.contains(wtype,"滚球") ? "滚球" : StrUtil.isNotBlank(hgRecord.getParlaysub()) ? "串关" : "";
             hgRecord.setWtype(wtype);
             hgRecord.setTnameAway(wager.getString("tname_away"));
             hgRecord.setTnameHome(wager.getString("tname_home"));

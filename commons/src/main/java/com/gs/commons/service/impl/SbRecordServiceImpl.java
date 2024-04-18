@@ -67,7 +67,7 @@ public class SbRecordServiceImpl extends ServiceImpl<SbRecordMapper, SbRecord>
                 BeanUtil.copyPropertiesIgnoreNull(sbRecord, bo);
                 if(StrUtil.isNotBlank(sbRecord.getParlaysub())){
                     //串关
-                    bo.setIsSport(2);
+                    bo.setIsSport(sbRecord.getParlaynum());
                     List<PlatRecordSprotBO> sportDetailList = new ArrayList<>();
                     JSONArray parlaySub = JSONArray.parseArray(sbRecord.getParlaysub());
                     for(Object obj:parlaySub){
@@ -76,6 +76,8 @@ public class SbRecordServiceImpl extends ServiceImpl<SbRecordMapper, SbRecord>
                         JSONArray bettypename = sub.getJSONArray("bettypename");
                         String bettypenameCN = bettypename.stream().filter(t -> ((JSONObject) t).getString("lang").equals("cs")).map(t -> ((JSONObject) t).getString("name")).distinct().collect(Collectors.joining());
                         recordSport.setWf(bettypenameCN);
+                        String pk = StrUtil.equals("1", sub.getString("islive")) ? "滚球" : "";
+                        recordSport.setPk(pk);
                         recordSport.setOdds(sub.getBigDecimal("odds"));
                         JSONArray hometeamname = sub.getJSONArray("hometeamname");
                         String hometeamnameCN = hometeamname.stream().filter(t -> ((JSONObject) t).getString("lang").equals("cs")).map(t -> ((JSONObject) t).getString("name")).distinct().collect(Collectors.joining());
@@ -106,6 +108,7 @@ public class SbRecordServiceImpl extends ServiceImpl<SbRecordMapper, SbRecord>
                     bo.setIsSport(1);
                     PlatRecordSprotBO recordSport = new PlatRecordSprotBO();
                     recordSport.setWf(sbRecord.getRtype());
+                    recordSport.setPk(sbRecord.getWtype());
                     recordSport.setOdds(sbRecord.getIoratio());
                     recordSport.setTnameHome(sbRecord.getTnameHome());
                     recordSport.setTnameAway(sbRecord.getTnameAway());

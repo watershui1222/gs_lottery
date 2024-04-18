@@ -14,6 +14,8 @@ public class PlatRecordSprotBO {
 
     private String wf;
 
+    private String pk;
+
     /**
      * 开奖结果
      */
