@@ -99,7 +99,7 @@ public class SbRecordServiceImpl extends ServiceImpl<SbRecordMapper, SbRecord>
                         recordSport.setOddsFormat(sub.getString("hdp"));
                         recordSport.setOrderContent(sub.getString("betContent"));
                         Date match_datetime = DateUtil.parse(sub.getString("match_datetime"), "yyyy-MM-dd'T'HH:mm:ss");
-                        recordSport.setMatchDatetime(match_datetime);
+                        recordSport.setMatchDatetime(DateUtil.offsetHour(match_datetime, 12));
                         sportDetailList.add(recordSport);
                     }
                     bo.setSportDetailList(sportDetailList);

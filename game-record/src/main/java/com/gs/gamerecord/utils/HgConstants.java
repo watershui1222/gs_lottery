@@ -74,7 +74,7 @@ public class HgConstants {
             if(StrUtil.isBlank(hgRecord.getParlaysub())){
                 String matchDatetimeStr = wager.getString("orderdate") + " " + wager.getString("ordertime");
                 Date matchDatetime = DateUtil.parseDateTime(matchDatetimeStr);
-                hgRecord.setMatchDatetime(matchDatetime);
+                hgRecord.setMatchDatetime(DateUtil.offsetHour(matchDatetime, 12));
             }
             recordList.add(hgRecord);
         }

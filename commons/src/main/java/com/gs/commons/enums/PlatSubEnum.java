@@ -12,12 +12,12 @@ import java.util.Map;
 @Getter
 public enum PlatSubEnum {
     // gameType（1-真人 2-电子 3-捕鱼 4-体育）
-    AGLIVE("AGLIVE", PlatEnum.AG.getPlatCode(),"AG真人", 1),
+    AGLIVE("AGLIVE", PlatEnum.AG.getPlatCode(),"AG视讯", 1),
     AGELE("AGELE", PlatEnum.AG.getPlatCode(),"AG电子", 2),
     AGFISH("AGFISH", PlatEnum.AG.getPlatCode(),"AG捕鱼", 3),
     BBINFISH("BBINFISH", PlatEnum.BBIN.getPlatCode(),"BBIN捕鱼", 3),
     BBINELE("BBINELE", PlatEnum.BBIN.getPlatCode(),"BBIN电子", 2),
-    BBINLIVE("BBINLIVE", PlatEnum.BBIN.getPlatCode(),"BBIN真人", 1),
+    BBINLIVE("BBINLIVE", PlatEnum.BBIN.getPlatCode(),"BBIN视讯", 1),
     SB("SB", PlatEnum.SB.getPlatCode(),"沙巴体育", 4),
     HG("HG", PlatEnum.HG.getPlatCode(),"皇冠体育", 4),
     LY("LY", PlatEnum.LY.getPlatCode(),"乐游棋牌", 2),

@@ -97,7 +97,7 @@ public class HgRecordServiceImpl extends ServiceImpl<HgRecordMapper, HgRecord>
                         recordSport.setStrong(strong1);
                         String matchDatetimeStr = sub.getString("orderdate") + " " + sub.getString("ordertime");
                         Date matchDatetime = DateUtil.parseDateTime(matchDatetimeStr);
-                        recordSport.setMatchDatetime(matchDatetime);
+                        recordSport.setMatchDatetime(DateUtil.offsetHour(matchDatetime, 12));
                         sportDetailList.add(recordSport);
                     }
                     bo.setSportDetailList(sportDetailList);

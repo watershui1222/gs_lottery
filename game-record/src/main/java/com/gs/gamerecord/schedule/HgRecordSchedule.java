@@ -73,7 +73,10 @@ public class HgRecordSchedule {
 
         if (hg != null) {
             log.info("皇冠未结算---拉单开始[{}]-[{}]", DateUtil.formatDateTime(hg.getBeginTime()), DateUtil.formatDateTime(hg.getEndTime()));
-            getRecord(hg.getBeginTime(), hg.getEndTime());
+            //使用美东时间
+            Date mdBeginTime = DateUtil.offsetHour(hg.getBeginTime(), -12);
+            Date mdEndTime = DateUtil.offsetHour(hg.getEndTime(), -12);
+            getRecord(mdBeginTime, mdEndTime);
             log.info("皇冠未结算---拉单完成[{}]-[{}]", DateUtil.formatDateTime(hg.getBeginTime()), DateUtil.formatDateTime(hg.getEndTime()));
             // 如果当前时间大于结束时间，更新拉取时间范围
             if (DateUtil.compare(now, hg.getEndTime()) == 1) {
