@@ -1,6 +1,5 @@
-package com.gs.business.service.impl;
+package com.gs.business.service.impl.pay;
 
-import cn.hutool.core.util.NumberUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
@@ -8,7 +7,6 @@ import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.gs.business.service.PayService;
-import com.gs.business.utils.pay.ObUtil;
 import com.gs.commons.entity.PayChannel;
 import com.gs.commons.entity.PayMerchant;
 import com.gs.commons.entity.PayOrder;
@@ -21,38 +19,39 @@ import java.util.Map;
 import java.util.TreeMap;
 
 @Slf4j
-@Service("obPayService")
-public class ObPayServiceImpl implements PayService {
+@Service("kdPayService")
+public class KDPayServiceImpl implements PayService {
     @Override
     public String getPayUrl(PayMerchant merchant, PayOrder order, PayChannel payChannel) {
         String key = merchant.getMerchantKey();
         Long merchantId = Long.valueOf(merchant.getMerchantId());
 
         Map<String, Object> treeMap = new TreeMap<>();
-        treeMap.put("merchantNo", merchantId);
-        treeMap.put("outTradeNo", order.getOrderNo());
-        treeMap.put("amount", NumberUtil.mul(order.getAmount(), 100).intValue());
-        treeMap.put("currency", "OB");
-        treeMap.put("notifyUrl", merchant.getCallbackUrl());
+        treeMap.put("userCode", merchantId);
+        treeMap.put("orderCode", order.getOrderNo());
+        treeMap.put("amount", order.getAmount());
+        treeMap.put("payType", "3");
+        treeMap.put("callbackUrl", merchant.getCallbackUrl());
 
-        String sortData = ObUtil.sortData(treeMap, "&");
-        String stringSignTemp = StringUtils.join(sortData, "&", key);
+        String stringSignTemp = StringUtils.join(treeMap.get("orderCode")
+                , "&", treeMap.get("amount")
+                , "&", treeMap.get("payType")
+                , "&", treeMap.get("userCode"), "&", key);
         String sign = SecureUtil.md5(stringSignTemp).toUpperCase();
         treeMap.put("sign", sign);
-        log.info("参数加密:{}", JSON.toJSONString(treeMap));
-        HttpRequest request = HttpUtil.createPost(merchant.getPayUrl() + "/api/payment/create");
-        request.header("Content-Type", "application/json; charset=utf-8");
-        request.body(JSON.toJSONString(treeMap));
+        HttpRequest request = HttpUtil.createPost(merchant.getPayUrl() + "/system/api/pay");
+        request.contentType("application/x-www-form-urlencoded");
+        request.form(treeMap);
         HttpResponse response = request.execute();
-        log.info("OB充值响应:{}", response.body());
+        log.info("KD充值响应:{}", response.body());
         JSONObject responseObj = JSON.parseObject(response.body());
-        if (0 == responseObj.getIntValue("code")) {
+        if (200 == responseObj.getIntValue("code")) {
             // 设置三方订单号
-            String tradeNo = responseObj.getJSONObject("data").getString("tradeNo");
+            String tradeNo = responseObj.getJSONObject("data").getString("orderNo");
             order.setPayOrderNo(tradeNo);
-            return responseObj.getJSONObject("data").getString("payUrl");
+            return responseObj.getJSONObject("data").getString("url");
         } else {
-            String errmsg = responseObj.getString("msg");
+            String errmsg = responseObj.getString("message");
             throw new BusinessException(errmsg);
         }
     }

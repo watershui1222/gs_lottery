@@ -1,6 +1,8 @@
-package com.gs.business.service.impl;
+package com.gs.business.service.impl.pay;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
@@ -8,6 +10,7 @@ import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.gs.business.service.PayService;
+import com.gs.business.utils.pay.MkpayUtil;
 import com.gs.business.utils.pay.ObUtil;
 import com.gs.commons.entity.PayChannel;
 import com.gs.commons.entity.PayMerchant;
@@ -21,8 +24,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 @Slf4j
-@Service("chaowanPayService")
-public class ChaowanPayServiceImpl implements PayService {
+@Service("hxfPayService")
+public class HxfPayServiceImpl implements PayService {
     @Override
     public String getPayUrl(PayMerchant merchant, PayOrder order, PayChannel payChannel) {
         String key = merchant.getMerchantKey();
@@ -35,6 +38,9 @@ public class ChaowanPayServiceImpl implements PayService {
         treeMap.put("mchOrderNo", order.getOrderNo());
         treeMap.put("amount", NumberUtil.mul(order.getAmount(), 100).intValue());
         treeMap.put("notifyUrl", merchant.getCallbackUrl());
+        treeMap.put("subject", "网络购物");
+        treeMap.put("body", "网络购物");
+        treeMap.put("extra", "1");
 
         String stringSignTemp = StringUtils.join(ObUtil.sortData(treeMap, "&"), "&key=", key);
 
@@ -44,7 +50,7 @@ public class ChaowanPayServiceImpl implements PayService {
         request.contentType("application/x-www-form-urlencoded");
         request.form(treeMap);
         HttpResponse response = request.execute();
-        log.info("chaowan充值响应:{}", response.body());
+        log.info("hxf充值响应:{}", response.body());
         JSONObject responseObj = JSON.parseObject(response.body());
         if ("SUCCESS".equals(responseObj.getString("retCode"))) {
             JSONObject payParams = responseObj.getJSONObject("payParams");
@@ -52,7 +58,7 @@ public class ChaowanPayServiceImpl implements PayService {
             order.setPayOrderNo(order.getOrderNo());
             return payParams.getString("payUrl");
         } else {
-            String errmsg = responseObj.getString("errDes");
+            String errmsg = responseObj.getString("retMsg");
             throw new BusinessException(errmsg);
         }
     }

@@ -3,16 +3,22 @@ package com.gs.api.platform;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.asymmetric.Sign;
 import cn.hutool.crypto.asymmetric.SignAlgorithm;
+import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.gs.business.utils.plat.SignUtils;
+import com.gs.commons.utils.AesUtils;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class EBetLive {
@@ -139,6 +145,7 @@ public class EBetLive {
         param.put("timestamp", timestamp);
         param.put("signature", signature);
         param.put("currency", currency);
+        param.put("china", 1);
         String apiUrl = this.apiDomain + "/api/launchUrl";
         String result = apiRequest(apiUrl, param);
         System.out.println(result);
@@ -155,10 +162,68 @@ public class EBetLive {
         return url.toString();
     }
 
+    public boolean kickOff(){
+        String channelId = this.channelId;
+        String username = "gsTestAccount1";
+        Long timestamp = DateUtil.current();
+        String signature = SignUtils.eBetSign(username + channelId + timestamp, this.privateKey, this.publicKey);
+        JSONObject param = new JSONObject();
+        param.put("username", username);
+        param.put("channelId", channelId);
+        param.put("timestamp", timestamp);
+        param.put("signature", signature);
+        String apiUrl = this.apiDomain + "/api/logout";
+        String result = apiRequest(apiUrl, param);
+        System.out.println(result);
+        JSONObject res = JSONObject.parseObject(result);
+        return res.getInteger("status") == 200;
+    }
+
+    public void getRecord(){
+        String channelId = this.channelId;
+        Long timestamp = DateUtil.current();
+        String signature = SignUtils.eBetSign(timestamp.toString(), this.privateKey, this.publicKey);
+        Integer betStatus = 1;//0：仅查询失败的记录    1：仅查询成功的记录
+        Date endTime = DateUtil.date();
+        Date startTime = DateUtil.offsetHour(endTime, -1);
+        String endTimeStr = DateUtil.formatDateTime(endTime);
+        String startTimeStr = DateUtil.formatDateTime(startTime);
+        List<JSONObject> list = new ArrayList<>();
+        int pageNum = 1;
+        int pageSize = 5000;//最大5000
+        int totalPages = 1;
+
+        do{
+            JSONObject param = new JSONObject();
+            param.put("channelId", channelId);
+            param.put("timestamp", timestamp);
+            param.put("signature", signature);
+            param.put("betStatus", betStatus);
+            param.put("pageNum", pageNum);
+            param.put("pageSize", pageSize);
+            param.put("startTimeStr", startTimeStr);
+            param.put("endTimeStr", endTimeStr);
+            String apiUrl = this.apiDomain + "/api/userbethistory";
+            String result = apiRequest(apiUrl, param);
+            System.out.println(result);
+            JSONObject res = JSONObject.parseObject(result);
+            if(res.getInteger("status") == 200){
+                List<JSONObject> betHistories = res.getList("betHistories", JSONObject.class);
+                list.addAll(betHistories);
+                Integer count = res.getIntValue("count");
+                System.out.println("betHistories.size() = " + betHistories.size());
+                System.out.println("count = " + count);
+                totalPages = (int) Math.ceil((double) count / pageSize);
+            }
+            pageNum++;
+        }while(pageNum <= totalPages);
+        System.out.println(list);
+    }
+
 
     public static void main(String[] args) {
         EBetLive eb = new EBetLive();
 //        System.out.println(eb.createUser());
-        System.out.println(eb.getBalance());
+        System.out.println(eb.launchUrl());
     }
 }

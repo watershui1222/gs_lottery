@@ -1,4 +1,4 @@
-package com.gs.business.service.impl;
+package com.gs.business.service.impl.plat;
 
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.RandomUtil;

@@ -1,4 +1,4 @@
-package com.gs.business.service.impl;
+package com.gs.business.service.impl.pay;
 
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.http.HttpRequest;
@@ -19,8 +19,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 @Slf4j
-@Service("kdPayService")
-public class KDPayServiceImpl implements PayService {
+@Service("jdPayService")
+public class JDPayServiceImpl implements PayService {
     @Override
     public String getPayUrl(PayMerchant merchant, PayOrder order, PayChannel payChannel) {
         String key = merchant.getMerchantKey();
@@ -30,20 +30,18 @@ public class KDPayServiceImpl implements PayService {
         treeMap.put("userCode", merchantId);
         treeMap.put("orderCode", order.getOrderNo());
         treeMap.put("amount", order.getAmount());
-        treeMap.put("payType", "3");
         treeMap.put("callbackUrl", merchant.getCallbackUrl());
 
         String stringSignTemp = StringUtils.join(treeMap.get("orderCode")
                 , "&", treeMap.get("amount")
-                , "&", treeMap.get("payType")
                 , "&", treeMap.get("userCode"), "&", key);
         String sign = SecureUtil.md5(stringSignTemp).toUpperCase();
         treeMap.put("sign", sign);
-        HttpRequest request = HttpUtil.createPost(merchant.getPayUrl() + "/system/api/pay");
+        HttpRequest request = HttpUtil.createPost(merchant.getPayUrl() + "/jdpayOpen/api/pay");
         request.contentType("application/x-www-form-urlencoded");
         request.form(treeMap);
         HttpResponse response = request.execute();
-        log.info("KD充值响应:{}", response.body());
+        log.info("JD充值响应:{}", response.body());
         JSONObject responseObj = JSON.parseObject(response.body());
         if (200 == responseObj.getIntValue("code")) {
             // 设置三方订单号

@@ -1,4 +1,4 @@
-package com.gs.business.service.impl;
+package com.gs.business.service.impl.pay;
 
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.crypto.SecureUtil;
@@ -21,39 +21,38 @@ import java.util.Map;
 import java.util.TreeMap;
 
 @Slf4j
-@Service("cbPayService")
-public class CBPayServiceImpl implements PayService {
+@Service("chaowanPayService")
+public class ChaowanPayServiceImpl implements PayService {
     @Override
     public String getPayUrl(PayMerchant merchant, PayOrder order, PayChannel payChannel) {
         String key = merchant.getMerchantKey();
         Long merchantId = Long.valueOf(merchant.getMerchantId());
 
         Map<String, Object> treeMap = new TreeMap<>();
-        treeMap.put("userCode", merchantId);
-        treeMap.put("orderCode", order.getOrderNo());
-        treeMap.put("amount", order.getAmount());
-        treeMap.put("payType", "3");
-        treeMap.put("callbackUrl", merchant.getCallbackUrl());
 
-        String stringSignTemp = StringUtils.join(treeMap.get("orderCode")
-                , "&", treeMap.get("amount")
-                , "&", treeMap.get("payType")
-                , "&", treeMap.get("userCode"), "&", key);
+        treeMap.put("mchId", merchantId);
+        treeMap.put("productId", Integer.valueOf(payChannel.getChannelCode()));
+        treeMap.put("mchOrderNo", order.getOrderNo());
+        treeMap.put("amount", NumberUtil.mul(order.getAmount(), 100).intValue());
+        treeMap.put("notifyUrl", merchant.getCallbackUrl());
+
+        String stringSignTemp = StringUtils.join(ObUtil.sortData(treeMap, "&"), "&key=", key);
+
         String sign = SecureUtil.md5(stringSignTemp).toUpperCase();
         treeMap.put("sign", sign);
-        HttpRequest request = HttpUtil.createPost(merchant.getPayUrl() + "/system/api/pay");
+        HttpRequest request = HttpUtil.createPost(merchant.getPayUrl() + "/api/pay/create_order");
         request.contentType("application/x-www-form-urlencoded");
         request.form(treeMap);
         HttpResponse response = request.execute();
-        log.info("CB充值响应:{}", response.body());
+        log.info("chaowan充值响应:{}", response.body());
         JSONObject responseObj = JSON.parseObject(response.body());
-        if (200 == responseObj.getIntValue("code")) {
+        if ("SUCCESS".equals(responseObj.getString("retCode"))) {
+            JSONObject payParams = responseObj.getJSONObject("payParams");
             // 设置三方订单号
-            String tradeNo = responseObj.getJSONObject("data").getString("orderNo");
-            order.setPayOrderNo(tradeNo);
-            return responseObj.getJSONObject("data").getString("url");
+            order.setPayOrderNo(order.getOrderNo());
+            return payParams.getString("payUrl");
         } else {
-            String errmsg = responseObj.getString("message");
+            String errmsg = responseObj.getString("errDes");
             throw new BusinessException(errmsg);
         }
     }

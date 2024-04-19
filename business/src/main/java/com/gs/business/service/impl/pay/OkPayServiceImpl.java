@@ -1,4 +1,4 @@
-package com.gs.business.service.impl;
+package com.gs.business.service.impl.pay;
 
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.http.HttpRequest;
@@ -19,8 +19,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 @Slf4j
-@Service("toPayService")
-public class ToPayServiceImpl implements PayService {
+@Service("okPayService")
+public class OkPayServiceImpl implements PayService {
     @Override
     public String getPayUrl(PayMerchant merchant, PayOrder order, PayChannel payChannel) {
         String key = merchant.getMerchantKey();
