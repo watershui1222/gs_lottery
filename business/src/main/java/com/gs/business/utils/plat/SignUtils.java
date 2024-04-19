@@ -1,14 +1,17 @@
 package com.gs.business.utils.plat;
 
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.asymmetric.Sign;
 import cn.hutool.crypto.asymmetric.SignAlgorithm;
 import cn.hutool.crypto.digest.DigestUtil;
 import com.alibaba.fastjson2.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 
+@Slf4j
 public class SignUtils {
 
 
@@ -62,6 +65,25 @@ public class SignUtils {
         Sign sign = SecureUtil.sign(SignAlgorithm.MD5withRSA, privateKey, publicKey);
         byte[] signByte = sign.sign(content);
         return Base64.encode(signByte);
+    }
+
+    /**
+     * ebet sign
+     * @param content
+     * @param privateKey
+     * @param publicKey
+     * @return
+     */
+    public static boolean eBetverify(String signature, String content, String privateKey, String publicKey){
+        Sign sign = SecureUtil.sign(SignAlgorithm.MD5withRSA, privateKey, publicKey);
+        byte[] signByte = sign.sign(content);
+        String gSignStr = Base64.encode(signByte);
+        boolean result = StrUtil.equals(gSignStr, signature);
+        if(!result){
+            log.error("eBet(we) 登录回调验签失败 signature:[{}] gSignStr:[{}] content:[{}]",signature,gSignStr,content);
+            log.error("eBet(we) 登录回调验签失败 privateKey:[{}] publicKey:[{}]",privateKey,publicKey);
+        }
+        return result;
     }
 
 }
