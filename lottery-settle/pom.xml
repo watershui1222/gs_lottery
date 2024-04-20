@@ -11,7 +11,7 @@
     <groupId>com.gs</groupId>
     <artifactId>settle</artifactId>
     <version>1.0.0</version>
-    <name>api</name>
+    <name>settle</name>
     <description>settle</description>
     <packaging>jar</packaging>
 
