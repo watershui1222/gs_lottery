@@ -174,11 +174,9 @@ public class OGLive {
     }
 
     public String getRecord(){
-        String player_id = "gsTestAccount1";
         Integer fetch_id = 12;//应当用redis记录此数据作为下次拉取的数据
         Integer limit = 10000;
         JSONObject json = new JSONObject();
-        json.put("player_id",player_id);
         json.put("fetch_id",fetch_id);
         json.put("limit",limit);
         String sortParmstr = SignUtils.sortParam(json);
