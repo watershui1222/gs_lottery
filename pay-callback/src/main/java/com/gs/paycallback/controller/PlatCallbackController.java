@@ -25,12 +25,12 @@ public class PlatCallbackController {
     @Autowired
     private StringRedisTemplate redisTemplate;
 
-    @Value("${platform.EBet.publicKey}")
-    public String eBetPublicKey;
-    @Value("${platform.EBet.privateKey}")
-    public String eBetprivateKey;
+    @Value("${platform.WE.publicKey}")
+    public String wePublicKey;
+    @Value("${platform.WE.privateKey}")
+    public String wePrivateKey;
 
-    @ApiOperation(value = "eBet(we)回调")
+    @ApiOperation(value = "we回调")
     @PostMapping("/we")
     public JSONObject we(HttpServletRequest httpServletRequest) throws Exception {
         String body = ServletUtil.getBody(httpServletRequest);
@@ -48,7 +48,7 @@ public class PlatCallbackController {
 
         JSONObject res = new JSONObject();
         //验签
-        boolean isOK = SignUtils.eBetverify(signature, timestamp + accessToken, this.eBetprivateKey, this.eBetPublicKey);
+        boolean isOK = SignUtils.weVerify(signature, timestamp + accessToken, this.wePrivateKey, this.wePublicKey);
         if(isOK){
             res.put("accessToken", accessToken);
             res.put("subChannelId", 0);

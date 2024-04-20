@@ -1,19 +1,10 @@
 package com.gs.api.platform;
 
-import cn.hutool.core.codec.Base64;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.crypto.SecureUtil;
-import cn.hutool.crypto.asymmetric.Sign;
-import cn.hutool.crypto.asymmetric.SignAlgorithm;
-import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
-import cn.hutool.json.JSONUtil;
-import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.gs.business.utils.plat.SignUtils;
-import com.gs.commons.utils.AesUtils;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
@@ -21,16 +12,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class EBetLive {
+public class WELive {
 
-    @Value("${platform.EBet.apiDomain}")
+    @Value("${platform.WE.apiDomain}")
     public String apiDomain = "https://uat-nc-ugs-ebetapi.ufweg.com";
-    @Value("${platform.EBet.channelId}")
+    @Value("${platform.WE.channelId}")
     public String channelId = "971";
-    @Value("${platform.EBet.publicKey}")
+    @Value("${platform.WE.publicKey}")
     public String publicKey = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAOPuF1FxpmHQiqT8m5hueTv1K9EDTLlw" +
             "CTzQ4M3udqk+3oJhCg1jzFRavtOROlNwGoTxjjsg+fytySTJ0xxFJKECAwEAAQ==";
-    @Value("${platform.EBet.privateKey}")
+    @Value("${platform.WE.privateKey}")
     public String privateKey = "MIIBVgIBADANBgkqhkiG9w0BAQEFAASCAUAwggE8AgEAAkEA4+4XUXGmYdCKpPyb" +
             "mG55O/Ur0QNMuXAJPNDgze52qT7egmEKDWPMVFq+05E6U3AahPGOOyD5/K3JJMnT" +
             "HEUkoQIDAQABAkEAkFiYK9vtosSPCS1w3HgaDv6VYSjVzhpFv14JAGGkhEk6UEi/" +
@@ -43,7 +34,7 @@ public class EBetLive {
     public boolean createUser(){
         String channelId = this.channelId;
         String username = "gsTestAccount2";
-        String signature = SignUtils.eBetSign(username, this.privateKey, this.publicKey);
+        String signature = SignUtils.weSign(username, this.privateKey, this.publicKey);
         JSONObject param = new JSONObject();
         param.put("channelId", channelId);
         param.put("username", username);
@@ -71,7 +62,7 @@ public class EBetLive {
         String channelId = this.channelId;
         String username = "gsTestAccount1";
         Long timestamp = DateUtil.current();
-        String signature = SignUtils.eBetSign(username + timestamp, this.privateKey, this.publicKey);
+        String signature = SignUtils.weSign(username + timestamp, this.privateKey, this.publicKey);
         String rechargeReqId = "gsTestTransfer3";
         JSONObject param = new JSONObject();
         param.put("channelId", channelId);
@@ -92,7 +83,7 @@ public class EBetLive {
 
     public boolean checkTransfer(String rechargeReqId){
         String channelId = this.channelId;
-        String signature = SignUtils.eBetSign(rechargeReqId, this.privateKey, this.publicKey);
+        String signature = SignUtils.weSign(rechargeReqId, this.privateKey, this.publicKey);
         JSONObject param = new JSONObject();
         param.put("channelId", channelId);
         param.put("signature", signature);
@@ -120,7 +111,7 @@ public class EBetLive {
         BigDecimal balance = BigDecimal.ZERO;
         String channelId = this.channelId;
         String username = "gsTestAccount1";
-        String signature = SignUtils.eBetSign(username, this.privateKey, this.publicKey);
+        String signature = SignUtils.weSign(username, this.privateKey, this.publicKey);
         JSONObject param = new JSONObject();
         param.put("channelId", channelId);
         param.put("username", username);
@@ -138,7 +129,7 @@ public class EBetLive {
     public String launchUrl(){
         String channelId = this.channelId;
         Long timestamp = DateUtil.current();
-        String signature = SignUtils.eBetSign(channelId + timestamp, this.privateKey, this.publicKey);
+        String signature = SignUtils.weSign(channelId + timestamp, this.privateKey, this.publicKey);
         String currency = "CNY";
         JSONObject param = new JSONObject();
         param.put("channelId", channelId);
@@ -154,10 +145,10 @@ public class EBetLive {
         if(res.getInteger("status") == 200){
             String username = "gsTestAccount1";
             String accessToken = RandomUtil.randomString(11);
-//            ?username=testmember&accessToken=testaccesstoken
             url.append(res.getString("launchUrl"))
                     .append("?username=").append(username)
-                    .append("&accessToken=").append(accessToken);
+                    .append("&accessToken=").append(accessToken)
+                    .append("&language=zh_cn");
         }
         return url.toString();
     }
@@ -166,7 +157,7 @@ public class EBetLive {
         String channelId = this.channelId;
         String username = "gsTestAccount1";
         Long timestamp = DateUtil.current();
-        String signature = SignUtils.eBetSign(username + channelId + timestamp, this.privateKey, this.publicKey);
+        String signature = SignUtils.weSign(username + channelId + timestamp, this.privateKey, this.publicKey);
         JSONObject param = new JSONObject();
         param.put("username", username);
         param.put("channelId", channelId);
@@ -182,7 +173,7 @@ public class EBetLive {
     public void getRecord(){
         String channelId = this.channelId;
         Long timestamp = DateUtil.current();
-        String signature = SignUtils.eBetSign(timestamp.toString(), this.privateKey, this.publicKey);
+        String signature = SignUtils.weSign(timestamp.toString(), this.privateKey, this.publicKey);
         Integer betStatus = 1;//0：仅查询失败的记录    1：仅查询成功的记录
         Date endTime = DateUtil.date();
         Date startTime = DateUtil.offsetHour(endTime, -1);
@@ -222,7 +213,7 @@ public class EBetLive {
 
 
     public static void main(String[] args) {
-        EBetLive eb = new EBetLive();
+        WELive eb = new WELive();
 //        System.out.println(eb.createUser());
         System.out.println(eb.launchUrl());
     }

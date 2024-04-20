@@ -55,33 +55,33 @@ public class SignUtils {
     }
 
     /**
-     * ebet sign
+     * we sign
      * @param content
      * @param privateKey
      * @param publicKey
      * @return
      */
-    public static String eBetSign(String content, String privateKey, String publicKey){
+    public static String weSign(String content, String privateKey, String publicKey){
         Sign sign = SecureUtil.sign(SignAlgorithm.MD5withRSA, privateKey, publicKey);
         byte[] signByte = sign.sign(content);
         return Base64.encode(signByte);
     }
 
     /**
-     * ebet sign
+     * we verify
      * @param content
      * @param privateKey
      * @param publicKey
      * @return
      */
-    public static boolean eBetverify(String signature, String content, String privateKey, String publicKey){
+    public static boolean weVerify(String signature, String content, String privateKey, String publicKey){
         Sign sign = SecureUtil.sign(SignAlgorithm.MD5withRSA, privateKey, publicKey);
         byte[] signByte = sign.sign(content);
         String gSignStr = Base64.encode(signByte);
         boolean result = StrUtil.equals(gSignStr, signature);
         if(!result){
-            log.error("eBet(we) 登录回调验签失败 signature:[{}] gSignStr:[{}] content:[{}]",signature,gSignStr,content);
-            log.error("eBet(we) 登录回调验签失败 privateKey:[{}] publicKey:[{}]",privateKey,publicKey);
+            log.error("WE 登录回调验签失败 signature:[{}] gSignStr:[{}] content:[{}]",signature,gSignStr,content);
+            log.error("WE 登录回调验签失败 privateKey:[{}] publicKey:[{}]",privateKey,publicKey);
         }
         return result;
     }

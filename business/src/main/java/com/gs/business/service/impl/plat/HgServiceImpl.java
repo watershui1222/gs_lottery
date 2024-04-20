@@ -44,6 +44,8 @@ public class HgServiceImpl implements PlatService {
     @Autowired
     private UserPlatService userPlatService;
 
+    public static String platCode = "HG";
+
     @Autowired
     private StringRedisTemplate redisTemplate;
 
@@ -53,7 +55,7 @@ public class HgServiceImpl implements PlatService {
         UserPlat userPlat = userPlatService.getOne(
                 new LambdaQueryWrapper<UserPlat>()
                         .eq(UserPlat::getUserName, userName)
-                        .eq(UserPlat::getPlatCode, "HG")
+                        .eq(UserPlat::getPlatCode, platCode)
         );
         if (userPlat != null) {
             return userPlat;
@@ -91,7 +93,7 @@ public class HgServiceImpl implements PlatService {
             // 执行注册逻辑
             UserPlat save = new UserPlat();
             save.setUserName(userName);
-            save.setPlatCode("HG");
+            save.setPlatCode(platCode);
             save.setPlatUserName(memname);
             save.setPlatUserPassword(password);
             save.setStatus(0);

@@ -40,13 +40,15 @@ public class BbinServiceImpl implements PlatService {
     @Autowired
     private UserPlatService userPlatService;
 
+    public static String platCode = "BBIN";
+
     @Override
     public UserPlat register(String userName) throws Exception {
         // 查询是否注册平台
         UserPlat userPlat = userPlatService.getOne(
                 new LambdaQueryWrapper<UserPlat>()
                         .eq(UserPlat::getUserName, userName)
-                        .eq(UserPlat::getPlatCode, "BBIN")
+                        .eq(UserPlat::getPlatCode, platCode)
         );
         if (userPlat != null) {
             return userPlat;
@@ -60,7 +62,7 @@ public class BbinServiceImpl implements PlatService {
         // 执行注册逻辑
         UserPlat save = new UserPlat();
         save.setUserName(userName);
-        save.setPlatCode("BBIN");
+        save.setPlatCode(platCode);
         save.setPlatUserName(this.owner + userName);
         save.setPlatUserPassword(null);
         save.setStatus(0);

@@ -38,13 +38,15 @@ public class SbServiceImpl implements PlatService {
     @Autowired
     private UserPlatService userPlatService;
 
+    public static String platCode = "SB";
+
     @Override
     public UserPlat register(String userName) throws Exception {
         // 查询是否注册平台
         UserPlat userPlat = userPlatService.getOne(
                 new LambdaQueryWrapper<UserPlat>()
                         .eq(UserPlat::getUserName, userName)
-                        .eq(UserPlat::getPlatCode, "SB")
+                        .eq(UserPlat::getPlatCode, platCode)
         );
         if (userPlat != null) {
             return userPlat;
@@ -80,7 +82,7 @@ public class SbServiceImpl implements PlatService {
         // 执行注册逻辑
         UserPlat save = new UserPlat();
         save.setUserName(userName);
-        save.setPlatCode("SB");
+        save.setPlatCode(platCode);
         save.setPlatUserName(vendor_member_id);
         save.setPlatUserPassword(null);
         save.setStatus(0);

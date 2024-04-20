@@ -62,10 +62,11 @@ public class OGLive {
     }
 
     public boolean deposit(){
-        String player_id = "gsTestAccount1";
-        String transaction_id = "gstestorderno4";
+        String player_id = "gslichade123";
+        String transaction_id = "dsfsdfsd234";
         BigDecimal transfer_amount = new BigDecimal("100");
         Long timestamp = DateUtil.current();
+//        Long timestamp = 1713584456742L;
         JSONObject param = new JSONObject();
         param.put("player_id",player_id);
         param.put("transaction_id",transaction_id);
@@ -235,7 +236,7 @@ public class OGLive {
     public static void main(String[] args) {
         OGLive og = new OGLive();
 //        System.out.println(og.launch());
-        System.out.println(og.register());
+        System.out.println(og.deposit());
     }
 
 }
